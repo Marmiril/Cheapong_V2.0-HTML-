@@ -1,0 +1,40 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #111;
+    font-family: Arial, sans-serif;
+    color: white;
+    overflow: hidden;
+}
+
+.cheapong-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cheapong-wrapper {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cheapong-wrapper h1 {
+    margin: 0;
+    font-size: clamp(2rem, 6vw, 3rem);
+}
+
+#gameCanvas {
+    width: min(90vw, calc(75vh * 1.3333), 50rem);
+    aspect-ratio: 4 / 3;
+    height: auto;
+    background-color: black;
+    border: 0.125rem solid white;
+    display: block;
+}
