@@ -6,21 +6,46 @@
  * - draw initial screen
  */
 
+// Basic application states
+import { AppState } from "./states/appState.js";
+
+// Basic game states
+import { GameState } from "./states/gameState.js";
+
+// Input state
+import { inputState } from "./input/inputState.js";
+
+const canvasWidth = canvas.width;
+const canvasHeight = canvas.height;
+
+// Paddle model
+import { Paddle } from "./models/Paddle.js";
+
+// Player paddle
+const playerPaddle = new Paddle(
+    (canvasWidth - 120) / 2,
+    canvasHeight - 15 - 20,
+    120,
+    15,
+    5
+);
+
+// CPU paddle
+const cpuPaddle = new Paddle(
+    (canvasWidth - 120) / 2,
+    20,
+    120,
+    15,
+    5
+);
+
 const canvas = document.getElementById("gameCanvas");
 
 if (!canvas) { throw new Error("Canvas element not found"); }
 
 const ctx = canvas.getContext("2d");
 
-const canvasWidth = canvas.width;
-const canvasHeight = canvas.height;
 
-// Basic application states
-
-const AppState = Object.freeze({
-    MAIN_MENU: "MAIN_MENU",
-    IN_GAME: "IN_GAME"
-});
 
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
@@ -30,37 +55,9 @@ const score = {
     cpu: 0
 }
 
-const GameState = Object.freeze({
-    SERVE_PLAYER: "SERVE_PLAYER",
-    SERVE_CPU: "SERVE_CPU",
-    RALLY: "RALLY"
-
-});
-
 let gameState = GameState.SERVE_PLAYER;
 
-const inputState = {
-    left: false,
-    right: false
-}
 
-// Player paddle
-const playerPaddle = {
-    x: (canvasWidth - 120) / 2,
-    y: canvasHeight - 15 - 20,
-    width: 120,
-    height: 15,
-    speed: 5
-};
-
-// CPU paddle
-const cpuPaddle = {
-    x: (canvasWidth - 120) / 2,
-    y: 20,
-    width: 120,
-    height: 15,
-    speed: 5
-};
 
 function drawPaddle(paddle) {
     ctx.fillStyle = "white";
@@ -75,7 +72,7 @@ function drawPaddle(paddle) {
 
 // Ball
 const ball = {
-    x: (canvasWidth -20) / 2,
+    x: (canvasWidth - 20) / 2,
     y: (canvasHeight - 20) / 2,
     size: 20,
     speedX: 3,
@@ -153,20 +150,20 @@ function renderGameScreen() {
     updatePlayerPaddle();
 
     if (gameState === GameState.SERVE_PLAYER) { updateServe(playerPaddle); }
-    if (gameState === GameState.SERVE_CPU)    { updateServe   (cpuPaddle); }
+    if (gameState === GameState.SERVE_CPU) { updateServe(cpuPaddle); }
 
     if (gameState === GameState.RALLY) {
-    updateBall();
-    handleWallCollision();
-    handlePlayerPaddleCollision();
-    handleCpuPaddleCollision();     
+        updateBall();
+        handleWallCollision();
+        handlePlayerPaddleCollision();
+        handleCpuPaddleCollision();
     }
 
     drawPaddle(playerPaddle);
     drawPaddle(cpuPaddle);
     drawBall();
 
-    drawCenteredText("GAME STARTED",       canvasHeight * 0.40, 24);
+    drawCenteredText("GAME STARTED", canvasHeight * 0.40, 24);
     drawCenteredText("Cheapong game area", canvasHeight * 0.52, 16);
 }
 
@@ -194,7 +191,7 @@ function updateBall() {
 
 function handleWallCollision() {
     if (ball.x <= 0) { ball.x = 0; ball.speedX *= -1; }
-    if (ball.x + ball.size >= canvasWidth) { ball.x = canvasWidth - ball.size; ball.speedX *= -1; } 
+    if (ball.x + ball.size >= canvasWidth) { ball.x = canvasWidth - ball.size; ball.speedX *= -1; }
 
     if (ball.y <= 0) { ball.y = 0; ball.speedY *= -1; }
     if (ball.y + ball.size >= canvasHeight) { ball.y = canvasHeight - ball.size; ball.speedY *= -1; }
@@ -205,7 +202,7 @@ function handlePlayerPaddleCollision() {
     if (isColliding && ball.speedY > 0) { ball.y = playerPaddle.y - ball.size; ball.speedY *= -1; }
 }
 
-function handleCpuPaddleCollision() { 
+function handleCpuPaddleCollision() {
     const isColliding = intersects(ball, cpuPaddle);
     if (isColliding && ball.speedY < 0) { ball.y = cpuPaddle.y + cpuPaddle.height; ball.speedY *= -1; }
 
@@ -227,13 +224,12 @@ function handleScore() {
 
 function updateServe(paddle) {
     ball.x = paddle.x + (paddle.width - ball.size) / 2;
-    if (gameState === GameState.SERVE_PLAYER) { ball.y = playerPaddle.y -     ball.size; }
-    if (gameState === GameState.SERVE_CPU)    { ball.y = cpuPaddle.y + cpuPaddle.height; }
+    if (gameState === GameState.SERVE_PLAYER) { ball.y = playerPaddle.y - ball.size; }
+    if (gameState === GameState.SERVE_CPU) { ball.y = cpuPaddle.y + cpuPaddle.height; }
 }
 
 function launchPlayerServe() {
     ball.speedX = 0;
-    ball.speedY = 4.5;
+    ball.speedY = -4.5;
     gameState = GameState.RALLY;
 }
- 

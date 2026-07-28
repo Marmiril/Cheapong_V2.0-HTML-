@@ -307,7 +307,7 @@ function updateServe(paddle) {
 
 function launchPlayerServe() {
     ball.speedX = 0;
-    ball.speedY = 4.5;
+    ball.speedY = -4.5;
     gameState = GameState.RALLY;
 }
  
