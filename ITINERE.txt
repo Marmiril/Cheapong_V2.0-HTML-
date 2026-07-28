@@ -1,0 +1,66 @@
+Cheapong/
+├── index.html
+├── README.md
+│
+├── assets/
+│   ├── img/
+│   │   ├── backgrounds/
+│   │   ├── ui/
+│   │   └── sprites/
+│   │
+│   └── sounds/
+│       ├── paddle-hit-1.mp3
+│       ├── paddle-hit-2.mp3
+│       ├── point.mp3
+│       ├── win.mp3
+│       └── lose.mp3
+│
+├── css/
+│   └── style.css
+│
+└── js/
+    ├── main.js
+    │
+    ├── core/
+    │   └── gameConfig.js
+    │
+    ├── model/
+    │   ├── Ball.js
+    │   └── Paddle.js
+    │
+    ├── logic/
+    │   ├── collisionSystem.js
+    │   ├── aiSystem.js
+    │   ├── paddleMovementSystem.js
+    │   └── hitEffect.js
+    │
+    ├── game/
+    │   ├── scoreSystem.js
+    │   ├── speedProgressionSystem.js
+    │   └── soundSystem.js
+    │
+    ├── input/
+    │   └── inputState.js
+    │
+    └── states/
+        ├── appState.js
+        └── gameState.js
+
+
+
+1º- CREACIÓN DE CARPETAS.
+2 - INDEX.HTML
+3 - CSS BÁSICO
+4 - MAIN.JS - FUNCIONES BÁSICAS DE RENDER
+5 - ESTADO BÁSICO DEL JUEGO -- MAIN_MENU → pulsar SPACE → IN_GAME
+6 - PRIMEROS ELEMENTOS VISUALES - BALL / PADDLE (PLAYER & CPU)
+7 - FUNCIONES DE DIBUJADO DE LOS ELEMENTOS VISUALES
+8 - ESTADOS DE INPUT Y LISTENER PARA KEYUP Y KEYDOWN
+9 - REQUESTANIMATIONFRAME();
+10 - BORDES
+11 - MOVIMIENTO DE BOLA
+12 - COLISIÓN BOLA - PALA JUGADOR
+13 - DETECCIÓN DE PUNTOS
+14 - ESTADOS DE RALLY Y SERVE
+15 - FUNCIONES DE SERVE PLAYER/CPU PARA MANEJO DE BALL
+16 - ACTIVAR RALLY CON SPACE
