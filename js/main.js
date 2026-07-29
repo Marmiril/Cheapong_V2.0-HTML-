@@ -15,11 +15,23 @@ import { GameState } from "./states/gameState.js";
 // Input state
 import { inputState } from "./input/inputState.js";
 
-const canvasWidth = canvas.width;
-const canvasHeight = canvas.height;
-
 // Paddle model
 import { Paddle } from "./models/Paddle.js";
+
+// Ball model
+import { Ball } from "./models/Ball.js";
+
+// Player paddle movement
+import { updatePlayerPaddle } from "./logic/paddleMovementSystem.js";
+
+const canvas = document.getElementById("gameCanvas");
+
+if (!canvas) { throw new Error("Canvas element not found"); }
+
+const ctx = canvas.getContext("2d");
+
+const canvasWidth = canvas.width;
+const canvasHeight = canvas.height;
 
 // Player paddle
 const playerPaddle = new Paddle(
@@ -39,14 +51,6 @@ const cpuPaddle = new Paddle(
     5
 );
 
-const canvas = document.getElementById("gameCanvas");
-
-if (!canvas) { throw new Error("Canvas element not found"); }
-
-const ctx = canvas.getContext("2d");
-
-
-
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
 
@@ -56,7 +60,6 @@ const score = {
 }
 
 let gameState = GameState.SERVE_PLAYER;
-
 
 
 function drawPaddle(paddle) {
@@ -71,13 +74,13 @@ function drawPaddle(paddle) {
 }
 
 // Ball
-const ball = {
-    x: (canvasWidth - 20) / 2,
-    y: (canvasHeight - 20) / 2,
-    size: 20,
-    speedX: 3,
-    speedY: 3
-};
+const ball = new Ball(
+    (canvasWidth - 20) / 2,
+    (canvasHeight - 20) / 2,
+    20,
+    3,
+    3
+);
 
 function drawBall() {
     const radius = ball.size / 2;
@@ -147,7 +150,7 @@ gameLoop();
 function renderGameScreen() {
     clearCanvas();
 
-    updatePlayerPaddle();
+    updatePlayerPaddle(playerPaddle, inputState, canvasWidth);
 
     if (gameState === GameState.SERVE_PLAYER) { updateServe(playerPaddle); }
     if (gameState === GameState.SERVE_CPU) { updateServe(cpuPaddle); }
@@ -173,15 +176,6 @@ function renderGameScreen() {
 function render() {
     if (appState === AppState.MAIN_MENU) { renderMainMenu(); }
     if (appState === AppState.IN_GAME) { renderGameScreen(); }
-}
-
-function updatePlayerPaddle() {
-    if (inputState.left) { playerPaddle.x -= playerPaddle.speed; }
-    if (inputState.right) { playerPaddle.x += playerPaddle.speed; }
-
-    // Borders
-    if (playerPaddle.x < 0) { playerPaddle.x = 0; }
-    if (playerPaddle.x + playerPaddle.width > canvasWidth) { playerPaddle.x = canvasWidth - playerPaddle.width; }
 }
 
 function updateBall() {

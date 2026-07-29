@@ -24,7 +24,7 @@ Cheapong/
     ├── core/
     │   └── gameConfig.js
     │
-    ├── model/
+    ├── models/
     │   ├── Ball.js
     │   └── Paddle.js
     │
