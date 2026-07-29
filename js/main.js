@@ -30,6 +30,11 @@ import { updateBall } from "./logic/ballMovementSystem.js";
 // Collision system
 import { handleWallCollision, handlePlayerPaddleCollision, handleCpuPaddleCollision } from "./logic/collisionSystem.js";
 
+// Render ball & paddle
+import { drawPaddle, drawBall } from "./render/gameRenderer.js";
+
+
+
 const canvas = document.getElementById("gameCanvas");
 
 if (!canvas) { throw new Error("Canvas element not found"); }
@@ -67,18 +72,6 @@ const score = {
 
 let gameState = GameState.SERVE_PLAYER;
 
-
-function drawPaddle(paddle) {
-    ctx.fillStyle = "white";
-
-    ctx.fillRect(
-        paddle.x,
-        paddle.y,
-        paddle.width,
-        paddle.height
-    );
-}
-
 // Ball
 const ball = new Ball(
     (canvasWidth - 20) / 2,
@@ -87,17 +80,6 @@ const ball = new Ball(
     3,
     3
 );
-
-function drawBall() {
-    const radius = ball.size / 2;
-    const centerX = ball.x + radius;
-    const centerY = ball.y + radius;
-
-    ctx.fillStyle = "white";
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-    ctx.fill();
-}
 
 function clearCanvas() {
     ctx.fillStyle = "black";
@@ -168,9 +150,9 @@ function renderGameScreen() {
         handleCpuPaddleCollision(ball, cpuPaddle);
     }
 
-    drawPaddle(playerPaddle);
-    drawPaddle(cpuPaddle);
-    drawBall();
+    drawPaddle(ctx, playerPaddle);
+    drawPaddle(ctx, cpuPaddle);
+    drawBall(ctx, ball);
 
     drawCenteredText("GAME STARTED", canvasHeight * 0.40, 24);
     drawCenteredText("Cheapong game area", canvasHeight * 0.52, 16);

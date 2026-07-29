@@ -1,3 +1,10 @@
+Biblioteca
+/
+Cheapong
+/
+02-ITINERE.txt
+
+
 Cheapong/
 ├── index.html
 ├── README.md
@@ -29,6 +36,7 @@ Cheapong/
     │   └── Paddle.js
     │
     ├── logic/
+    │   ├── ballMovementSystem.js
     │   ├── collisionSystem.js
     │   ├── aiSystem.js
     │   ├── paddleMovementSystem.js
@@ -41,6 +49,9 @@ Cheapong/
     │
     ├── input/
     │   └── inputState.js
+    │
+    ├── render/
+    │   └── gameRenderer.js
     │
     └── states/
         ├── appState.js
@@ -64,3 +75,12 @@ Cheapong/
 14 - ESTADOS DE RALLY Y SERVE
 15 - FUNCIONES DE SERVE PLAYER/CPU PARA MANEJO DE BALL
 16 - ACTIVAR RALLY CON SPACE
+17 - CORRECCIÓN DE LA DIRECCIÓN DEL SAQUE DEL JUGADOR
+18 - CREACIÓN DE MÓDULOS PARA APPSTATE Y GAMESTATE
+19 - EXTRACCIÓN DE INPUTSTATE A SU PROPIO MÓDULO
+20 - CREACIÓN DE LAS CLASES PADDLE Y BALL EN JS/MODELS
+21 - EXTRACCIÓN DEL MOVIMIENTO DE LA PALA A PADDLEMOVEMENTSYSTEM.JS
+22 - EXTRACCIÓN DEL MOVIMIENTO DE LA BOLA A BALLMOVEMENTSYSTEM.JS
+23 - EXTRACCIÓN DE LAS COLISIONES A COLLISIONSYSTEM.JS
+24 - CORRECCIÓN DE LA DIRECCIÓN DE COLISIÓN CON LA PALA DEL JUGADOR
+25 - INICIO DE LA EXTRACCIÓN DEL RENDERIZADO A GAMERENDERER.JS
