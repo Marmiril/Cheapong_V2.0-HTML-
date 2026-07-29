@@ -24,6 +24,12 @@ import { Ball } from "./models/Ball.js";
 // Player paddle movement
 import { updatePlayerPaddle } from "./logic/paddleMovementSystem.js";
 
+// Ball movement
+import { updateBall } from "./logic/ballMovementSystem.js";
+
+// Collision system
+import { handleWallCollision, handlePlayerPaddleCollision, handleCpuPaddleCollision } from "./logic/collisionSystem.js";
+
 const canvas = document.getElementById("gameCanvas");
 
 if (!canvas) { throw new Error("Canvas element not found"); }
@@ -156,10 +162,10 @@ function renderGameScreen() {
     if (gameState === GameState.SERVE_CPU) { updateServe(cpuPaddle); }
 
     if (gameState === GameState.RALLY) {
-        updateBall();
-        handleWallCollision();
-        handlePlayerPaddleCollision();
-        handleCpuPaddleCollision();
+        updateBall(ball);
+        handleWallCollision(ball, canvasWidth, canvasHeight);
+        handlePlayerPaddleCollision(ball, playerPaddle);
+        handleCpuPaddleCollision(ball, cpuPaddle);
     }
 
     drawPaddle(playerPaddle);
@@ -176,39 +182,6 @@ function renderGameScreen() {
 function render() {
     if (appState === AppState.MAIN_MENU) { renderMainMenu(); }
     if (appState === AppState.IN_GAME) { renderGameScreen(); }
-}
-
-function updateBall() {
-    ball.x += ball.speedX;
-    ball.y += ball.speedY;
-}
-
-function handleWallCollision() {
-    if (ball.x <= 0) { ball.x = 0; ball.speedX *= -1; }
-    if (ball.x + ball.size >= canvasWidth) { ball.x = canvasWidth - ball.size; ball.speedX *= -1; }
-
-    if (ball.y <= 0) { ball.y = 0; ball.speedY *= -1; }
-    if (ball.y + ball.size >= canvasHeight) { ball.y = canvasHeight - ball.size; ball.speedY *= -1; }
-}
-
-function handlePlayerPaddleCollision() {
-    const isColliding = intersects(ball, playerPaddle);
-    if (isColliding && ball.speedY > 0) { ball.y = playerPaddle.y - ball.size; ball.speedY *= -1; }
-}
-
-function handleCpuPaddleCollision() {
-    const isColliding = intersects(ball, cpuPaddle);
-    if (isColliding && ball.speedY < 0) { ball.y = cpuPaddle.y + cpuPaddle.height; ball.speedY *= -1; }
-
-}
-
-function intersects(ball, paddle) {
-    return (
-        ball.x < paddle.x + paddle.width &&
-        ball.x + ball.size > paddle.x &&
-        ball.y < paddle.y + paddle.height &&
-        ball.y + ball.size > paddle.y
-    );
 }
 
 function handleScore() {
