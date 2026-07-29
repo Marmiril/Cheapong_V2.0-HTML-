@@ -30,8 +30,8 @@ import { updateBall } from "./logic/ballMovementSystem.js";
 // Collision system
 import { handleWallCollision, handlePlayerPaddleCollision, handleCpuPaddleCollision } from "./logic/collisionSystem.js";
 
-// Render ball & paddle
-import { drawPaddle, drawBall } from "./render/gameRenderer.js";
+// Render paddle, ball, clear canvas, draw text & render main menu
+import { drawPaddle, drawBall, clearCanvas, drawCenteredText, renderMainMenu } from "./render/gameRenderer.js";
 
 
 
@@ -81,35 +81,11 @@ const ball = new Ball(
     3
 );
 
-function clearCanvas() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-}
 
-/**
- * Draws centered text on the canvas.
- *
- * @param {string} text - Text to draw.
- * @param {number} y - Vertical position.
- * @param {number} fontSize - Font size in pixels.
- */
-function drawCenteredText(text, y, fontSize = 32) {
-    ctx.fillStyle = "white";
-    ctx.font = `${fontSize}px Arial`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    ctx.fillText(text, canvasWidth / 2, y);
-}
 
 /**
  * Renders the initial main menu.
  */
-function renderMainMenu() {
-    clearCanvas();
-    drawCenteredText("CHEAPONG", canvasHeight * 0.30, 30);
-    drawCenteredText("PRESS SPACE TO START", canvasHeight * 0.50, 16);
-}
 
 window.addEventListener("keydown", (event) => {
     if (event.code === "Space" && appState === AppState.MAIN_MENU) { appState = AppState.IN_GAME; render(); }
@@ -136,7 +112,7 @@ gameLoop();
  * Renders a temporary game screen.
  */
 function renderGameScreen() {
-    clearCanvas();
+    clearCanvas(ctx, canvasWidth, canvasHeight);
 
     updatePlayerPaddle(playerPaddle, inputState, canvasWidth);
 
@@ -154,15 +130,15 @@ function renderGameScreen() {
     drawPaddle(ctx, cpuPaddle);
     drawBall(ctx, ball);
 
-    drawCenteredText("GAME STARTED", canvasHeight * 0.40, 24);
-    drawCenteredText("Cheapong game area", canvasHeight * 0.52, 16);
+    drawCenteredText(ctx, canvasWidth, "GAME STARTED", canvasHeight * 0.40, 24);
+    drawCenteredText(ctx, canvasWidth, "Cheapong game area", canvasHeight * 0.52, 16);
 }
 
 /**
  * Renders the current screen according to the app state.
  */
 function render() {
-    if (appState === AppState.MAIN_MENU) { renderMainMenu(); }
+    if (appState === AppState.MAIN_MENU) { renderMainMenu(ctx, canvasWidth, canvasHeight); }
     if (appState === AppState.IN_GAME) { renderGameScreen(); }
 }
 
