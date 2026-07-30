@@ -135,7 +135,7 @@ function updateGame() {
     if (gameState === GameState.SERVE_CPU) { updateServe(ball, cpuPaddle, gameState); }
 
     if (gameState === GameState.RALLY) {
-        const cpuTargetX = calculateCpuTargetX(cpuPaddle, ball);
+        const cpuTargetX = calculateCpuTargetX(cpuPaddle, ball, canvasWidth);
 
         updateCpuPaddle(cpuPaddle, cpuTargetX, canvasWidth);
         updateBall(ball);
