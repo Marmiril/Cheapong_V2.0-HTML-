@@ -4,6 +4,8 @@ let targetX = 0;
 
 const MAX_ERROR_FACTOR = 0.40;
 
+const MAX_DRIFT = 0.12;
+
 export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight) {
     if (ball.speedY >= 0) {
         currentPhase = -1;
@@ -18,8 +20,9 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight) 
             currentPhase = i;
             const cleanTargetX = predictBallX(ball, cpuPaddle, canvasWidth) + ball.size / 2 - cpuPaddle.width / 2;
             const aimError = calculateAimError(cpuPaddle, currentPhase);
+            const drift = calculateDrift(cpuPaddle);
 
-            targetX = cleanTargetX + aimError;
+            targetX = cleanTargetX + aimError + drift;
             break;
         }
     }
@@ -55,4 +58,8 @@ function calculateAimError(cpuPaddle, phaseIndex) {
     const maxError = cpuPaddle.width * MAX_ERROR_FACTOR * phaseErrorFactor;
 
     return Math.random() * maxError * 2 - maxError;
+}
+
+function calculateDrift(cpuPaddle) {
+    return (Math.random() * 2 - 1) * cpuPaddle.width * MAX_DRIFT;
 }
