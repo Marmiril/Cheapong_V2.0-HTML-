@@ -1,17 +1,30 @@
-/*
-export function updateCpuPaddle(cpuPaddle, ball) {
-    const predictedBallX = predictBallX(ball, cpuPaddle);
-    const ballCenter = predictedBallX + ball.size / 2;
-    const paddleCenter = cpuPaddle.x + cpuPaddle.width / 2;
+const PHASES = [0.90, 0.75, 0.50, 0.25, 0.10];
+let currentPhase = -1;
+let targetX = 0;
 
-    if (ballCenter < paddleCenter) { cpuPaddle.x -= cpuPaddle.speed; }
-    if (ballCenter > paddleCenter) { cpuPaddle.x += cpuPaddle.speed; }
-}
-*/
-export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth) {
-    const predicedBallX = predictBallX(ball, cpuPaddle, canvasWidth);
+const MAX_ERROR_FACTOR = 0.40;
 
-    return predicedBallX + ball.size / 2 - cpuPaddle.width / 2;
+export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight) {
+    if (ball.speedY >= 0) {
+        currentPhase = -1;
+        targetX = canvasWidth / 2 - cpuPaddle.width / 2;
+        return targetX;
+    }
+
+    for (let i = 0; i < PHASES.length; i++) {
+        const phaseY = canvasHeight * PHASES[i];
+
+        if (ball.y <= phaseY && currentPhase < i) {
+            currentPhase = i;
+            const cleanTargetX = predictBallX(ball, cpuPaddle, canvasWidth) + ball.size / 2 - cpuPaddle.width / 2;
+            const aimError = calculateAimError(cpuPaddle, currentPhase);
+
+            targetX = cleanTargetX + aimError;
+            break;
+        }
+    }
+
+    return targetX;
 }
 
 function predictBallX(ball, cpuPaddle, canvasWidth) {
@@ -31,8 +44,15 @@ function reflectX(rawBallCenterX, ballSize, canvasWidth) {
 
     let reflectedX = (rawBallCenterX - minBallCenterX) % (playableWidth * 2);
 
-    if (reflectedX < 0) { reflectX += playableWidth * 2; }
-    if (reflectedX > playableWidth) { reflectedX = playableWidth * 2 - reflectX; }
+    if (reflectedX < 0) { reflectedX += playableWidth * 2; }
+    if (reflectedX > playableWidth) { reflectedX = playableWidth * 2 - reflectedX; }
 
     return reflectedX + minBallCenterX;
+}
+
+function calculateAimError(cpuPaddle, phaseIndex) {
+    const phaseErrorFactor = PHASES[phaseIndex];
+    const maxError = cpuPaddle.width * MAX_ERROR_FACTOR * phaseErrorFactor;
+
+    return Math.random() * maxError * 2 - maxError;
 }
