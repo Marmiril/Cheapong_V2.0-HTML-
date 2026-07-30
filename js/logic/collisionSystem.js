@@ -1,3 +1,5 @@
+const SPINT_FACTOR = 0.35;
+
 function intersects(ball, paddle) {
     return (
         ball.x < paddle.x + paddle.width &&
@@ -9,15 +11,29 @@ function intersects(ball, paddle) {
 
 export function handleWallCollision(ball, canvasWidth, canvasHeight) {
     if (ball.x <= 0) { ball.x = 0; ball.speedX *= -1; }
-    if (ball.x + ball.size >= canvasWidth) { ball.x = canvasWidth - ball.size; ball.speedX *= -1; }
+
+    if (ball.x + ball.size >= canvasWidth) {
+        ball.x = canvasWidth - ball.size;
+        ball.speedX *= -1;
+    }
 
     if (ball.y <= 0) { ball.y = 0; ball.speedY *= -1; }
-    if (ball.y + ball.size >= canvasHeight) { ball.y = canvasHeight - ball.size; ball.speedY *= -1; }
+
+    if (ball.y + ball.size >= canvasHeight) {
+        ball.y = canvasHeight - ball.size;
+        ball.speedY *= -1;
+    }
 }
 
 export function handlePlayerPaddleCollision(ball, playerPaddle) {
     const isColliding = intersects(ball, playerPaddle);
-    if (isColliding && ball.speedY > 0) { ball.y = playerPaddle.y - ball.size; ball.speedY *= -1; }
+
+    if (isColliding && ball.speedY > 0) {
+        ball.y = playerPaddle.y - ball.size;
+        ball.speedY *= -1;
+        const paddleDeltaX = playerPaddle.x - playerPaddle.prevX;
+        ball.speedX += paddleDeltaX * SPINT_FACTOR;
+    }
 }
 
 export function handleCpuPaddleCollision(ball, cpuPaddle) {

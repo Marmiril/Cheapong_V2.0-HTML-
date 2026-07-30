@@ -1,10 +1,3 @@
-Biblioteca
-/
-Cheapong
-/
-02-ITINERE.txt
-
-
 Cheapong/
 ├── index.html
 ├── README.md
@@ -31,15 +24,15 @@ Cheapong/
     ├── core/
     │   └── gameConfig.js
     │
-    ├── models/
+    ├── model/
     │   ├── Ball.js
     │   └── Paddle.js
     │
     ├── logic/
-    │   ├── ballMovementSystem.js
     │   ├── collisionSystem.js
     │   ├── aiSystem.js
     │   ├── paddleMovementSystem.js
+    │   ├── serveSystem.js
     │   └── hitEffect.js
     │
     ├── game/
@@ -49,9 +42,6 @@ Cheapong/
     │
     ├── input/
     │   └── inputState.js
-    │
-    ├── render/
-    │   └── gameRenderer.js
     │
     └── states/
         ├── appState.js
@@ -75,12 +65,54 @@ Cheapong/
 14 - ESTADOS DE RALLY Y SERVE
 15 - FUNCIONES DE SERVE PLAYER/CPU PARA MANEJO DE BALL
 16 - ACTIVAR RALLY CON SPACE
-17 - CORRECCIÓN DE LA DIRECCIÓN DEL SAQUE DEL JUGADOR
-18 - CREACIÓN DE MÓDULOS PARA APPSTATE Y GAMESTATE
-19 - EXTRACCIÓN DE INPUTSTATE A SU PROPIO MÓDULO
-20 - CREACIÓN DE LAS CLASES PADDLE Y BALL EN JS/MODELS
-21 - EXTRACCIÓN DEL MOVIMIENTO DE LA PALA A PADDLEMOVEMENTSYSTEM.JS
-22 - EXTRACCIÓN DEL MOVIMIENTO DE LA BOLA A BALLMOVEMENTSYSTEM.JS
-23 - EXTRACCIÓN DE LAS COLISIONES A COLLISIONSYSTEM.JS
-24 - CORRECCIÓN DE LA DIRECCIÓN DE COLISIÓN CON LA PALA DEL JUGADOR
-25 - INICIO DE LA EXTRACCIÓN DEL RENDERIZADO A GAMERENDERER.JS
+17 - INICIO DEL JUEGO EN SERVE_PLAYER
+     MAIN_MENU → SPACE → IN_GAME / SERVE_PLAYER
+     Se añadió return al cambio de estado para evitar que el mismo SPACE lance la bola.
+18 - INPUT ARROWUP
+     inputState incorpora up.
+     keydown y keyup actualizan ArrowUp.
+19 - SAQUE DIRIGIDO DEL JUGADOR
+     La velocidad vertical del saque se mantiene constante.
+     UP + LEFT aplica velocidad horizontal negativa.
+     UP + RIGHT aplica velocidad horizontal positiva.
+     Mientras UP está pulsada, la pala registra LEFT/RIGHT pero no se desplaza.
+20 - VELOCIDAD BASE COMÚN DE LA BOLA
+     La velocidad de saque deja de depender exclusivamente de launchPlayerServe().
+     PLAYER y CPU utilizan la misma velocidad base y distinta dirección vertical.
+21 - POSICIÓN ANTERIOR DE LAS PALAS
+     Paddle incorpora prevX.
+     paddleMovementSystem actualiza prevX antes de mover cada pala.
+22 - EFECTO POR DESPLAZAMIENTO DE LA PALA
+     collisionSystem calcula paddleDeltaX = paddle.x - paddle.prevX.
+     El desplazamiento horizontal de la pala modifica speedX al golpear la bola.
+     SPIN_FACTOR actual: 0.35.
+23 - RESOLUCIÓN INTERNA DEL CANVAS
+     El canvas se define con width="800" y height="600".
+     El CSS mantiene la adaptación visual con proporción 4 / 3.
+     Corregido el desenfoque causado por ampliar la resolución predeterminada 300 × 150.
+24 - PREDICCIÓN BÁSICA DE LA IA
+     aiSystem calcula la posición X aproximada a la que llegará la bola.
+     calculateCpuTargetX() devuelve el destino horizontal de la pala CPU.
+     La predicción todavía no contempla los rebotes laterales.
+25 - SEPARACIÓN ENTRE IA Y MOVIMIENTO CPU
+     aiSystem decide la posición objetivo.
+     paddleMovementSystem mueve la pala CPU hacia el objetivo y aplica los límites.
+     main.js coordina calculateCpuTargetX() y updateCpuPaddle() durante RALLY.
+26 - LÍMITES DE LA PALA CPU
+     La posición queda limitada entre 0 y canvasWidth - cpuPaddle.width.
+     Corregido el error que convertía cpuPaddle en NaN al moverlo hacia la izquierda.
+
+
+ESTADO ACTUAL
+
+- El menú entra correctamente en SERVE_PLAYER.
+- El jugador puede orientar el saque con UP + LEFT/RIGHT.
+- La pelota recibe efecto horizontal según el desplazamiento de la pala del jugador.
+- Las palas y la pelota se renderizan con nitidez a 800 × 600.
+- La CPU se mueve hacia una posición prevista y respeta los límites del canvas.
+- La velocidad actual de las palas se define al crear cada Paddle en main.js.
+
+
+SIGUIENTE PUNTO
+
+27 - AMPLIAR LA PREDICCIÓN DE LA IA PARA CONTEMPLAR REBOTES LATERALES.

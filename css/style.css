@@ -31,7 +31,7 @@ body {
 }
 
 #gameCanvas {
-    width: min(90vw, calc(75vh * 1.3333), 50rem);
+    width: min(90vw, calc(75vh * 1.3333), 70rem);
     aspect-ratio: 4 / 3;
     height: auto;
     background-color: black;

@@ -22,7 +22,7 @@ import { Paddle } from "./models/Paddle.js";
 import { Ball } from "./models/Ball.js";
 
 // Player paddle movement
-import { updatePlayerPaddle } from "./logic/paddleMovementSystem.js";
+import { updatePlayerPaddle, updateCpuPaddle } from "./logic/paddleMovementSystem.js";
 
 // Ball movement
 import { updateBall } from "./logic/ballMovementSystem.js";
@@ -37,7 +37,7 @@ import { drawPaddle, drawBall, clearCanvas, drawCenteredText, renderMainMenu } f
 import { updateServe, launchPlayerServe } from "./logic/serveSystem.js";
 
 // AI movement
-import { updateCpuPadddle } from "./logic/aiSystem.js";
+import { calculateCpuTargetX } from "./logic/aiSystem.js";
 
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -55,21 +55,21 @@ const canvasHeight = canvas.height;
 
 // Player paddle
 const playerPaddle = new Paddle(
-    (canvasWidth - 120) / 2,
-    canvasHeight - 15 - 20,
-    120,
-    15,
-    5
+    (canvasWidth - 80) / 2,
+    canvasHeight - 10 - 20,
+    80,
+    10,
+    7
 );
 
 // CPU paddle
 const cpuPaddle = new Paddle(
-    (canvasWidth - 120) / 2,
+    (canvasWidth - 80) / 2,
     20,
-    120,
-    15,
-    5
-);
+    80,
+    10,
+    7
+)
 
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
@@ -83,9 +83,9 @@ let gameState = GameState.SERVE_PLAYER;
 
 // Ball
 const ball = new Ball(
-    (canvasWidth - 20) / 2,
-    (canvasHeight - 20) / 2,
-    20,
+    (canvasWidth - 12) / 2,
+    (canvasHeight - 12) / 2,
+    15,
     3,
     3
 );
@@ -95,17 +95,23 @@ const ball = new Ball(
  */
 
 window.addEventListener("keydown", (event) => {
-    if (event.code === "Space" && appState === AppState.MAIN_MENU) { appState = AppState.IN_GAME; render(); }
-    if (event.code === "Space" && appState === AppState.IN_GAME && gameState === GameState.SERVE_PLAYER) { gameState = launchPlayerServe(ball); }
+    if (event.code === "Space" && appState === AppState.MAIN_MENU) {
+        appState = AppState.IN_GAME;
+        gameState = GameState.SERVE_PLAYER;
+        return;
+    }
+    if (event.code === "Space" && appState === AppState.IN_GAME && gameState === GameState.SERVE_PLAYER) { gameState = launchPlayerServe(ball, inputState); }
 
     if (event.code === "ArrowLeft") { inputState.left = true; }
     if (event.code === "ArrowRight") { inputState.right = true; }
+    if (event.code === "ArrowUp") { inputState.up = true; }
 });
 
 window.addEventListener("keyup", (event) => {
     if (event.code === "ArrowLeft") { inputState.left = false; }
     if (event.code === "ArrowRight") { inputState.right = false; }
-})
+    if (event.code === "ArrowUp") { inputState.up = false; }
+});
 
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +135,9 @@ function updateGame() {
     if (gameState === GameState.SERVE_CPU) { updateServe(ball, cpuPaddle, gameState); }
 
     if (gameState === GameState.RALLY) {
-        updateCpuPadddle(cpuPaddle, ball);
+        const cpuTargetX = calculateCpuTargetX(cpuPaddle, ball);
+
+        updateCpuPaddle(cpuPaddle, cpuTargetX, canvasWidth);
         updateBall(ball);
         handleWallCollision(ball, canvasWidth, canvasHeight);
         handlePlayerPaddleCollision(ball, playerPaddle);
