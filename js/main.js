@@ -105,12 +105,14 @@ window.addEventListener("keydown", (event) => {
     if (event.code === "ArrowLeft") { inputState.left = true; }
     if (event.code === "ArrowRight") { inputState.right = true; }
     if (event.code === "ArrowUp") { inputState.up = true; }
+    if (event.code === "ArrowDown") { inputState.down = true; }
 });
 
 window.addEventListener("keyup", (event) => {
     if (event.code === "ArrowLeft") { inputState.left = false; }
     if (event.code === "ArrowRight") { inputState.right = false; }
     if (event.code === "ArrowUp") { inputState.up = false; }
+    if (event.code === "ArrowDown") { inputState.down = false; }
 });
 
 
@@ -140,7 +142,7 @@ function updateGame() {
         updateCpuPaddle(cpuPaddle, cpuTargetX, canvasWidth);
         updateBall(ball);
         handleWallCollision(ball, canvasWidth, canvasHeight);
-        handlePlayerPaddleCollision(ball, playerPaddle);
+        handlePlayerPaddleCollision(ball, playerPaddle, inputState);
         handleCpuPaddleCollision(ball, cpuPaddle);
     }
 }

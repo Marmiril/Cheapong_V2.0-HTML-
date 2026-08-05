@@ -1,7 +1,9 @@
 export function updatePlayerPaddle(paddle, inputState, canvasWidth) {
     paddle.prevX = paddle.x;
 
-    if (inputState.up) { return; }
+    const isApplingSpin = inputState.down && (inputState.left || inputState.right);
+
+    if (inputState.up || isApplingSpin) { return; }
 
     if (inputState.left) paddle.x -= paddle.speed;
     if (inputState.right) paddle.x += paddle.speed;

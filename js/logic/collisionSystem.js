@@ -1,4 +1,5 @@
-const SPINT_FACTOR = 0.35;
+const SPIN_FACTOR = 0.35;
+const INPUT_SPIN_BONUS = 2.2;
 
 function intersects(ball, paddle) {
     return (
@@ -25,14 +26,23 @@ export function handleWallCollision(ball, canvasWidth, canvasHeight) {
     }
 }
 
-export function handlePlayerPaddleCollision(ball, playerPaddle) {
+export function handlePlayerPaddleCollision(ball, playerPaddle, inputState) {
     const isColliding = intersects(ball, playerPaddle);
 
     if (isColliding && ball.speedY > 0) {
+        const incomingSpeedX = ball.speedX;
+        const paddleDeltaX = playerPaddle.x - playerPaddle.prevX;
+
         ball.y = playerPaddle.y - ball.size;
         ball.speedY *= -1;
-        const paddleDeltaX = playerPaddle.x - playerPaddle.prevX;
-        ball.speedX += paddleDeltaX * SPINT_FACTOR;
+
+        if (inputState.up) { ball.speedX = 0; return; }
+        if (inputState.down) {
+            ball.speedX = -incomingSpeedX;
+            if (inputState.left) { ball.speedX -= INPUT_SPIN_BONUS; }
+            if (inputState.right) { ball.speedX += INPUT_SPIN_BONUS; }
+        }
+        ball.speedX += paddleDeltaX * SPIN_FACTOR;
     }
 }
 
