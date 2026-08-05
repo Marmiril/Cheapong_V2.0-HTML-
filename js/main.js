@@ -86,9 +86,13 @@ const ball = new Ball(
     (canvasWidth - 12) / 2,
     (canvasHeight - 12) / 2,
     15,
-    3,
-    3
+    5,
+    5
 );
+
+// Normalize ballSpeed
+const BALL_SPEED = Math.sqrt(ball.speedX ** 2 + ball.speedY ** 2);
+
 
 /**
  * Renders the initial main menu.
@@ -142,8 +146,8 @@ function updateGame() {
         updateCpuPaddle(cpuPaddle, cpuTargetX, canvasWidth);
         updateBall(ball);
         handleWallCollision(ball, canvasWidth, canvasHeight);
-        handlePlayerPaddleCollision(ball, playerPaddle, inputState);
-        handleCpuPaddleCollision(ball, cpuPaddle);
+        handlePlayerPaddleCollision(ball, playerPaddle, inputState, BALL_SPEED);
+        handleCpuPaddleCollision(ball, cpuPaddle, BALL_SPEED);
     }
 }
 

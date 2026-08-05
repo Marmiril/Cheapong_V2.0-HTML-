@@ -1,3 +1,5 @@
+import { normalizeBallSpeed } from "./ballMovementSystem.js";
+
 const SPIN_FACTOR = 0.35;
 const INPUT_SPIN_BONUS = 2.2;
 
@@ -26,7 +28,7 @@ export function handleWallCollision(ball, canvasWidth, canvasHeight) {
     }
 }
 
-export function handlePlayerPaddleCollision(ball, playerPaddle, inputState) {
+export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ballSpeed) {
     const isColliding = intersects(ball, playerPaddle);
 
     if (isColliding && ball.speedY > 0) {
@@ -43,10 +45,12 @@ export function handlePlayerPaddleCollision(ball, playerPaddle, inputState) {
             if (inputState.right) { ball.speedX += INPUT_SPIN_BONUS; }
         }
         ball.speedX += paddleDeltaX * SPIN_FACTOR;
+        normalizeBallSpeed(ball, ballSpeed);
     }
 }
 
-export function handleCpuPaddleCollision(ball, cpuPaddle) {
+export function handleCpuPaddleCollision(ball, cpuPaddle, ballSpeed) {
     const isColliding = intersects(ball, cpuPaddle);
     if (isColliding && ball.speedY < 0) { ball.y = cpuPaddle.y + cpuPaddle.height; ball.speedY *= -1; }
+    normalizeBallSpeed(ball, ballSpeed);
 }
