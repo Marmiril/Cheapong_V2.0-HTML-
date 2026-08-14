@@ -3,7 +3,7 @@ export function updatePlayerPaddle(paddle, inputState, canvasWidth) {
 
     const isApplingSpin = inputState.down && (inputState.left || inputState.right);
 
-    if (inputState.up || isApplingSpin) { return; }
+    if (isApplingSpin) { return; }
 
     if (inputState.left) paddle.x -= paddle.speed;
     if (inputState.right) paddle.x += paddle.speed;
