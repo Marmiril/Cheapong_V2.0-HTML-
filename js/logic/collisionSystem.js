@@ -33,8 +33,22 @@ export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ball
 
     if (!isColliding || ball.speedY <= 0) { return; }
 
-    ball.y = playerPaddle.y - ball.size;
-    ball.speedY *= -1;
+    const overlapsX =
+        ball.x < playerPaddle.x + playerPaddle.width &&
+        ball.x + ball.size > playerPaddle.x;
+
+    const wasAbove = ball.prevY + ball.size >= playerPaddle.y;
+
+    const crossEdgeTop = ball.y + ball.size >= playerPaddle.y;
+
+    if (overlapsX &&
+        wasAbove &&
+        crossEdgeTop &&
+        ball.speedY > 0
+    ) {
+        ball.y = playerPaddle.y - ball.size;
+        ball.speedY *= -1;
+    }
 
     applyPlayerSpin(ball, inputState, ballSpeed);
 

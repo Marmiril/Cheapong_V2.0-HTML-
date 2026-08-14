@@ -1,4 +1,6 @@
 export function updateBall(ball) {
+    ball.savePreviousPosition();
+
     ball.x += ball.speedX;
     ball.y += ball.speedY;
 }
