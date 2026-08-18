@@ -50,7 +50,7 @@ export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ball
         ball.speedY *= -1;
     }
 
-    applyPlayerSpin(ball, inputState, ballSpeed);
+    applyPlayerSpin(ball, playerPaddle, inputState, ballSpeed);
 
     /*
     if (isColliding && ball.speedY > 0) {
@@ -72,12 +72,15 @@ export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ball
     */
 }
 
-function applyPlayerSpin(ball, inputState, ballSpeed) {
+function applyPlayerSpin(ball, playerPaddle, inputState, ballSpeed) {
+    const paddleDeltaX = playerPaddle.x - playerPaddle.prevX;
+    const movementSpin = paddleDeltaX * SPIN_FACTOR;
+
     if (inputState.down && inputState.right) { ball.speedX += INPUT_SPIN_BONUS; }
     else if (inputState.down && inputState.left) { ball.speedX -= INPUT_SPIN_BONUS; }
     else if (inputState.down) { ball.speedX *= -1; }
     else if (inputState.up) { ball.speedX = 0; }
-    else { ball.speedX += paddleDeltaX * SPIN_FACTOR; }
+    else { ball.speedX += movementSpin; }
 
     normalizeBallSpeed(ball, ballSpeed);
 }

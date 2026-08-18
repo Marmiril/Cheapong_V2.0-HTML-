@@ -1,6 +1,14 @@
+CHEAPONG - ITINERARIO DE DESARROLLO WEB
+
+
+ESTRUCTURA DEL PROYECTO
+
 Cheapong/
 ├── index.html
 ├── README.md
+├── ITINERE.txt
+├── FRONT.md
+├── FRONT.pdf
 │
 ├── assets/
 │   ├── img/
@@ -24,95 +32,143 @@ Cheapong/
     ├── core/
     │   └── gameConfig.js
     │
-    ├── model/
+    ├── models/
     │   ├── Ball.js
     │   └── Paddle.js
     │
     ├── logic/
-    │   ├── collisionSystem.js
     │   ├── aiSystem.js
+    │   ├── ballMovementSystem.js
+    │   ├── collisionSystem.js
+    │   ├── hitEffect.js
     │   ├── paddleMovementSystem.js
-    │   ├── serveSystem.js
-    │   └── hitEffect.js
+    │   └── serveSystem.js
     │
     ├── game/
     │   ├── scoreSystem.js
-    │   ├── speedProgressionSystem.js
-    │   └── soundSystem.js
+    │   ├── soundSystem.js
+    │   └── speedProgressionSystem.js
     │
     ├── input/
     │   └── inputState.js
+    │
+    ├── render/
+    │   └── gameRenderer.js
     │
     └── states/
         ├── appState.js
         └── gameState.js
 
 
+ITINERARIO
 
-1º- CREACIÓN DE CARPETAS.
-2 - INDEX.HTML
-3 - CSS BÁSICO
-4 - MAIN.JS - FUNCIONES BÁSICAS DE RENDER
-5 - ESTADO BÁSICO DEL JUEGO -- MAIN_MENU → pulsar SPACE → IN_GAME
-6 - PRIMEROS ELEMENTOS VISUALES - BALL / PADDLE (PLAYER & CPU)
-7 - FUNCIONES DE DIBUJADO DE LOS ELEMENTOS VISUALES
-8 - ESTADOS DE INPUT Y LISTENER PARA KEYUP Y KEYDOWN
-9 - REQUESTANIMATIONFRAME();
-10 - BORDES
-11 - MOVIMIENTO DE BOLA
-12 - COLISIÓN BOLA - PALA JUGADOR
-13 - DETECCIÓN DE PUNTOS
-14 - ESTADOS DE RALLY Y SERVE
-15 - FUNCIONES DE SERVE PLAYER/CPU PARA MANEJO DE BALL
-16 - ACTIVAR RALLY CON SPACE
-17 - INICIO DEL JUEGO EN SERVE_PLAYER
-     MAIN_MENU → SPACE → IN_GAME / SERVE_PLAYER
+1 - CREACIÓN DE CARPETAS.
+2 - INDEX.HTML.
+3 - CSS BÁSICO.
+4 - MAIN.JS - FUNCIONES BÁSICAS DE RENDER.
+5 - ESTADO BÁSICO DEL JUEGO: MAIN_MENU → SPACE → IN_GAME.
+6 - PRIMEROS ELEMENTOS VISUALES: BALL / PADDLE (PLAYER & CPU).
+7 - FUNCIONES DE DIBUJADO DE LOS ELEMENTOS VISUALES.
+8 - ESTADOS DE INPUT Y LISTENERS PARA KEYUP Y KEYDOWN.
+9 - REQUESTANIMATIONFRAME().
+10 - BORDES.
+11 - MOVIMIENTO DE BOLA.
+12 - COLISIÓN BOLA - PALA JUGADOR.
+13 - DETECCIÓN DE PUNTOS.
+14 - ESTADOS DE RALLY Y SERVE.
+15 - FUNCIONES DE SERVE PLAYER/CPU PARA MANEJO DE BALL.
+16 - ACTIVAR RALLY CON SPACE.
+17 - INICIO DEL JUEGO EN SERVE_PLAYER.
+     MAIN_MENU → SPACE → IN_GAME / SERVE_PLAYER.
      Se añadió return al cambio de estado para evitar que el mismo SPACE lance la bola.
-18 - INPUT ARROWUP
+18 - INPUT ARROWUP.
      inputState incorpora up.
      keydown y keyup actualizan ArrowUp.
-19 - SAQUE DIRIGIDO DEL JUGADOR
+19 - SAQUE DIRIGIDO DEL JUGADOR.
      La velocidad vertical del saque se mantiene constante.
      UP + LEFT aplica velocidad horizontal negativa.
      UP + RIGHT aplica velocidad horizontal positiva.
-     Mientras UP está pulsada, la pala registra LEFT/RIGHT pero no se desplaza.
-20 - VELOCIDAD BASE COMÚN DE LA BOLA
-     La velocidad de saque deja de depender exclusivamente de launchPlayerServe().
+20 - VELOCIDAD BASE COMÚN DE LA BOLA.
      PLAYER y CPU utilizan la misma velocidad base y distinta dirección vertical.
-21 - POSICIÓN ANTERIOR DE LAS PALAS
+21 - POSICIÓN ANTERIOR DE LAS PALAS.
      Paddle incorpora prevX.
      paddleMovementSystem actualiza prevX antes de mover cada pala.
-22 - EFECTO POR DESPLAZAMIENTO DE LA PALA
+22 - EFECTO POR DESPLAZAMIENTO DE LA PALA.
      collisionSystem calcula paddleDeltaX = paddle.x - paddle.prevX.
      El desplazamiento horizontal de la pala modifica speedX al golpear la bola.
      SPIN_FACTOR actual: 0.35.
-23 - RESOLUCIÓN INTERNA DEL CANVAS
+23 - RESOLUCIÓN INTERNA DEL CANVAS.
      El canvas se define con width="800" y height="600".
      El CSS mantiene la adaptación visual con proporción 4 / 3.
      Corregido el desenfoque causado por ampliar la resolución predeterminada 300 × 150.
-24 - PREDICCIÓN BÁSICA DE LA IA
+24 - PREDICCIÓN BÁSICA DE LA IA.
      aiSystem calcula la posición X aproximada a la que llegará la bola.
      calculateCpuTargetX() devuelve el destino horizontal de la pala CPU.
-     La predicción todavía no contempla los rebotes laterales.
-25 - SEPARACIÓN ENTRE IA Y MOVIMIENTO CPU
+25 - SEPARACIÓN ENTRE IA Y MOVIMIENTO CPU.
      aiSystem decide la posición objetivo.
      paddleMovementSystem mueve la pala CPU hacia el objetivo y aplica los límites.
      main.js coordina calculateCpuTargetX() y updateCpuPaddle() durante RALLY.
-26 - LÍMITES DE LA PALA CPU
+26 - LÍMITES DE LA PALA CPU.
      La posición queda limitada entre 0 y canvasWidth - cpuPaddle.width.
      Corregido el error que convertía cpuPaddle en NaN al moverlo hacia la izquierda.
+27 - PREDICCIÓN DE REBOTES LATERALES.
+     predictBallX() calcula el recorrido horizontal futuro de la bola.
+     reflectX() refleja la predicción cuando la trayectoria cruza los laterales.
+28 - FASES DE DECISIÓN DE LA CPU.
+     PHASES = [0.90, 0.75, 0.50, 0.25, 0.10].
+     currentPhase evita recalcular el objetivo en cada fotograma.
+29 - ERROR Y DRIFT DE LA CPU.
+     calculateAimError() añade un error de puntería controlado.
+     calculateDrift() evita que el movimiento y los impactos sean perfectos.
+30 - INPUT ARROWDOWN Y EFECTOS ESPECIALES DEL JUGADOR.
+     inputState incorpora down.
+     DOWN invierte la dirección horizontal de la bola.
+     DOWN + LEFT aplica bonus hacia la izquierda.
+     DOWN + RIGHT aplica bonus hacia la derecha.
+     UP produce una devolución vertical con speedX = 0.
+     DOWN + dirección bloquea el desplazamiento de la pala mientras se prepara el efecto.
+31 - NORMALIZACIÓN DE LA VELOCIDAD DE LA BOLA.
+     BALL_SPEED representa la magnitud total del vector de velocidad.
+     BALL_SPEED = Math.sqrt(ball.speedX ** 2 + ball.speedY ** 2).
+     normalizeBallSpeed() conserva la velocidad total después de modificar el ángulo.
+     La normalización se ejecuta únicamente cuando ocurre una colisión.
+32 - POSICIÓN ANTERIOR DE LA BOLA.
+     Ball incorpora prevX y prevY.
+     savePreviousPosition() guarda la posición antes de cada movimiento.
+     updateBall() actualiza la posición anterior antes de cambiar x e y.
+33 - COLISIÓN VERTICAL PRECISA CON LA PALA DEL JUGADOR.
+     Se comprueba que la bola estuviera encima de la pala en el fotograma anterior.
+     Se comprueba que la bola haya cruzado la superficie superior en el fotograma actual.
+     Un simple solapamiento lateral ya no debe interpretarse como rebote vertical.
+34 - SEPARACIÓN DE LOS EFECTOS DEL JUGADOR.
+     SPIN_FACTOR controla el efecto natural producido por el desplazamiento de la pala.
+     INPUT_SPIN_BONUS controla los efectos especiales activados mediante teclado.
+     applyPlayerSpin() aplica un único efecto y normaliza después el vector de velocidad.
+35 - TIPOS DE EFECTO PARA LA CPU.
+     hitEffect.js define NONE, UP, DOWN, BREAK_LEFT y BREAK_RIGHT.
+     La estructura toma como referencia HitEffect.java de la primera versión.
 
 
 ESTADO ACTUAL
 
 - El menú entra correctamente en SERVE_PLAYER.
-- El jugador puede orientar el saque con UP + LEFT/RIGHT.
-- La pelota recibe efecto horizontal según el desplazamiento de la pala del jugador.
-- Las palas y la pelota se renderizan con nitidez a 800 × 600.
-- La CPU se mueve hacia una posición prevista y respeta los límites del canvas.
-- La velocidad actual de las palas se define al crear cada Paddle en main.js.
+- El jugador puede orientar el saque.
+- La bola y las palas se renderizan con nitidez a 800 × 600.
+- La CPU predice la llegada de la bola teniendo en cuenta rebotes laterales.
+- La CPU recalcula por fases y añade error y drift para no ser perfecta.
+- El jugador dispone de efecto natural por movimiento y efectos especiales mediante teclado.
+- La velocidad total de la bola se normaliza después de los impactos.
+- La bola conserva prevX y prevY para mejorar la precisión de las colisiones.
+- La colisión superior con la pala del jugador utiliza la posición anterior de la bola.
+- Los tipos de respuesta de la CPU ya están definidos en hitEffect.js.
+- El sistema de puntuación todavía no está cerrado: handleScore() no está integrado y los límites superior e inferior aún rebotan.
 
 
 SIGUIENTE PUNTO
 
-27 - AMPLIAR LA PREDICCIÓN DE LA IA PARA CONTEMPLAR REBOTES LATERALES.
+36 - ELECCIÓN INTELIGENTE DEL EFECTO DE LA CPU.
+     Portar desde AISystem.java la evaluación de NONE, UP y DOWN.
+     Predecir dónde llegará cada respuesta a la pala del jugador.
+     Elegir el efecto que obligue al jugador a recorrer una mayor distancia.
+     Reservar BREAK_LEFT y BREAK_RIGHT para romper trayectorias verticales.
+     Aplicar el efecto elegido desde la colisión de la pala CPU.

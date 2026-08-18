@@ -1,6 +1,18 @@
+import { HitEffect } from "./hitEffect.js";
+
 // Defines the moments when the CPU recalculates its target.
 // Higher values happen earlier while the ball is still far from the CPU.
 const PHASES = [0.90, 0.75, 0.50, 0.25, 0.10];
+
+// Effects for Ai response
+const NORMAL_EFFECTS = [
+    HitEffect.NONE,
+    HitEffect.UP,
+    HitEffect.DOWN
+];
+
+// Horizontal speed applied by the CPU to break a vertical ball trajectory.
+const CPU_BREAK_BONUS = 2.2;
 
 // Stores the last phase already processed.
 // Prevents the CPU from recalculating the target every frame.
@@ -107,4 +119,81 @@ function calculateAimError(cpuPaddle, phaseIndex) {
 function calculateDrift(cpuPaddle) {
     // Returns a small random side offset based on paddle width.
     return (Math.random() * 2 - 1) * cpuPaddle.width * MAX_DRIFT;
+}
+
+function getCandidateSpeedX(ball, effect) {
+    switch (effect) {
+        case HitEffect.NONE:
+            return ball.speedX;
+        case HitEffect.UP:
+            return -ball.speedX;
+        case HitEffect.BREAK_LEFT:
+            return -CPU_BREAK_BONUS;
+        case HitEffect.BREAK_RIGHT:
+            return CPU_BREAK_BONUS;
+        default:
+            return ball.speedX;
+    }
+}
+
+export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth) {
+
+    const playerCenterX = playerPaddle.x + playerPaddle.width / 2;
+    const ballCenterX = ball.x + ball.size / 2;
+    const ballCenterY = ball.y + ball.size / 2;
+
+    const playerRight = playerPaddle.x + playerPaddle.Width;
+    const ballRight = ball.x + ball.size;
+
+    // With speed = 0, the ball would follow this same horizontal track.
+    const isInsidePlayerTrack =
+        ballRight > playerPaddle.x &&
+        ball.x < playerRight;
+
+    if (ball.speedX === 0 && isInsidePlayerTrack) {
+        if (ballCenterX < canvasWidth / 2) { return HitEffect.BREAK_RIGHT; }
+        if (ballCenterX > canvasWidth / 2) { return HitEffect.BREAK_LEFT; }
+
+        return Math.random() < 0.5
+            ? HitEffect.BREAK_LEFT
+            : HitEffect.BREAK_RIGHT;
+    }
+
+    let bestEffet = HitEffect.NONE;
+    let longestReactionTime = -1;
+
+    for (const effect of NORMAL_EFFECTS) {
+        // Simulates the horizontal speed produced by this effect.
+        const candidateSpeedX = getCandidateSpeedX(ball, effect);
+
+        // After the CPU hit, the ball moves down towards the player.
+        const candidateSpeedY = Math.abs(ball.speedY);
+
+        if (candidateSpeedY === 0) { continue; }
+
+        // Calculates how long the ball needs to reach the player paddle.
+        const timeToPlayer = (playerPaddle.y - ballCenterY) / candidateSpeedY;
+
+        if (timeToPlayer <= 0) { continue; }
+
+        // Predicts the horizontal landing position
+        const rawPredictedCenterX = ballCenterX + candidateSpeedX * timeToPlayer;
+
+        const predicetdCenterX = reflectX(
+            rawPredictedCenterX,
+            ball.size,
+            canvasWidth
+        );
+
+        // Measures how far the player would need to move.
+        const distanceToTravel = Math.abs(predicetdCenterX - playerCenterX);
+        const reactionTime = distanceToTravel / playerPaddle.speed;
+
+        // Keeps the response that is hardest for the player to reach
+        if (reactionTime > longestReactionTime) {
+            longestReactionTime = reactionTime;
+            bestEffet = effect;
+        }
+    }
+    return bestEffet;
 }
