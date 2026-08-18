@@ -40,7 +40,7 @@ export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ball
         ball.x < playerPaddle.x + playerPaddle.width &&
         ball.x + ball.size > playerPaddle.x;
 
-    const wasAbove = ball.prevY + ball.size >= playerPaddle.y;
+    const wasAbove = ball.prevY + ball.size <= playerPaddle.y;
 
     const crossEdgeTop = ball.y + ball.size >= playerPaddle.y;
 
@@ -51,9 +51,10 @@ export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ball
     ) {
         ball.y = playerPaddle.y - ball.size;
         ball.speedY *= -1;
+        applyPlayerSpin(ball, playerPaddle, inputState, ballSpeed);
     }
 
-    applyPlayerSpin(ball, playerPaddle, inputState, ballSpeed);
+
 
     /*
     if (isColliding && ball.speedY > 0) {
@@ -117,7 +118,7 @@ function applyCpuEffect(ball, cpuPaddle, effect, ballSpeed) {
     const movementSpin = paddleDeltaX * SPIN_FACTOR;
 
     // Applies the natural spin produced by the CPU paddle movement.
-    ball.speeedX += movementSpin;
+    ball.speedX += movementSpin;
 
     switch (effect) {
         case HitEffect.NONE:
@@ -126,7 +127,7 @@ function applyCpuEffect(ball, cpuPaddle, effect, ballSpeed) {
             ball.speedX = 0;
             break;
         case HitEffect.DOWN:
-            ball.speedX = -1;
+            ball.speedX *= -1;
             break;
         case HitEffect.BREAK_LEFT:
             ball.speedX -= CPU_BREAK_BONUS;
