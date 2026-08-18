@@ -1,3 +1,10 @@
+ioteca
+/
+Cheapong
+/
+14-ITINERE.txt
+
+
 CHEAPONG - ITINERARIO DE DESARROLLO WEB
 
 
@@ -147,6 +154,24 @@ ITINERARIO
 35 - TIPOS DE EFECTO PARA LA CPU.
      hitEffect.js define NONE, UP, DOWN, BREAK_LEFT y BREAK_RIGHT.
      La estructura toma como referencia HitEffect.java de la primera versión.
+36 - ELECCIÓN INTELIGENTE DEL EFECTO DE LA CPU.
+     calculateCpuHitEffect() evalúa NONE, UP y DOWN.
+     getCandidateSpeedX() simula la velocidad horizontal de cada respuesta.
+     La CPU predice dónde llegará la bola después de cada posible efecto.
+     Se elige el efecto que obliga al jugador a recorrer una mayor distancia.
+     BREAK_LEFT y BREAK_RIGHT rompen las trayectorias completamente verticales.
+37 - APLICACIÓN DE LOS EFECTOS DE LA CPU.
+     collisionSystem llama a calculateCpuHitEffect() cuando la bola golpea la pala CPU.
+     applyCpuEffect() aplica el efecto elegido sobre speedX.
+     El desplazamiento de la pala CPU añade efecto natural mediante SPIN_FACTOR.
+     normalizeBallSpeed() conserva la velocidad total después de aplicar el efecto.
+     main.js pasa playerPaddle y canvasWidth al sistema de colisión CPU.
+38 - CORRECCIONES DE INTEGRACIÓN DE LOS EFECTOS.
+     Corregidos los nombres de playerPaddle y speedX.
+     UP establece speedX = 0.
+     DOWN invierte speedX.
+     Corregido el operador usado para comprobar que la bola venía desde encima de la pala del jugador.
+     applyPlayerSpin() se ejecuta únicamente después de confirmar el rebote.
 
 
 ESTADO ACTUAL
@@ -161,14 +186,15 @@ ESTADO ACTUAL
 - La bola conserva prevX y prevY para mejorar la precisión de las colisiones.
 - La colisión superior con la pala del jugador utiliza la posición anterior de la bola.
 - Los tipos de respuesta de la CPU ya están definidos en hitEffect.js.
+- La CPU compara varias respuestas y selecciona la más difícil para el jugador.
+- La colisión con la pala CPU aplica el efecto seleccionado y normaliza la velocidad.
 - El sistema de puntuación todavía no está cerrado: handleScore() no está integrado y los límites superior e inferior aún rebotan.
 
 
 SIGUIENTE PUNTO
 
-36 - ELECCIÓN INTELIGENTE DEL EFECTO DE LA CPU.
-     Portar desde AISystem.java la evaluación de NONE, UP y DOWN.
-     Predecir dónde llegará cada respuesta a la pala del jugador.
-     Elegir el efecto que obligue al jugador a recorrer una mayor distancia.
-     Reservar BREAK_LEFT y BREAK_RIGHT para romper trayectorias verticales.
-     Aplicar el efecto elegido desde la colisión de la pala CPU.
+39 - PROBAR Y AJUSTAR LOS EFECTOS DE LA CPU.
+     Comprobar visualmente NONE, UP, DOWN, BREAK_LEFT y BREAK_RIGHT.
+     Verificar que cada efecto modifica la trayectoria esperada.
+     Ajustar CPU_BREAK_BONUS si el cambio horizontal resulta demasiado débil o excesivo.
+     Confirmar que ningún error detiene el game loop durante RALLY.
