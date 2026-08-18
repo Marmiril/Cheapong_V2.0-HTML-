@@ -1,6 +1,8 @@
 import { normalizeBallSpeed } from "./ballMovementSystem.js";
 import { HitEffect } from "./hitEffect.js";
-import { calculateCpuHitEffect } from "./aiSystem.js";
+import { calculateCpuHitEffect,
+         NORMAL_EFFECTS
+ } from "./aiSystem.js";
 
 const SPIN_FACTOR = 0.35;
 const INPUT_SPIN_BONUS = 2.2;
@@ -23,12 +25,14 @@ export function handleWallCollision(ball, canvasWidth, canvasHeight) {
         ball.speedX *= -1;
     }
 
+    /*
     if (ball.y <= 0) { ball.y = 0; ball.speedY *= -1; }
 
     if (ball.y + ball.size >= canvasHeight) {
         ball.y = canvasHeight - ball.size;
         ball.speedY *= -1;
     }
+    */
 }
 
 export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ballSpeed) {
@@ -108,7 +112,7 @@ export function handleCpuPaddleCollision(
     ball.y = cpuPaddle.y + cpuPaddle.height;
     ball.speedY *= -1;
 
-    const effect = calculateCpuHitEffect(ball, playerPaddle, canvasWidth);
+    const effect = calculateCpuHitEffect(ball, playerPaddle, canvasWidth, NORMAL_EFFECTS);
 
     applyCpuEffect(ball, cpuPaddle, effect, ballSpeed);
 }

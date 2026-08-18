@@ -2,7 +2,7 @@ export class ScoreSystem {
     constructor(maxPoints = 5) {
         this.maxPoints = maxPoints;
         
-        this.playerPoints = playerPoints;3
+        this.playerPoints = playerPoints;
         this.cpuPoints = cpuPoints;
 
         this.matchEnded = false;

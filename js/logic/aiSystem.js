@@ -5,10 +5,18 @@ import { HitEffect } from "./hitEffect.js";
 const PHASES = [0.90, 0.75, 0.50, 0.25, 0.10];
 
 // Effects for Ai response
-const NORMAL_EFFECTS = [
+export const NORMAL_EFFECTS = [
     HitEffect.NONE,
     HitEffect.UP,
     HitEffect.DOWN
+];
+
+
+// Effects the CPU can compare when preparing a serve
+export const CPU_SERVE_EFFECT = [
+    HitEffect.NONE,
+    HitEffect.BREAK_LEFT,
+    HitEffect.BREAK_RIGHT
 ];
 
 // Horizontal speed applied by the CPU to break a vertical ball trajectory.
@@ -136,7 +144,13 @@ function getCandidateSpeedX(ball, effect) {
     }
 }
 
-export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth) {
+function getCpuServeTargetPositions(cpuPaddle, canvasWidth) {
+    const maxPaddleX = canvasWidth - cpuPaddle.width;
+
+    return [0, maxPaddleX / 2, maxPaddleX ]
+}
+
+export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth, avaliableEffects) {
 
     const playerCenterX = playerPaddle.x + playerPaddle.width / 2;
     const ballCenterX = ball.x + ball.size / 2;
@@ -150,6 +164,8 @@ export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth) {
         ballRight > playerPaddle.x &&
         ball.x < playerRight;
 
+    const isNormalHit = availableEffects === NORMAL_EFFECTS;
+
     if (ball.speedX === 0 && isInsidePlayerTrack) {
         if (ballCenterX < canvasWidth / 2) { return HitEffect.BREAK_RIGHT; }
         if (ballCenterX > canvasWidth / 2) { return HitEffect.BREAK_LEFT; }
@@ -162,7 +178,7 @@ export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth) {
     let bestEffet = HitEffect.NONE;
     let longestReactionTime = -1;
 
-    for (const effect of NORMAL_EFFECTS) {
+    for (const effect of avaliableEffects) {
         // Simulates the horizontal speed produced by this effect.
         const candidateSpeedX = getCandidateSpeedX(ball, effect);
 
@@ -197,3 +213,6 @@ export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth) {
     }
     return bestEffet;
 }
+
+ 
+

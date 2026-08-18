@@ -39,6 +39,9 @@ import { updateServe, launchPlayerServe } from "./logic/serveSystem.js";
 // AI movement
 import { calculateCpuTargetX } from "./logic/aiSystem.js";
 
+// ScoreSystem
+import { ScoreSystem } from "./game/scoreSystem.js";
+
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -74,10 +77,7 @@ const cpuPaddle = new Paddle(
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
 
-const score = {
-    player: 0,
-    cpu: 0
-}
+const scoreSystem = new ScoreSystem(5);
 
 let gameState = GameState.SERVE_PLAYER;
 
@@ -148,6 +148,8 @@ function updateGame() {
         handleWallCollision(ball, canvasWidth, canvasHeight);
         handlePlayerPaddleCollision(ball, playerPaddle, inputState, BALL_SPEED);
         handleCpuPaddleCollision(ball, cpuPaddle, playerPaddle, canvasWidth, BALL_SPEED);
+
+        handleScore();
     }
 }
 
@@ -181,7 +183,12 @@ function render() {
 }
 
 function handleScore() {
-    if (ball.y <= 0) { score.player++; resetBall(); }
-    if (ball.y >= canvas.height) { score.cpu++; resetBall(); }
+    if (ball.y <= 0) {
+        scoreSystem.pointPlayer();
+        gameState = GameState.SERVE_CPU; }
+
+    if (ball.y + ball.size >= canvas.height) {
+        scoreSystem.pointCpu();
+        gameState = GameState.SERVE_PLAYER; }
 }
 
