@@ -166,7 +166,8 @@ export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth, avaliable
 
     const isNormalHit = availableEffects === NORMAL_EFFECTS;
 
-    if (ball.speedX === 0 && isInsidePlayerTrack) {
+
+    if (isNormalHit && ball.speedX === 0 && isInsidePlayerTrack) {
         if (ballCenterX < canvasWidth / 2) { return HitEffect.BREAK_RIGHT; }
         if (ballCenterX > canvasWidth / 2) { return HitEffect.BREAK_LEFT; }
 
