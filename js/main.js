@@ -147,7 +147,7 @@ function updateGame() {
         updateBall(ball);
         handleWallCollision(ball, canvasWidth, canvasHeight);
         handlePlayerPaddleCollision(ball, playerPaddle, inputState, BALL_SPEED);
-        handleCpuPaddleCollision(ball, cpuPaddle, BALL_SPEED);
+        handleCpuPaddleCollision(ball, cpuPaddle, playerPaddel, canvasWidth, BALL_SPEED);
     }
 }
 

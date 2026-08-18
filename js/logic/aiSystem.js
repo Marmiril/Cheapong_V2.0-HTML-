@@ -123,9 +123,9 @@ function calculateDrift(cpuPaddle) {
 
 function getCandidateSpeedX(ball, effect) {
     switch (effect) {
-        case HitEffect.NONE:
-            return ball.speedX;
         case HitEffect.UP:
+            return 0;
+        case HitEffect.DOWN:
             return -ball.speedX;
         case HitEffect.BREAK_LEFT:
             return -CPU_BREAK_BONUS;
@@ -142,7 +142,7 @@ export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth) {
     const ballCenterX = ball.x + ball.size / 2;
     const ballCenterY = ball.y + ball.size / 2;
 
-    const playerRight = playerPaddle.x + playerPaddle.Width;
+    const playerRight = playerPaddle.x + playerPaddle.width;
     const ballRight = ball.x + ball.size;
 
     // With speed = 0, the ball would follow this same horizontal track.

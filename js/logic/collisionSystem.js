@@ -1,7 +1,10 @@
 import { normalizeBallSpeed } from "./ballMovementSystem.js";
+import { HitEffect } from "./hitEffect.js";
+import { calculateCpuHitEffect } from "./aiSystem.js";
 
 const SPIN_FACTOR = 0.35;
 const INPUT_SPIN_BONUS = 2.2;
+const CPU_BREAK_BONUS = 2.2;
 
 function intersects(ball, paddle) {
     return (
@@ -85,9 +88,53 @@ function applyPlayerSpin(ball, playerPaddle, inputState, ballSpeed) {
     normalizeBallSpeed(ball, ballSpeed);
 }
 
-export function handleCpuPaddleCollision(ball, cpuPaddle, ballSpeed) {
+export function handleCpuPaddleCollision(
+    ball,
+    cpuPaddle,
+    playerPaddle,
+    canvasWidth,
+    ballSpeed) {
+
     const isColliding = intersects(ball, cpuPaddle);
+    
+    if (!isColliding || ball.speedY >= 0) { return; }
+    
+    /*
     if (isColliding && ball.speedY < 0) { ball.y = cpuPaddle.y + cpuPaddle.height; ball.speedY *= -1; }
     normalizeBallSpeed(ball, ballSpeed);
+    */
+
+    ball.y = cpuPaddle.y + cpuPaddle.height;
+    ball.speedY *= -1;
+
+    const effect = calculateCpuHitEffect(ball, playerPaddle, canvasWidth);
+
+    applyCpuEffect(ball, cpuPaddle, effect, ballSpeed);
 }
 
+function applyCpuEffect(ball, cpuPaddle, effect, ballSpeed) {
+    const paddleDeltaX = cpuPaddle.x - cpuPaddle.prevX;
+    const movementSpin = paddleDeltaX * SPIN_FACTOR;
+
+    // Applies the natural spin produced by the CPU paddle movement.
+    ball.speeedX += movementSpin;
+
+    switch (effect) {
+        case HitEffect.NONE:
+            break;
+        case HitEffect.UP: 
+            ball.speedX = 0;
+            break;
+        case HitEffect.DOWN:
+            ball.speedX = -1;
+            break;
+        case HitEffect.BREAK_LEFT:
+            ball.speedX -= CPU_BREAK_BONUS;
+            break;
+        case HitEffect.BREAK_RIGHT:
+            ball.speedX += CPU_BREAK_BONUS;
+            break;    
+    }
+
+    normalizeBallSpeed(ball, ballSpeed);
+}
