@@ -1,4 +1,5 @@
 import { HitEffect } from "./hitEffect.js";
+import { normalizeBallSpeed } from "./ballMovementSystem.js"
 
 // Defines the moments when the CPU recalculates its target.
 // Higher values happen earlier while the ball is still far from the CPU.
@@ -13,7 +14,7 @@ export const NORMAL_EFFECTS = [
 
 
 // Effects the CPU can compare when preparing a serve
-export const CPU_SERVE_EFFECT = [
+export const CPU_SERVE_EFFECTS = [
     HitEffect.NONE,
     HitEffect.BREAK_LEFT,
     HitEffect.BREAK_RIGHT
@@ -147,7 +148,7 @@ function getCandidateSpeedX(ball, effect) {
 function getCpuServeTargetPositions(cpuPaddle, canvasWidth) {
     const maxPaddleX = canvasWidth - cpuPaddle.width;
 
-    return [0, maxPaddleX / 2, maxPaddleX ]
+    return [0, maxPaddleX / 2, maxPaddleX]
 }
 
 export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth, avaliableEffects) {
@@ -215,5 +216,100 @@ export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth, avaliable
     return bestEffet;
 }
 
- 
+function createCpuServeCandidateBall(
+    ball,
+    cpuPaddle,
+    targetX,
+    ballSpeed
+) {
+    return {
+        x: targetX + (cpuPaddle.width - ball.size) / 2,
+        y: cpuPaddle.y + cpuPaddle.height,
+        size: ball.size,
+        speedX: 0,
+        speedY: ballSpeed
+    };
+}
 
+export function calculateServePlan(
+    ball,
+    cpuPaddle,
+    playerPaddle,
+    canvasWidth,
+    ballSpeed
+) {
+    const targetPositions = getCpuServeTargetPositions(cpuPaddle, canvasWidth);
+    const playerCenterX = playerPaddle.x + playerPaddle.width / 2;
+
+    let bestPlan = {
+        targetX: targetPositions[1],
+        effect: HitEffect.NONE
+    }
+
+    let longestReactionTime = -1;
+
+    for (const targetX of targetPositions) {
+        const candidateBall = createCpuServeCandidateBall(
+            ball,
+            cpuPaddle,
+            targetX,
+            ballSpeed
+        );
+
+        const effect = calculateCpuHitEffect(
+            candidateBall,
+            playerPaddle,
+            canvasWidth,
+            CPU_SERVE_EFFECTS
+        );
+
+        /*
+        const candidateSpeedX = getCandidateSpeedX(
+            candidateBall,
+            effect
+        );
+
+        const candidateSpeedY = Math.sqrt(
+            Math.max(
+                0,
+                ballSpeed ** 2 - candidateSpeedX ** 2
+            )
+        );
+
+        if (candidateSpeedY === 0) { continue; }
+        */
+
+        candidateBall.speedX = getCandidateSpeedX(candidateBall, effect);
+
+        normalizeBallSpeed(candidateBall, ballSpeed);
+
+        const ballCenterX = candidateBall.x + candidateBall.size / 2;
+
+        const ballCenterY = candidateBall.y + candidateBall.size / 2;
+
+        const timeToPlayer = (playerPaddle.y - ballCenterY) / candidateSpeedY;
+
+        const rawPredictedCenterX = ballCenterX + candidateSpeedX * timeToPlayer;
+
+        const predictedCenterX = reflectX(
+            rawPredictedCenterX,
+            ball.size,
+            canvasWidth
+        );
+
+        const distanceToTravel = Math.abs(predictedCenterX - playerCenterX);
+
+        const reactionTime = distanceToTravel / playerPaddle.speed;
+
+        if (reactionTime > longestReactionTime) {
+            longestReactionTime = reactionTime;
+
+            bestPlan = {
+                targetX,
+                effect
+            };
+        }
+    }
+
+    return bestPlan;
+}
