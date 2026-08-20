@@ -25,6 +25,13 @@ body {
     gap: 1rem;
 }
 
+.game-layout {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1rem;
+}
+
 .cheapong-wrapper h1 {
     margin: 0;
     font-size: clamp(2rem, 6vw, 3rem);
@@ -37,4 +44,45 @@ body {
     background-color: black;
     border: 0.125rem solid white;
     display: block;
+}
+
+.score-panel,
+.setting-panel {
+    align-items: self;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.score-item,
+.setting-item {
+    width: 10rem;
+    min-height: 8rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: black;
+    border: 0.125rem solid white;
+    border-radius: 2rem;
+    text-align: center;
+}
+
+.score-item span,
+.setting-item span {
+    color: #aaa;
+    font-size: 0.8rem;
+    letter-spacing: 0.15rem;
+}
+
+.score-item strong {
+    font-size: 3rem;
+    line-height: 1;
+}
+.setting-item strong {
+    font-size: 1.5rem;
+    line-height: 1;
 }
