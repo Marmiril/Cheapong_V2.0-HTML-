@@ -57,7 +57,16 @@ export class ScoreSystem {
     getMaxMatches() { return this.maxMatches; }
 
     isMatchEnded() { return this.matchEnded; }
-    isGameEnded() { return this.currentMatch === this.maxMatches && this.matchEnded; }
+    isGameEnded() {
+        const cpuWon = this.matchEnded && this.winner === "CPU";
+
+        const playerWon =
+            this.matchEnded &&
+            this.winner === "PLAYER" &&
+            this.currentMatch === this.maxMatches;
+
+        return cpuWon || playerWon;
+    }
 
 
 

@@ -4,7 +4,7 @@ import { normalizeBallSpeed } from "./ballMovementSystem.js"
 // Defines the moments when the CPU recalculates its target.
 // Higher values happen earlier while the ball is still far from the CPU.
 const PHASES = [
-    0.90,
+    //0.90,
     //0.75,
     //0.50,
     0.25,

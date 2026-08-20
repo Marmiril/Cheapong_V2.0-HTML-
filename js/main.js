@@ -80,7 +80,7 @@ const cpuPaddle = new Paddle(
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
 
-const scoreSystem = new ScoreSystem(5, 10);
+const scoreSystem = new ScoreSystem(5, 1);
 
 let gameState = GameState.SERVE_PLAYER;
 
@@ -110,12 +110,33 @@ let cpuServeStartTime = null;
  */
 
 window.addEventListener("keydown", (event) => {
-    if (event.code === "Space" && appState === AppState.MAIN_MENU) {
+    if (event.code === "Space" &&
+        appState === AppState.MAIN_MENU
+    ) {
         appState = AppState.IN_GAME;
         gameState = GameState.SERVE_PLAYER;
         return;
     }
-    if (event.code === "Space" && appState === AppState.IN_GAME && gameState === GameState.SERVE_PLAYER) { gameState = launchPlayerServe(ball, inputState, BALL_SPEED); }
+    if (event.code === "Space" &&
+        appState === AppState.IN_GAME &&
+        gameState === GameState.SERVE_PLAYER
+    ) {
+        gameState = launchPlayerServe(ball, inputState, BALL_SPEED);
+    }
+
+    if (event.code === "Space" &&
+        appState === AppState.IN_GAME &&
+        gameState === GameState.GAME_OVER
+    ) {
+        scoreSystem.resetGame();
+        renderScore(scoreSystem);
+        resetPaddles();
+
+        gameState = GameState.SERVE_PLAYER;
+        appState = AppState.MAIN_MENU;
+
+        return;
+    }
 
     if (event.code === "ArrowLeft") { inputState.left = true; }
     if (event.code === "ArrowRight") { inputState.right = true; }
@@ -217,6 +238,21 @@ function renderGameScreen() {
     drawPaddle(ctx, cpuPaddle);
     drawBall(ctx, ball);
 
+    if (gameState === GameState.GAME_OVER) {
+
+        const message = scoreSystem.winner === "CPU"
+            ? "CPU-WINS - PLAYER CRIES - GAME OVER"
+            : "MIGHTY PLAYER WINS, GAME COMPLETED EPICFULLY!!!"
+
+        drawCenteredText(
+            ctx,
+            canvasWidth,
+            message,
+            canvas.height * 0.50,
+            32
+        );
+    }
+
     // drawCenteredText(ctx, canvasWidth, "GAME STARTED", canvasHeight * 0.40, 24);
     // drawCenteredText(ctx, canvasWidth, "Cheapong game area", canvasHeight * 0.52, 16);
 }
@@ -250,6 +286,13 @@ function handleScore() {
 
     if (ball.y + ball.size >= canvas.height) {
         scoreSystem.pointCpu();
+
+        if (scoreSystem.isGameEnded()) {
+            gameState = GameState.GAME_OVER;
+            resetPaddles();
+            return;
+        }
+
         gameState = GameState.SERVE_PLAYER;
         resetPaddles();
     }
