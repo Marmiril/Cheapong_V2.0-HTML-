@@ -25,7 +25,10 @@ import { Ball } from "./models/Ball.js";
 import { updatePlayerPaddle, updateCpuPaddle } from "./logic/paddleMovementSystem.js";
 
 // Ball movement
-import { updateBall, launchPlayerServe, launchCpuServe } from "./logic/ballMovementSystem.js";
+import { updateBall, launchPlayerServe } from "./logic/ballMovementSystem.js";
+
+//
+import { launchCpuServe } from "./logic/serveSystem.js";
 
 // Collision system
 import { handleWallCollision, handlePlayerPaddleCollision, handleCpuPaddleCollision } from "./logic/collisionSystem.js";
