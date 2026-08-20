@@ -9,7 +9,9 @@ const PHASES = [0.90, 0.75, 0.50, 0.25, 0.10];
 export const NORMAL_EFFECTS = [
     HitEffect.NONE,
     HitEffect.UP,
-    HitEffect.DOWN
+    HitEffect.DOWN,
+    HitEffect.BREAK_LEFT,
+    HitEffect.BREAK_RIGHT
 ];
 
 
@@ -44,7 +46,8 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight) 
     // The CPU resets its phase and returns to the center.
     if (ball.speedY >= 0) {
         currentPhase = -1;
-        targetX = canvasWidth / 2 - cpuPaddle.width / 2;
+        // targetX = canvasWidth / 2 - cpuPaddle.width / 2;
+        targetX = cpuPaddle.x;
         return targetX;
     }
 

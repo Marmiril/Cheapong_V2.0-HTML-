@@ -112,7 +112,7 @@ window.addEventListener("keydown", (event) => {
         gameState = GameState.SERVE_PLAYER;
         return;
     }
-    if (event.code === "Space" && appState === AppState.IN_GAME && gameState === GameState.SERVE_PLAYER) { gameState = launchPlayerServe(ball, inputState); }
+    if (event.code === "Space" && appState === AppState.IN_GAME && gameState === GameState.SERVE_PLAYER) { gameState = launchPlayerServe(ball, inputState, BALL_SPEED); }
 
     if (event.code === "ArrowLeft") { inputState.left = true; }
     if (event.code === "ArrowRight") { inputState.right = true; }
@@ -236,11 +236,21 @@ function handleScore() {
     if (ball.y <= 0) {
         scoreSystem.pointPlayer();
         gameState = GameState.SERVE_CPU;
+        resetPaddles();
     }
 
     if (ball.y + ball.size >= canvas.height) {
         scoreSystem.pointCpu();
         gameState = GameState.SERVE_PLAYER;
+        resetPaddles();
     }
+}
+
+function resetPaddles() {
+    playerPaddle.x = (canvasWidth - playerPaddle.width) / 2;
+    playerPaddle.prevX = playerPaddle.x;
+
+    cpuPaddle.x = (canvasWidth - cpuPaddle.width) / 2;
+    cpuPaddle.prevX = cpuPaddle.x;
 }
 
