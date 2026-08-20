@@ -42,6 +42,9 @@ import { calculateCpuTargetX, calculateCpuServePlan } from "./logic/aiSystem.js"
 // ScoreSystem
 import { ScoreSystem } from "./game/scoreSystem.js";
 
+// Score renderer
+import { renderScore } from "./render/scoreRenderer.js";
+
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -77,7 +80,7 @@ const cpuPaddle = new Paddle(
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
 
-const scoreSystem = new ScoreSystem(5);
+const scoreSystem = new ScoreSystem(5, 10);
 
 let gameState = GameState.SERVE_PLAYER;
 
@@ -229,7 +232,10 @@ function renderGameScreen() {
  */
 function render() {
     if (appState === AppState.MAIN_MENU) { renderMainMenu(ctx, canvasWidth, canvasHeight); }
-    if (appState === AppState.IN_GAME) { renderGameScreen(); }
+    if (appState === AppState.IN_GAME) {
+        renderGameScreen();
+        renderScore(scoreSystem);
+    }
 }
 
 function handleScore() {
