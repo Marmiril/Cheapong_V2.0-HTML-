@@ -25,18 +25,16 @@ import { Ball } from "./models/Ball.js";
 import { updatePlayerPaddle, updateCpuPaddle } from "./logic/paddleMovementSystem.js";
 
 // Ball movement
-import { updateBall, launchPlayerServe } from "./logic/ballMovementSystem.js";
+import { updateBall } from "./logic/ballMovementSystem.js";
 
-//
-import { launchCpuServe } from "./logic/serveSystem.js";
+// Server system
+import { updateServe, launchPlayerServe, launchCpuServe } from "./logic/serveSystem.js";
 
 // Collision system
 import { handleWallCollision, handlePlayerPaddleCollision, handleCpuPaddleCollision } from "./logic/collisionSystem.js";
 
 // Render paddle, ball, clear canvas, draw text & render main menu
 import { drawPaddle, drawBall, clearCanvas, drawCenteredText, renderMainMenu } from "./render/gameRenderer.js";
-
-// Server systemimport { updateServe, launchPlayerServe } from "./logic/serveSystem.js";
 
 // AI movement
 import { calculateCpuTargetX, calculateCpuServePlan } from "./logic/aiSystem.js";
@@ -237,12 +235,12 @@ function render() {
 function handleScore() {
     if (ball.y <= 0) {
         scoreSystem.pointPlayer();
-        gameState = GameState.SERVE_CPU;
+        gameState = GameState.SERVE_PLAYER;
     }
 
     if (ball.y + ball.size >= canvas.height) {
         scoreSystem.pointCpu();
-        gameState = GameState.SERVE_PLAYER;
+        gameState = GameState.SERVE_CPU;
     }
 }
 

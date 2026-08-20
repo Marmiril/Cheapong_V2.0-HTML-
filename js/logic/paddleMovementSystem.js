@@ -27,10 +27,11 @@ export function updateCpuPaddle(cpuPaddle, targetX, canvasWidth) {
         cpuPaddle.x += Math.sign(distanceToTarget) * cpuPaddle.speed;
     }
 
+    /*
     if (cpuPaddle.x < targetX) { cpuPaddle.x += cpuPaddle.speed; }
 
     if (cpuPaddle.x > targetX) { cpuPaddle.x -= cpuPaddle.speed; }
-
+*/
     cpuPaddle.x = Math.max(
         0,
         Math.min(cpuPaddle.x, canvasWidth - cpuPaddle.width)

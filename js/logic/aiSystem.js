@@ -151,7 +151,7 @@ function getCpuServeTargetPositions(cpuPaddle, canvasWidth) {
     return [0, maxPaddleX / 2, maxPaddleX]
 }
 
-export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth, avaliableEffects) {
+export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth, availableEffects) {
 
     const playerCenterX = playerPaddle.x + playerPaddle.width / 2;
     const ballCenterX = ball.x + ball.size / 2;
@@ -180,7 +180,7 @@ export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth, avaliable
     let bestEffet = HitEffect.NONE;
     let longestReactionTime = -1;
 
-    for (const effect of avaliableEffects) {
+    for (const effect of availableEffects) {
         // Simulates the horizontal speed produced by this effect.
         const candidateSpeedX = getCandidateSpeedX(ball, effect);
 
@@ -263,7 +263,7 @@ export function calculateCpuServePlan(
             CPU_SERVE_EFFECTS
         );
 
-        /*
+
         const candidateSpeedX = getCandidateSpeedX(
             candidateBall,
             effect
@@ -277,7 +277,7 @@ export function calculateCpuServePlan(
         );
 
         if (candidateSpeedY === 0) { continue; }
-        */
+
 
         candidateBall.speedX = getCandidateSpeedX(candidateBall, effect);
 

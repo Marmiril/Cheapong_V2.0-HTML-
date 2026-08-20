@@ -1,19 +1,19 @@
 export class ScoreSystem {
     constructor(maxPoints = 5) {
         this.maxPoints = maxPoints;
-        
-        this.playerPoints = playerPoints;
-        this.cpuPoints = cpuPoints;
+
+        this.playerPoints = 0;
+        this.cpuPoints = 0;
 
         this.matchEnded = false;
         this.winner = null;
-    }  
+    }
 
     pointPlayer() {
         if (this.matchEnded) {
             return;
         }
-        
+
         this.playerPoints++;
 
         if (this.playerPoints >= this.maxPoints) {
@@ -47,7 +47,7 @@ export class ScoreSystem {
     getCpuPoints() { return this.cpuPoints; }
     isMatchEnded() { return this.matchEnded; }
 
-    
-     
- 
+
+
+
 }
