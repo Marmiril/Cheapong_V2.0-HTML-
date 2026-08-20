@@ -169,6 +169,24 @@ function updateGame() {
 
         // Keeps the ball attached while the CPU paddle is moving
         updateServe(ball, cpuPaddle, gameState);
+
+        const elapsedTime = performance.now() - cpuServeStartTime;
+
+        const isTimerFinished = elapsedTime >= CPU_SERVE_DELAY;
+
+        const isAtTarget = cpuPaddle.x === cpuServePlan.targetX;
+
+        if (isTimerFinished && isAtTarget) {
+            gameState = launchCpuServe(
+                ball,
+                cpuServePlan.effect,
+                BALL_SPEED
+            );
+
+            // Resets the preparation data fot the next CPU serve
+            cpuServePlan = null;
+            cpuServeStartTime = null;
+        }
     }
 
     if (gameState === GameState.RALLY) {

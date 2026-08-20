@@ -15,7 +15,17 @@ export function updatePlayerPaddle(paddle, inputState, canvasWidth) {
 }
 
 export function updateCpuPaddle(cpuPaddle, targetX, canvasWidth) {
+
     cpuPaddle.prevX = cpuPaddle.x;
+
+    const distanceToTarget = targetX - cpuPaddle.x;
+
+    // Snaps to the target when it is closer than one movement step
+    if (Math.abs(distanceToTarget) <= cpuPaddle.speed) {
+        cpuPaddle.x = targetX;
+    } else {
+        cpuPaddle.x += Math.sign(distanceToTarget) * cpuPaddle.speed;
+    }
 
     if (cpuPaddle.x < targetX) { cpuPaddle.x += cpuPaddle.speed; }
 
