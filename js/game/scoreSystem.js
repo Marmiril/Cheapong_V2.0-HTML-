@@ -37,8 +37,13 @@ export class ScoreSystem {
         this.winner = null;
     }
 
+    resetGame() {
+        this.resetMatch();
+        this.currentMatch = 1;
+    }
+
     startNextMatch() {
-        if (!this.matchEnded || this.currentMatch >= this.maxMatches) { return false; }
+        if (!this.matchEnded || this.currentMatch >= this.maxMatches || this.winner !== "PLAYER") { return false; }
 
         this.currentMatch++;
         this.resetMatch();

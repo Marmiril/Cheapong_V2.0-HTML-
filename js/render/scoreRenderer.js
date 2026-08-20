@@ -6,7 +6,7 @@ if (!playerPoints || !cpuPoints || !matchNumber) { throw new Error("Score elemen
 
 export function renderScore(scoreSystem) {
     playerPoints.textContent = scoreSystem.getPlayerPoints();
-    cpuPoints.texContent = scoreSystem.getCpuPoints();
+    cpuPoints.textContent = scoreSystem.getCpuPoints();
     matchNumber.textContent =
         `${scoreSystem.getCurrentMatch()}`;
 }

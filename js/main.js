@@ -241,6 +241,9 @@ function render() {
 function handleScore() {
     if (ball.y <= 0) {
         scoreSystem.pointPlayer();
+
+        if (scoreSystem.isMatchEnded()) { scoreSystem.startNextMatch(); }
+
         gameState = GameState.SERVE_CPU;
         resetPaddles();
     }
