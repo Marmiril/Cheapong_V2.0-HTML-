@@ -130,7 +130,7 @@ function calculateDrift(cpuPaddle) {
     return (Math.random() * 2 - 1) * cpuPaddle.width * MAX_DRIFT;
 }
 
-function getCandidateSpeedX(ball, effect) {
+export function getCandidateSpeedX(ball, effect) {
     switch (effect) {
         case HitEffect.UP:
             return 0;
@@ -231,7 +231,7 @@ function createCpuServeCandidateBall(
     };
 }
 
-export function calculateServePlan(
+export function calculateCpuServePlan(
     ball,
     cpuPaddle,
     playerPaddle,

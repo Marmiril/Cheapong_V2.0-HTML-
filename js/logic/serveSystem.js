@@ -1,5 +1,7 @@
 import { GameState } from "../states/gameState.js";
 import { inputState } from "../input/inputState.js";
+import { getCandidateSpeedX } from "./aiSystem.js"
+import { normalizeBallSpeed } from "./ballMovementSystem.js";
 
 const SPIN = 4.5
 const BALL_SPEED = 6;
@@ -21,9 +23,13 @@ export function launchPlayerServe(ball, inputState) {
     return GameState.RALLY;
 }
 
-export function launchCpuServe(ball) {
+export function launchCpuServe(ball, effect, ballSpeed) {
+    // Starts from a straight downward serve
     ball.speedX = 0;
     ball.speedY = BALL_SPEED;
+
+    // Applies the effect selected during the CPU simulation
+    ball.speedX = getCandidateSpeedX(ball, effect);
 
     return GameState.RALLY;
 }

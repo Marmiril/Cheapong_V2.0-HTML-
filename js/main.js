@@ -25,7 +25,7 @@ import { Ball } from "./models/Ball.js";
 import { updatePlayerPaddle, updateCpuPaddle } from "./logic/paddleMovementSystem.js";
 
 // Ball movement
-import { updateBall } from "./logic/ballMovementSystem.js";
+import { updateBall, launchPlayerServe, launchCpuServe } from "./logic/ballMovementSystem.js";
 
 // Collision system
 import { handleWallCollision, handlePlayerPaddleCollision, handleCpuPaddleCollision } from "./logic/collisionSystem.js";
@@ -33,11 +33,10 @@ import { handleWallCollision, handlePlayerPaddleCollision, handleCpuPaddleCollis
 // Render paddle, ball, clear canvas, draw text & render main menu
 import { drawPaddle, drawBall, clearCanvas, drawCenteredText, renderMainMenu } from "./render/gameRenderer.js";
 
-// Server system
-import { updateServe, launchPlayerServe } from "./logic/serveSystem.js";
+// Server systemimport { updateServe, launchPlayerServe } from "./logic/serveSystem.js";
 
 // AI movement
-import { calculateCpuTargetX } from "./logic/aiSystem.js";
+import { calculateCpuTargetX, calculateCpuServePlan } from "./logic/aiSystem.js";
 
 // ScoreSystem
 import { ScoreSystem } from "./game/scoreSystem.js";
@@ -93,6 +92,14 @@ const ball = new Ball(
 // Normalize ballSpeed
 const BALL_SPEED = Math.sqrt(ball.speedX ** 2 + ball.speedY ** 2);
 
+// Time avaliable for the CPU to prepare its serve
+const CPU_SERVE_DELAY = 600;
+
+// Stores the position and effect selected for the current CPU serve
+let cpuServePlan = null;
+
+// Stores when the CPU serve preparation started
+let cpuServeStartTime = null;
 
 /**
  * Renders the initial main menu.
@@ -138,7 +145,31 @@ function updateGame() {
     updatePlayerPaddle(playerPaddle, inputState, canvasWidth);
 
     if (gameState === GameState.SERVE_PLAYER) { updateServe(ball, playerPaddle, gameState); }
-    if (gameState === GameState.SERVE_CPU) { updateServe(ball, cpuPaddle, gameState); }
+
+    if (gameState === GameState.SERVE_CPU) {
+        // Creates the serve plan only once
+        if (cpuServePlan === null) {
+            cpuServePlan = calculateCpuServePlan(
+                ball,
+                cpuPaddle,
+                playerPaddle,
+                canvasWidth,
+                BALL_SPEED
+            );
+
+            cpuServeStartTime = performance.now();
+        }
+
+        // Moves the CPU paddle towards the selected serve position
+        updateCpuPaddle(
+            cpuPaddle,
+            cpuServePlan.cpuTargetX,
+            canvasWidth
+        );
+
+        // Keeps the ball attached while the CPU paddle is moving
+        updateServe(ball, cpuPaddle, gameState);
+    }
 
     if (gameState === GameState.RALLY) {
         const cpuTargetX = calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight);
@@ -185,10 +216,12 @@ function render() {
 function handleScore() {
     if (ball.y <= 0) {
         scoreSystem.pointPlayer();
-        gameState = GameState.SERVE_CPU; }
+        gameState = GameState.SERVE_CPU;
+    }
 
     if (ball.y + ball.size >= canvas.height) {
         scoreSystem.pointCpu();
-        gameState = GameState.SERVE_PLAYER; }
+        gameState = GameState.SERVE_PLAYER;
+    }
 }
 
