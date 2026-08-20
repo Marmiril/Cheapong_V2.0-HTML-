@@ -164,7 +164,7 @@ function updateGame() {
         // Moves the CPU paddle towards the selected serve position
         updateCpuPaddle(
             cpuPaddle,
-            cpuServePlan.cpuTargetX,
+            cpuServePlan.targetX,
             canvasWidth
         );
 
@@ -235,12 +235,12 @@ function render() {
 function handleScore() {
     if (ball.y <= 0) {
         scoreSystem.pointPlayer();
-        gameState = GameState.SERVE_PLAYER;
+        gameState = GameState.SERVE_CPU;
     }
 
     if (ball.y + ball.size >= canvas.height) {
         scoreSystem.pointCpu();
-        gameState = GameState.SERVE_CPU;
+        gameState = GameState.SERVE_PLAYER;
     }
 }
 

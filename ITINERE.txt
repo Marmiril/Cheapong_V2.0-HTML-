@@ -1,8 +1,4 @@
-ioteca
-/
-Cheapong
-/
-14-ITINERE.txt
+NERE.txt
 
 
 CHEAPONG - ITINERARIO DE DESARROLLO WEB
@@ -172,6 +168,43 @@ ITINERARIO
      DOWN invierte speedX.
      Corregido el operador usado para comprobar que la bola venía desde encima de la pala del jugador.
      applyPlayerSpin() se ejecuta únicamente después de confirmar el rebote.
+39 - SISTEMA DE PUNTUACIÓN.
+     ScoreSystem almacena playerPoints, cpuPoints y maxPoints.
+     pointPlayer() y pointCpu() registran los puntos.
+     La partida termina cuando uno de los dos alcanza maxPoints.
+     matchEnded y winner conservan el resultado final.
+40 - ZONAS DE PUNTO Y SIGUIENTE SAQUE.
+     Los límites superior e inferior dejan de producir rebotes.
+     handleScore() se ejecuta al final de RALLY.
+     Si la bola alcanza el límite superior, marca el jugador y se activa SERVE_PLAYER.
+     Si la bola alcanza el límite inferior, marca la CPU y se activa SERVE_CPU.
+     El jugador que consigue el punto realiza el siguiente saque.
+41 - CONJUNTOS DE EFECTOS DE LA CPU.
+     NORMAL_EFFECTS contiene NONE, UP y DOWN para las devoluciones normales.
+     CPU_SERVE_EFFECTS contiene NONE, BREAK_LEFT y BREAK_RIGHT para los saques.
+     calculateCpuHitEffect() recibe availableEffects como parámetro obligatorio.
+42 - PLANIFICACIÓN DEL SAQUE CPU.
+     getCpuServeTargetPositions() propone izquierda, centro y derecha.
+     createCpuServeCandidateBall() crea una bola virtual para cada posición.
+     calculateCpuServePlan() compara las posiciones y efectos disponibles.
+     La CPU selecciona el plan que exige un mayor desplazamiento al jugador.
+43 - PREPARACIÓN Y LANZAMIENTO DEL SAQUE CPU.
+     El plan de saque se calcula una sola vez al entrar en SERVE_CPU.
+     La pala CPU se desplaza hacia targetX mientras mantiene la bola unida.
+     CPU_SERVE_DELAY establece una espera mínima de 600 milisegundos.
+     El saque se lanza cuando termina el temporizador y la pala alcanza el objetivo.
+     cpuServePlan y cpuServeStartTime se reinician después del lanzamiento.
+44 - MOVIMIENTO PRECISO HACIA EL OBJETIVO CPU.
+     updateCpuPaddle() calcula la distancia restante hasta targetX.
+     Math.sign() determina la dirección del movimiento.
+     La pala se coloca directamente en el objetivo cuando queda a menos de un paso.
+     Se evita que la pala sobrepase el objetivo y oscile alrededor de él.
+45 - CORRECCIONES DE INTEGRACIÓN DE PUNTUACIÓN Y SAQUE CPU.
+     playerPoints y cpuPoints se inicializan en 0 dentro de ScoreSystem.
+     Corregida la escritura de availableEffects en calculateCpuHitEffect().
+     main.js utiliza cpuServePlan.targetX, la propiedad devuelta por calculateCpuServePlan().
+     Corregido el error que convertía cpuPaddle.x en NaN y hacía desaparecer la pala.
+     updateServe() centra la bola sobre la pala con (paddle.width - ball.size) / 2.
 
 
 ESTADO ACTUAL
@@ -188,13 +221,21 @@ ESTADO ACTUAL
 - Los tipos de respuesta de la CPU ya están definidos en hitEffect.js.
 - La CPU compara varias respuestas y selecciona la más difícil para el jugador.
 - La colisión con la pala CPU aplica el efecto seleccionado y normaliza la velocidad.
-- El sistema de puntuación todavía no está cerrado: handleScore() no está integrado y los límites superior e inferior aún rebotan.
+- ScoreSystem registra los puntos y detecta el final de la partida.
+- Los límites superior e inferior funcionan como zonas de punto.
+- Quien consigue el punto realiza el siguiente saque.
+- La CPU calcula una posición y un efecto antes de sacar.
+- Durante SERVE_CPU, la pala se mueve con la bola unida y respeta un temporizador mínimo.
+- La integración completa de los saques todavía necesita una prueba final en el navegador.
+- El marcador todavía no se muestra en pantalla.
+- matchEnded y winner todavía no detienen ni cierran visualmente la partida.
+- launchPlayerServe() y launchCpuServe() todavía deben unificarse con la velocidad base común.
 
 
 SIGUIENTE PUNTO
 
-39 - PROBAR Y AJUSTAR LOS EFECTOS DE LA CPU.
-     Comprobar visualmente NONE, UP, DOWN, BREAK_LEFT y BREAK_RIGHT.
-     Verificar que cada efecto modifica la trayectoria esperada.
-     Ajustar CPU_BREAK_BONUS si el cambio horizontal resulta demasiado débil o excesivo.
-     Confirmar que ningún error detiene el game loop durante RALLY.
+46 - PRUEBA INTEGRAL DE PUNTUACIÓN Y SAQUES.
+     Confirmar que un punto del jugador activa SERVE_PLAYER.
+     Confirmar que un punto de la CPU activa SERVE_CPU.
+     Verificar el movimiento, temporizador, efecto y lanzamiento del saque CPU.
+     Corregir cualquier error de integración antes de añadir el marcador visual.
