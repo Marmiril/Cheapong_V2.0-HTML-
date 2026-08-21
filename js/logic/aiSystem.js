@@ -23,7 +23,7 @@ export const NORMAL_EFFECTS = [
 
 // Effects the CPU can compare when preparing a serve
 export const CPU_SERVE_EFFECTS = [
-    HitEffect.NONE,
+    // HitEffect.NONE,
     HitEffect.BREAK_LEFT,
     HitEffect.BREAK_RIGHT
 ];
@@ -56,6 +56,8 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight) 
         targetX = cpuPaddle.x;
         return targetX;
     }
+    // 
+    if (currentPhase === -1) { targetX = cpuPaddle.x; }
 
     // Checks each phase to know if the CPU should update its target now.
     for (let i = 0; i < PHASES.length; i++) {
@@ -157,7 +159,7 @@ export function getCandidateSpeedX(ball, effect) {
 function getCpuServeTargetPositions(cpuPaddle, canvasWidth) {
     const maxPaddleX = canvasWidth - cpuPaddle.width;
 
-    return [0, maxPaddleX / 2, maxPaddleX]
+    return [0, maxPaddleX / 4, maxPaddleX / 3, maxPaddleX / 2, maxPaddleX]
 }
 
 export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth, availableEffects) {

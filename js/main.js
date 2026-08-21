@@ -1,4 +1,4 @@
-/**
+5/**
  * Cheapong - Main entry point
  * 
  * - get canvas
@@ -172,8 +172,13 @@ function updateGame() {
     if (gameState === GameState.SERVE_PLAYER) { updateServe(ball, playerPaddle, gameState); }
 
     if (gameState === GameState.SERVE_CPU) {
-        // Creates the serve plan only once
-        if (cpuServePlan === null) {
+
+        if (cpuServeStartTime === null) { cpuServeStartTime = performance.now(); }
+
+        const elapsedTime = performance.now() - cpuServeStartTime;
+        const isTimerFinished = elapsedTime >= CPU_SERVE_DELAY;
+
+        if (!isTimerFinished) {
             cpuServePlan = calculateCpuServePlan(
                 ball,
                 cpuPaddle,
@@ -181,8 +186,6 @@ function updateGame() {
                 canvasWidth,
                 BALL_SPEED
             );
-
-            cpuServeStartTime = performance.now();
         }
 
         // Moves the CPU paddle towards the selected serve position
@@ -195,10 +198,6 @@ function updateGame() {
         // Keeps the ball attached while the CPU paddle is moving
         updateServe(ball, cpuPaddle, gameState);
 
-        const elapsedTime = performance.now() - cpuServeStartTime;
-
-        const isTimerFinished = elapsedTime >= CPU_SERVE_DELAY;
-
         const isAtTarget = cpuPaddle.x === cpuServePlan.targetX;
 
         if (isTimerFinished && isAtTarget) {
@@ -207,7 +206,6 @@ function updateGame() {
                 cpuServePlan.effect,
                 BALL_SPEED
             );
-
             // Resets the preparation data fot the next CPU serve
             cpuServePlan = null;
             cpuServeStartTime = null;

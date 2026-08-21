@@ -16,8 +16,8 @@ export function launchPlayerServe(ball, inputState, ballSpeed) {
     ball.speedX = 0;
     ball.speedY = -ballSpeed;
 
-    if (inputState.up && inputState.left) { ball.speedX = -SPIN; }
-    if (inputState.up && inputState.right) { ball.speedX = +SPIN; }
+    if (inputState.left) { ball.speedX = -SPIN; }
+    if (inputState.right) { ball.speedX = +SPIN; }
 
     return GameState.RALLY;
 }
