@@ -80,7 +80,7 @@ const cpuPaddle = new Paddle(
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
 
-const scoreSystem = new ScoreSystem(5, 1);
+const scoreSystem = new ScoreSystem(2, 1);
 
 let gameState = GameState.SERVE_PLAYER;
 
@@ -242,7 +242,7 @@ function renderGameScreen() {
 
         const message = scoreSystem.winner === "CPU"
             ? "CPU-WINS - PLAYER CRIES - GAME OVER"
-            : "MIGHTY PLAYER WINS, GAME COMPLETED EPICFULLY!!!"
+            : "MIGHTY PLAYER WINS GAME COMPLETED EPICFULLY!!!"
 
         drawCenteredText(
             ctx,
@@ -278,7 +278,15 @@ function handleScore() {
     if (ball.y <= 0) {
         scoreSystem.pointPlayer();
 
-        if (scoreSystem.isMatchEnded()) { scoreSystem.startNextMatch(); }
+        if (scoreSystem.isMatchEnded()) {
+            scoreSystem.startNextMatch();
+        }
+
+        if (scoreSystem.isGameEnded()) {
+            gameState = GameState.GAME_OVER;
+            resetPaddles();
+            return;
+        }
 
         gameState = GameState.SERVE_CPU;
         resetPaddles();

@@ -1,6 +1,3 @@
-NERE.txt
-
-
 CHEAPONG - ITINERARIO DE DESARROLLO WEB
 
 
@@ -56,7 +53,8 @@ Cheapong/
     │   └── inputState.js
     │
     ├── render/
-    │   └── gameRenderer.js
+    │   ├── gameRenderer.js
+    │   └── scoreRenderer.js
     │
     └── states/
         ├── appState.js
@@ -118,7 +116,7 @@ ITINERARIO
      predictBallX() calcula el recorrido horizontal futuro de la bola.
      reflectX() refleja la predicción cuando la trayectoria cruza los laterales.
 28 - FASES DE DECISIÓN DE LA CPU.
-     PHASES = [0.90, 0.75, 0.50, 0.25, 0.10].
+     PHASES determina los momentos en los que la CPU recalcula su objetivo.
      currentPhase evita recalcular el objetivo en cada fotograma.
 29 - ERROR Y DRIFT DE LA CPU.
      calculateAimError() añade un error de puntería controlado.
@@ -151,7 +149,7 @@ ITINERARIO
      hitEffect.js define NONE, UP, DOWN, BREAK_LEFT y BREAK_RIGHT.
      La estructura toma como referencia HitEffect.java de la primera versión.
 36 - ELECCIÓN INTELIGENTE DEL EFECTO DE LA CPU.
-     calculateCpuHitEffect() evalúa NONE, UP y DOWN.
+     calculateCpuHitEffect() evalúa los efectos disponibles.
      getCandidateSpeedX() simula la velocidad horizontal de cada respuesta.
      La CPU predice dónde llegará la bola después de cada posible efecto.
      Se elige el efecto que obliga al jugador a recorrer una mayor distancia.
@@ -176,11 +174,11 @@ ITINERARIO
 40 - ZONAS DE PUNTO Y SIGUIENTE SAQUE.
      Los límites superior e inferior dejan de producir rebotes.
      handleScore() se ejecuta al final de RALLY.
-     Si la bola alcanza el límite superior, marca el jugador y se activa SERVE_PLAYER.
-     Si la bola alcanza el límite inferior, marca la CPU y se activa SERVE_CPU.
-     El jugador que consigue el punto realiza el siguiente saque.
+     Si la bola alcanza el límite superior, marca el jugador y se activa SERVE_CPU.
+     Si la bola alcanza el límite inferior, marca la CPU y se activa SERVE_PLAYER.
+     Tras cada punto, el saque pasa al oponente.
 41 - CONJUNTOS DE EFECTOS DE LA CPU.
-     NORMAL_EFFECTS contiene NONE, UP y DOWN para las devoluciones normales.
+     NORMAL_EFFECTS contiene los efectos disponibles para las devoluciones normales.
      CPU_SERVE_EFFECTS contiene NONE, BREAK_LEFT y BREAK_RIGHT para los saques.
      calculateCpuHitEffect() recibe availableEffects como parámetro obligatorio.
 42 - PLANIFICACIÓN DEL SAQUE CPU.
@@ -205,37 +203,69 @@ ITINERARIO
      main.js utiliza cpuServePlan.targetX, la propiedad devuelta por calculateCpuServePlan().
      Corregido el error que convertía cpuPaddle.x en NaN y hacía desaparecer la pala.
      updateServe() centra la bola sobre la pala con (paddle.width - ball.size) / 2.
+46 - VELOCIDAD BASE COMPARTIDA EN LOS SAQUES.
+     main.js calcula BALL_SPEED a partir del vector inicial de la bola.
+     launchPlayerServe() y launchCpuServe() reciben ballSpeed como parámetro.
+     Ambos saques aplican su trayectoria usando la misma magnitud base.
+47 - REINICIO DE POSICIÓN DE LAS PALAS.
+     resetPaddles() devuelve playerPaddle y cpuPaddle al centro.
+     prevX se sincroniza con la nueva posición para evitar efecto residual.
+     main.js ejecuta el reinicio después de registrar un punto.
+48 - AJUSTE TEMPORAL DE LA DIFICULTAD DE LA CPU.
+     PHASES mantiene activas actualmente las fases 0.25 y 0.10.
+     Las fases 0.90, 0.75 y 0.50 permanecen comentadas para facilitar las pruebas.
+     Cuando la bola se aleja de la CPU, targetX conserva la posición actual de cpuPaddle.
+     MAX_ERROR_FACTOR y MAX_DRIFT añaden imprecisión al seguimiento.
+49 - DISTRIBUCIÓN VISUAL DEL MARCADOR Y LOS AJUSTES.
+     index.html incorpora score-panel, game-area y setting-panel dentro de game-layout.
+     PLAYER y CPU muestran su puntuación en contenedores independientes.
+     MATCH y DIFFICULTY se muestran en contenedores independientes a la derecha.
+     style.css distribuye los tres bloques horizontalmente mediante flexbox.
+50 - RENDERIZADO DEL MARCADOR HTML.
+     scoreRenderer.js obtiene playerPoints, cpuPoints y matchNumber por sus identificadores HTML.
+     renderScore() consulta ScoreSystem mediante sus getters.
+     main.js ejecuta renderScore() mientras AppState está en IN_GAME.
+     difficultyLevel permanece actualmente como texto estático EASY.
+51 - SISTEMA DE MATCHES.
+     ScoreSystem incorpora maxMatches y currentMatch.
+     resetMatch() limpia puntos, matchEnded y winner.
+     startNextMatch() avanza únicamente cuando PLAYER gana y quedan matches disponibles.
+     Si CPU gana un match, isGameEnded() considera terminado el juego completo.
+     Si PLAYER gana el último match, isGameEnded() también considera terminado el juego.
+     El constructor mantiene 10 matches por defecto; main.js usa temporalmente 1 para las pruebas.
+52 - ESTADOS DE FINALIZACIÓN.
+     GameState incorpora MATCH_OVER y GAME_OVER.
+     renderGameScreen() muestra un mensaje distinto según winner sea CPU o PLAYER.
+     MATCH_OVER está definido, pero todavía no participa en el flujo de main.js.
+53 - REINICIO COMPLETO DESDE GAME_OVER.
+     SPACE durante GAME_OVER ejecuta scoreSystem.resetGame().
+     El marcador y las palas se reinician.
+     gameState vuelve a SERVE_PLAYER.
+     appState vuelve a MAIN_MENU.
 
 
 ESTADO ACTUAL
 
 - El menú entra correctamente en SERVE_PLAYER.
-- El jugador puede orientar el saque.
-- La bola y las palas se renderizan con nitidez a 800 × 600.
-- La CPU predice la llegada de la bola teniendo en cuenta rebotes laterales.
-- La CPU recalcula por fases y añade error y drift para no ser perfecta.
-- El jugador dispone de efecto natural por movimiento y efectos especiales mediante teclado.
-- La velocidad total de la bola se normaliza después de los impactos.
-- La bola conserva prevX y prevY para mejorar la precisión de las colisiones.
-- La colisión superior con la pala del jugador utiliza la posición anterior de la bola.
-- Los tipos de respuesta de la CPU ya están definidos en hitEffect.js.
-- La CPU compara varias respuestas y selecciona la más difícil para el jugador.
-- La colisión con la pala CPU aplica el efecto seleccionado y normaliza la velocidad.
-- ScoreSystem registra los puntos y detecta el final de la partida.
-- Los límites superior e inferior funcionan como zonas de punto.
-- Quien consigue el punto realiza el siguiente saque.
-- La CPU calcula una posición y un efecto antes de sacar.
-- Durante SERVE_CPU, la pala se mueve con la bola unida y respeta un temporizador mínimo.
-- La integración completa de los saques todavía necesita una prueba final en el navegador.
-- El marcador todavía no se muestra en pantalla.
-- matchEnded y winner todavía no detienen ni cierran visualmente la partida.
-- launchPlayerServe() y launchCpuServe() todavía deben unificarse con la velocidad base común.
+- El jugador y la CPU disponen de saques diferenciados con una velocidad base compartida desde main.js.
+- La CPU predice rebotes laterales, compara efectos y prepara su saque antes de lanzarlo.
+- La dificultad de la CPU está reducida temporalmente a dos fases activas para facilitar las pruebas.
+- La pala CPU conserva su posición cuando la bola se aleja de ella.
+- Las palas regresan al centro después de cada punto.
+- ScoreSystem registra puntos, ganador, final de match y número del match actual.
+- El marcador HTML muestra playerPoints, cpuPoints y matchNumber.
+- La dificultad se muestra como EASY, pero todavía no está conectada a la lógica.
+- GAME_OVER muestra un mensaje diferente para PLAYER y CPU.
+- SPACE durante GAME_OVER reinicia el sistema y devuelve la aplicación a MAIN_MENU.
+- GameState.MATCH_OVER existe, pero todavía no se utiliza desde main.js.
+- La constante BALL_SPEED = 6 de serveSystem.js permanece declarada, aunque los lanzamientos usan el parámetro ballSpeed recibido desde main.js.
+- La rama del punto de CPU comprueba isGameEnded().
+- La rama del punto de PLAYER todavía no comprueba isGameEnded() en la versión actual de main.
 
 
 SIGUIENTE PUNTO
 
-46 - PRUEBA INTEGRAL DE PUNTUACIÓN Y SAQUES.
-     Confirmar que un punto del jugador activa SERVE_PLAYER.
-     Confirmar que un punto de la CPU activa SERVE_CPU.
-     Verificar el movimiento, temporizador, efecto y lanzamiento del saque CPU.
-     Corregir cualquier error de integración antes de añadir el marcador visual.
+54 - CORREGIR EL FINAL DEL JUEGO CUANDO GANA PLAYER.
+     Tras pointPlayer(), comprobar isGameEnded() antes de iniciar el siguiente match.
+     Si el jugador ha ganado el último match, establecer GameState.GAME_OVER y detener el flujo con return.
+     Si todavía quedan matches, ejecutar startNextMatch() y continuar con SERVE_CPU.
