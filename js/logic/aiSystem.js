@@ -335,8 +335,8 @@ export function calculateCpuServePlan(
 
     //return bestPlan;
     candidatePlans.sort(
-        (firsPlan, secondPlan) =>
-            secondPlan.reactionTime = firstPlan.reactionTime
+        (firstPlan, secondPlan) =>
+            secondPlan.reactionTime - firstPlan.reactionTime
     );
 
     const selectedPlan = candidatePlans[Math.min(cpuServePlanRank, candidatePlans.length - 1)];
