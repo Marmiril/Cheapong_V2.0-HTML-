@@ -102,6 +102,9 @@ const CPU_SERVE_DELAY = 600;
 // Stores the position and effect selected for the current CPU serve
 let cpuServePlan = null;
 
+// Randomize several plans
+let cpuServePlanRank = null;
+
 // Stores when the CPU serve preparation started
 let cpuServeStartTime = null;
 
@@ -173,7 +176,10 @@ function updateGame() {
 
     if (gameState === GameState.SERVE_CPU) {
 
-        if (cpuServeStartTime === null) { cpuServeStartTime = performance.now(); }
+        if (cpuServeStartTime === null) {
+            cpuServeStartTime = performance.now();
+            cpuServePlanRank = Math.floor(Math.random() * 3);
+        }
 
         const elapsedTime = performance.now() - cpuServeStartTime;
         const isTimerFinished = elapsedTime >= CPU_SERVE_DELAY;
@@ -184,7 +190,8 @@ function updateGame() {
                 cpuPaddle,
                 playerPaddle,
                 canvasWidth,
-                BALL_SPEED
+                BALL_SPEED,
+                cpuServePlanRank
             );
         }
 
@@ -209,6 +216,7 @@ function updateGame() {
             // Resets the preparation data fot the next CPU serve
             cpuServePlan = null;
             cpuServeStartTime = null;
+            cpuServePlanRank = null;
         }
     }
 

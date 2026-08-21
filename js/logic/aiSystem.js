@@ -38,7 +38,6 @@ let currentPhase = -1;
 // Stores the curretn X postiion the CPU wants to reach
 let targetX = 0;
 
-
 // Controle how much the CPU can miss its prediction.
 // Higher value means a less accurate CPU.
 const MAX_ERROR_FACTOR = 0.40;
@@ -159,7 +158,7 @@ export function getCandidateSpeedX(ball, effect) {
 function getCpuServeTargetPositions(cpuPaddle, canvasWidth) {
     const maxPaddleX = canvasWidth - cpuPaddle.width;
 
-    return [0, maxPaddleX / 4, maxPaddleX / 3, maxPaddleX / 2, maxPaddleX]
+    return [0, maxPaddleX / 4, maxPaddleX / 3, maxPaddleX / 2, maxPaddleX * 2 / 3, maxPaddleX * 3 / 4, maxPaddleX]
 }
 
 export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth, availableEffects) {
@@ -247,10 +246,12 @@ export function calculateCpuServePlan(
     cpuPaddle,
     playerPaddle,
     canvasWidth,
-    ballSpeed
+    ballSpeed,
+    cpuServePlanRank
 ) {
     const targetPositions = getCpuServeTargetPositions(cpuPaddle, canvasWidth);
     const playerCenterX = playerPaddle.x + playerPaddle.width / 2;
+
 
     let bestPlan = {
         targetX: targetPositions[1],
@@ -258,6 +259,9 @@ export function calculateCpuServePlan(
     }
 
     let longestReactionTime = -1;
+
+
+    const candidatePlans = [];
 
     for (const targetX of targetPositions) {
         const candidateBall = createCpuServeCandidateBall(
@@ -312,6 +316,12 @@ export function calculateCpuServePlan(
 
         const reactionTime = distanceToTravel / playerPaddle.speed;
 
+        candidatePlans.push({
+            targetX,
+            effect,
+            reactionTime
+        });
+        /*/
         if (reactionTime > longestReactionTime) {
             longestReactionTime = reactionTime;
 
@@ -320,7 +330,19 @@ export function calculateCpuServePlan(
                 effect
             };
         }
+        */
     }
 
-    return bestPlan;
+    //return bestPlan;
+    candidatePlans.sort(
+        (firsPlan, secondPlan) =>
+            secondPlan.reactionTime = firstPlan.reactionTime
+    );
+
+    const selectedPlan = candidatePlans[Math.min(cpuServePlanRank, candidatePlans.length - 1)];
+
+    return {
+        targetX: selectedPlan.targetX,
+        effect: selectedPlan.effect
+    };
 }
