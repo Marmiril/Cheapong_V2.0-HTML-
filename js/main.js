@@ -16,7 +16,7 @@ import { GameState } from "./states/gameState.js";
 import { inputState } from "./input/inputState.js";
 
 // Difficulty settings
-import { Difficulty, DIFFICULTY_SETTINGS } from "./core/gameConfig.js";
+import { Difficulty, DIFFICULTY_SETTINGS, getDifficultyByMatch, GAME_SETTINGS } from "./core/gameConfig.js";
 
 // Paddle model
 import { Paddle } from "./models/Paddle.js";
@@ -59,47 +59,52 @@ if (!canvas) { throw new Error("Canvas element not found"); }
 
 const ctx = canvas.getContext("2d");
 
-const canvasWidth = canvas.width;
-const canvasHeight = canvas.height;
+
+
+const canvasWidth = GAME_SETTINGS.canvasWidth;
+const canvasHeight = GAME_SETTINGS.canvasHeight;
+
+canvas.width = canvasWidth;
+canvas.height = canvasHeight;
 
 // Player paddle
 const playerPaddle = new Paddle(
-    (canvasWidth - 80) / 2,
-    canvasHeight - 10 - 20,
-    80,
-    10,
-    7
+    (canvasWidth - GAME_SETTINGS.paddleWidth) / 2,
+    canvasHeight - GAME_SETTINGS.paddleHeight - 20,
+    GAME_SETTINGS.paddleWidth,
+    GAME_SETTINGS.paddleHeight,
+    GAME_SETTINGS.paddleSpeed
 );
 
 // CPU paddle
 const cpuPaddle = new Paddle(
-    (canvasWidth - 80) / 2,
-    20,
-    80,
-    10,
-    7
-)
-
-// Current applicaton state
-let appState = AppState.MAIN_MENU;
-
-const scoreSystem = new ScoreSystem(2, 1);
-
-let gameState = GameState.SERVE_PLAYER;
-
-let currentDifficulty = Difficulty.EASY;
+    (canvasWidth - GAME_SETTINGS.paddleWidth) / 2,
+    canvasHeight - GAME_SETTINGS.paddleHeight - 20,
+    GAME_SETTINGS.paddleWidth,
+    GAME_SETTINGS.paddleHeight,
+    GAME_SETTINGS.paddleSpeed
+);
 
 // Ball
 const ball = new Ball(
-    (canvasWidth - 12) / 2,
-    (canvasHeight - 12) / 2,
-    15,
-    5,
-    5
+    (canvasWidth - GAME_SETTINGS.ballSize) / 2,
+    (canvasHeight - GAME_SETTINGS.ballSize) / 2,
+    GAME_SETTINGS.ballSize,
+    0,
+    0
 );
 
 // Normalize ballSpeed
 const BALL_SPEED = Math.sqrt(ball.speedX ** 2 + ball.speedY ** 2);
+
+// Current applicaton state
+let appState = AppState.MAIN_MENU;
+
+const scoreSystem = new ScoreSystem(2, 10);
+
+let gameState = GameState.SERVE_PLAYER;
+
+let currentDifficulty = Difficulty.EASY;
 
 // Time avaliable for the CPU to prepare its serve
 const CPU_SERVE_DELAY = 600;
@@ -137,7 +142,10 @@ window.addEventListener("keydown", (event) => {
         gameState === GameState.GAME_OVER
     ) {
         scoreSystem.resetGame();
-        renderScore(scoreSystem);
+
+        currentDifficulty = getDifficultyByMatch(scoreSystem.getCurrentMatch());
+
+        renderScore(scoreSystem, currentDifficulty);
         resetPaddles();
 
         gameState = GameState.SERVE_PLAYER;
@@ -292,7 +300,11 @@ function handleScore() {
         scoreSystem.pointPlayer();
 
         if (scoreSystem.isMatchEnded()) {
-            scoreSystem.startNextMatch();
+            const nextMatchStarted = scoreSystem.startNextMatch();
+
+            if (nextMatchStarted) {
+                currentDifficulty = getDifficultyByMatch(scoreSystem.getCurrentMatch());
+            }
         }
 
         if (scoreSystem.isGameEnded()) {

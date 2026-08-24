@@ -1,3 +1,14 @@
+
+export const GAME_SETTINGS = {
+    canvasWidth: 800,
+    canvasHeight: 600,
+    paddleWidth: 80,
+    paddleHeight: 10,
+    paddleSpeed: 7,
+    ballSize: 15,
+    ballSpeed: Math.sqrt(5 ** 2 + 5 ** 2)
+};
+
 export const Difficulty = {
     EASY: "EASY",
     NORMAL: "NORMAL",
@@ -29,3 +40,9 @@ export const DIFFICULTY_SETTINGS = {
         servePlanRanks: [0, 1]
     }
 };
+
+export function getDifficultyByMatch(currentMatch) {
+    if (currentMatch <= 3) { return Difficulty.EASY; }
+    if (currentMatch <= 8) { return Difficulty.NORMAL; }
+    return Difficulty.HARD;
+}
