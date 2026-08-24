@@ -48,7 +48,7 @@ let targetX = 0;
 
 export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, difficultySettings) {
 
-    const { phases, maxErrorFactor, maxDrift } = difficultySettings;
+    const { phases, maxErrorFactor, maxDrift, returnMode } = difficultySettings;
 
     // If the ball is moving down, it is going away from the CPU.
     // The CPU resets its phase and returns to the center.
@@ -63,7 +63,7 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
 
     // Checks each phase to know if the CPU should update its target now.
     for (let i = 0; i < phases.length; i++) {
-        const phaseY = canvasHeight * PHASES[i];
+        const phaseY = canvasHeight * phases[i];
 
         // The CPU recalculates only when the ball reaches a new phase.
         if (ball.y <= phaseY && currentPhase < i) {
@@ -78,7 +78,7 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
             const aimError = calculateAimError(cpuPaddle, currentPhase, phases, maxErrorFactor);
 
             // Adds a small random variation to avoid perfect movement.
-            const drift = calculateDrift(cpuPaddle);
+            const drift = calculateDrift(cpuPaddle, maxDrift);
 
             targetX = cleanTargetX + aimError + drift;
             break;
@@ -138,7 +138,7 @@ function calculateAimError(cpuPaddle, phaseIndex, phases, maxErrorFactor) {
     return Math.random() * maxError * 2 - maxError;
 }
 
-function calculateDrift(cpuPaddle) {
+function calculateDrift(cpuPaddle, maxDrift) {
     // Returns a small random side offset based on paddle width.
     return (Math.random() * 2 - 1) * cpuPaddle.width * maxDrift;
 }
