@@ -67,8 +67,4 @@ export class ScoreSystem {
 
         return cpuWon || playerWon;
     }
-
-
-
-
 }

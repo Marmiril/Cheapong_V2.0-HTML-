@@ -183,7 +183,9 @@ function updateGame() {
 
         if (cpuServeStartTime === null) {
             cpuServeStartTime = performance.now();
-            cpuServePlanRank = Math.floor(Math.random() * 3);
+            const servePlanRanks = DIFFICULTY_SETTINGS[currentDifficulty].servePlanRanks;
+
+            cpuServePlanRank = servePlanRanks[Math.floor(Math.random() * servePlanRanks.length)];
         }
 
         const elapsedTime = performance.now() - cpuServeStartTime;
@@ -281,7 +283,7 @@ function render() {
     if (appState === AppState.MAIN_MENU) { renderMainMenu(ctx, canvasWidth, canvasHeight); }
     if (appState === AppState.IN_GAME) {
         renderGameScreen();
-        renderScore(scoreSystem);
+        renderScore(scoreSystem, currentDifficulty);
     }
 }
 

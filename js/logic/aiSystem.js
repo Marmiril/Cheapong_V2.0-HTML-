@@ -54,6 +54,16 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
     // The CPU resets its phase and returns to the center.
     if (ball.speedY >= 0) {
         currentPhase = -1;
+
+        if (returnMode === "CENTER") {
+            targetX = canvasWidth / 2 - cpuPaddle / 2;
+            return targetX;
+        }
+
+        if (returnMode === "TRACK") {
+            targetX = ball.x + ball.size / 2 - cpuPaddle.width / 2;
+            return targetX;
+        }
         // targetX = canvasWidth / 2 - cpuPaddle.width / 2;
         targetX = cpuPaddle.x;
         return targetX;
