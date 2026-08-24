@@ -6,7 +6,7 @@ const difficultyLevel = document.getElementById("difficultyLevel");
 
 if (!playerPoints || !cpuPoints || !matchNumber || !difficultyLevel) { throw new Error("Score elements not found!"); }
 
-export function renderScore(scoreSystem) {
+export function renderScore(scoreSystem, currentDifficulty) {
     playerPoints.textContent = scoreSystem.getPlayerPoints();
     cpuPoints.textContent = scoreSystem.getCpuPoints();
     matchNumber.textContent = `${scoreSystem.getCurrentMatch()}`;

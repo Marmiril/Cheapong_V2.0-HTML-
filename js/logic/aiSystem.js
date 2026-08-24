@@ -56,7 +56,7 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
         currentPhase = -1;
 
         if (returnMode === "CENTER") {
-            targetX = canvasWidth / 2 - cpuPaddle / 2;
+            targetX = canvasWidth / 2 - cpuPaddle.width / 2;
             return targetX;
         }
 

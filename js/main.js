@@ -59,8 +59,6 @@ if (!canvas) { throw new Error("Canvas element not found"); }
 
 const ctx = canvas.getContext("2d");
 
-
-
 const canvasWidth = GAME_SETTINGS.canvasWidth;
 const canvasHeight = GAME_SETTINGS.canvasHeight;
 
@@ -105,6 +103,15 @@ const scoreSystem = new ScoreSystem(2, 10);
 let gameState = GameState.SERVE_PLAYER;
 
 let currentDifficulty = Difficulty.EASY;
+
+// Stores who scored the last point
+let pointWinner = null;
+
+// Stores when the point message must disappear
+let pointMessageEndTime = null;
+
+// Stores which player serves after the pause
+let nextServeState = null;
 
 // Time avaliable for the CPU to prepare its serve
 const CPU_SERVE_DELAY = 600;
@@ -183,7 +190,27 @@ function gameLoop() {
 gameLoop();
 
 function updateGame() {
-    updatePlayerPaddle(playerPaddle, inputState, canvasWidth);
+
+    function updateGame() {
+        if (gameState === GameState.POINT_OVER) {
+            if (performance.now() >= pointMessageEndTime) {
+                gameState = nextServeState;
+
+                pointWinner = null;
+                pointMessageEndTime = null;
+                nextServeState = null;
+            }
+            return;
+        }
+
+        if (gameState === GameState.MATCH_OVER ||
+            gameState === GameState.GAME_OVER
+        ) { return; }
+
+        updatePlayerPaddle(playerPaddle, inputState, canvasWidth);
+    }
+
+    //  updatePlayerPaddle(playerPaddle, inputState, canvasWidth);
 
     if (gameState === GameState.SERVE_PLAYER) { updateServe(ball, playerPaddle, gameState); }
 

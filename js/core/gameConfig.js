@@ -6,7 +6,8 @@ export const GAME_SETTINGS = {
     paddleHeight: 10,
     paddleSpeed: 7,
     ballSize: 15,
-    ballSpeed: Math.sqrt(5 ** 2 + 5 ** 2)
+    ballSpeed: Math.sqrt(5 ** 2 + 5 ** 2),
+    pointMessageDuration: 700
 };
 
 export const Difficulty = {
