@@ -226,7 +226,7 @@ function updateGame() {
     }
 
     if (gameState === GameState.RALLY) {
-        const cpuTargetX = calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight);
+        const cpuTargetX = calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, DIFFICULTY_SETTINGS[currentDifficulty]);
 
         updateCpuPaddle(cpuPaddle, cpuTargetX, canvasWidth);
         updateBall(ball);

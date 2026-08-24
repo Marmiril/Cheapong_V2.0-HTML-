@@ -3,13 +3,14 @@ import { normalizeBallSpeed } from "./ballMovementSystem.js"
 
 // Defines the moments when the CPU recalculates its target.
 // Higher values happen earlier while the ball is still far from the CPU.
-const PHASES = [
+/* const PHASES = [
     //0.90,
     //0.75,
     //0.50,
     0.25,
     0.10
 ];
+*/
 
 // Effects for Ai response
 export const NORMAL_EFFECTS = [
@@ -19,7 +20,6 @@ export const NORMAL_EFFECTS = [
     HitEffect.BREAK_LEFT,
     HitEffect.BREAK_RIGHT
 ];
-
 
 // Effects the CPU can compare when preparing a serve
 export const CPU_SERVE_EFFECTS = [
@@ -40,13 +40,16 @@ let targetX = 0;
 
 // Controle how much the CPU can miss its prediction.
 // Higher value means a less accurate CPU.
-const MAX_ERROR_FACTOR = 0.40;
+// const MAX_ERROR_FACTOR = 0.40;
 
 // Controls a small random side variation added to the CPU target.
 // This makes the CPU movement feel less robotic.
-const MAX_DRIFT = 0.12;
+// const MAX_DRIFT = 0.12;
 
-export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight) {
+export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, difficultySettings) {
+
+    const { phases, maxErrorFactor, maxDrift } = difficultySettings;
+
     // If the ball is moving down, it is going away from the CPU.
     // The CPU resets its phase and returns to the center.
     if (ball.speedY >= 0) {
@@ -59,7 +62,7 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight) 
     if (currentPhase === -1) { targetX = cpuPaddle.x; }
 
     // Checks each phase to know if the CPU should update its target now.
-    for (let i = 0; i < PHASES.length; i++) {
+    for (let i = 0; i < phases.length; i++) {
         const phaseY = canvasHeight * PHASES[i];
 
         // The CPU recalculates only when the ball reaches a new phase.
@@ -72,7 +75,7 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight) 
                 - cpuPaddle.width / 2;
 
             // Adds a controlled aiming mistake depending on the current phase.
-            const aimError = calculateAimError(cpuPaddle, currentPhase);
+            const aimError = calculateAimError(cpuPaddle, currentPhase, phases, maxErrorFactor);
 
             // Adds a small random variation to avoid perfect movement.
             const drift = calculateDrift(cpuPaddle);
@@ -124,12 +127,12 @@ function reflectX(rawBallCenterX, ballSize, canvasWidth) {
     return reflectedX + minBallCenterX;
 }
 
-function calculateAimError(cpuPaddle, phaseIndex) {
+function calculateAimError(cpuPaddle, phaseIndex, phases, maxErrorFactor) {
     // Early phases have more error, later phases have less error.
-    const phaseErrorFactor = PHASES[phaseIndex];
+    const phaseErrorFactor = phases[phaseIndex];
 
     // Maximum possible error based on paddle width and phase.
-    const maxError = cpuPaddle.width * MAX_ERROR_FACTOR * phaseErrorFactor;
+    const maxError = cpuPaddle.width * maxErrorFactor * phaseErrorFactor;
 
     // Returns a random valuie between -maxError and +maxError.
     return Math.random() * maxError * 2 - maxError;
@@ -137,7 +140,7 @@ function calculateAimError(cpuPaddle, phaseIndex) {
 
 function calculateDrift(cpuPaddle) {
     // Returns a small random side offset based on paddle width.
-    return (Math.random() * 2 - 1) * cpuPaddle.width * MAX_DRIFT;
+    return (Math.random() * 2 - 1) * cpuPaddle.width * maxDrift;
 }
 
 export function getCandidateSpeedX(ball, effect) {

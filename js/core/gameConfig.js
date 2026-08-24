@@ -21,7 +21,7 @@ export const DIFFICULTY_SETTINGS = {
         servePlanRanks: [1, 2, 3]
     },
 
-    [Difficulty.EASY]: {
+    [Difficulty.HARD]: {
         phases: [0.90, 0.75, 0.50, 0.25, 0.10],
         maxErrorFactor: 0.15,
         maxDrift: 0.05,
