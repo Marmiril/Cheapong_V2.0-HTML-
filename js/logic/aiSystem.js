@@ -252,15 +252,15 @@ export function calculateCpuServePlan(
     const targetPositions = getCpuServeTargetPositions(cpuPaddle, canvasWidth);
     const playerCenterX = playerPaddle.x + playerPaddle.width / 2;
 
-
-    let bestPlan = {
-        targetX: targetPositions[1],
-        effect: HitEffect.NONE
-    }
-
-    let longestReactionTime = -1;
-
-
+    /*
+        let bestPlan = {
+            targetX: targetPositions[1],
+            effect: HitEffect.NONE
+        }
+    
+        let longestReactionTime = -1;
+    
+    */
     const candidatePlans = [];
 
     for (const targetX of targetPositions) {

@@ -15,6 +15,9 @@ import { GameState } from "./states/gameState.js";
 // Input state
 import { inputState } from "./input/inputState.js";
 
+// Difficulty settings
+import { Difficulty, DIFFICULTY_SETTINGS } from "./core/gameConfig.js";
+
 // Paddle model
 import { Paddle } from "./models/Paddle.js";
 
@@ -83,6 +86,8 @@ let appState = AppState.MAIN_MENU;
 const scoreSystem = new ScoreSystem(2, 1);
 
 let gameState = GameState.SERVE_PLAYER;
+
+let currentDifficulty = Difficulty.EASY;
 
 // Ball
 const ball = new Ball(
