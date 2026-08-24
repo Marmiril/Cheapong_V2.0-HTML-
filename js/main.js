@@ -79,7 +79,7 @@ const playerPaddle = new Paddle(
 // CPU paddle
 const cpuPaddle = new Paddle(
     (canvasWidth - GAME_SETTINGS.paddleWidth) / 2,
-    canvasHeight - GAME_SETTINGS.paddleHeight - 20,
+    20,
     GAME_SETTINGS.paddleWidth,
     GAME_SETTINGS.paddleHeight,
     GAME_SETTINGS.paddleSpeed
@@ -95,7 +95,7 @@ const ball = new Ball(
 );
 
 // Normalize ballSpeed
-const BALL_SPEED = Math.sqrt(ball.speedX ** 2 + ball.speedY ** 2);
+const BALL_SPEED = GAME_SETTINGS.ballSpeed;
 
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
