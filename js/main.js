@@ -48,6 +48,9 @@ import { ScoreSystem } from "./game/scoreSystem.js";
 // Score renderer
 import { renderScore } from "./render/scoreRenderer.js";
 
+// RPS renderer
+import { renderRpsScreen } from "./render/rpsRenderer.js";
+
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -364,7 +367,16 @@ function renderGameScreen() {
 function render() {
     if (appState === AppState.MAIN_MENU) { renderMainMenu(ctx, canvasWidth, canvasHeight); }
     if (appState === AppState.IN_GAME) {
-        renderGameScreen();
+
+        if (gameState === GameState.RPS) {
+            renderRpsScreen(
+                ctx,
+                canvasWidth,
+                canvasHeight
+            );
+        } else {
+            renderGameScreen();
+        }
         renderScore(scoreSystem, currentDifficulty);
     }
 }
