@@ -191,24 +191,24 @@ gameLoop();
 
 function updateGame() {
 
-    function updateGame() {
-        if (gameState === GameState.POINT_OVER) {
-            if (performance.now() >= pointMessageEndTime) {
-                gameState = nextServeState;
 
-                pointWinner = null;
-                pointMessageEndTime = null;
-                nextServeState = null;
-            }
-            return;
+    if (gameState === GameState.POINT_OVER) {
+        if (performance.now() >= pointMessageEndTime) {
+            gameState = nextServeState;
+
+            pointWinner = null;
+            pointMessageEndTime = null;
+            nextServeState = null;
         }
-
-        if (gameState === GameState.MATCH_OVER ||
-            gameState === GameState.GAME_OVER
-        ) { return; }
-
-        updatePlayerPaddle(playerPaddle, inputState, canvasWidth);
+        return;
     }
+
+    if (gameState === GameState.MATCH_OVER ||
+        gameState === GameState.GAME_OVER
+    ) { return; }
+
+    updatePlayerPaddle(playerPaddle, inputState, canvasWidth);
+
 
     //  updatePlayerPaddle(playerPaddle, inputState, canvasWidth);
 
