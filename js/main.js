@@ -100,7 +100,7 @@ let appState = AppState.MAIN_MENU;
 
 const scoreSystem = new ScoreSystem(2, 10);
 
-let gameState = GameState.SERVE_PLAYER;
+let gameState = GameState.RPS;
 
 let currentDifficulty = Difficulty.EASY;
 
@@ -134,7 +134,7 @@ window.addEventListener("keydown", (event) => {
         appState === AppState.MAIN_MENU
     ) {
         appState = AppState.IN_GAME;
-        gameState = GameState.SERVE_PLAYER;
+        gameState = GameState.RPS;
         return;
     }
     if (event.code === "Space" &&
@@ -170,7 +170,7 @@ window.addEventListener("keydown", (event) => {
         if (nextMatchStarted) {
             currentDifficulty = getDifficultyByMatch(scoreSystem.getCurrentMatch());
             resetPaddles();
-            gameState = GameState.SERVE_CPU;
+            gameState = GameState.RPS;
         }
         return;
     }
@@ -217,7 +217,8 @@ function updateGame() {
         return;
     }
 
-    if (gameState === GameState.MATCH_OVER ||
+    if (gameState === GameState.RPS ||
+        gameState === GameState.MATCH_OVER ||
         gameState === GameState.GAME_OVER
     ) { return; }
 
