@@ -76,12 +76,13 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
                     break;
                 }
             }
-            currentTrackingPhase = -1;
-            targetX = cpuPaddle.x;
+
             return targetX;
         }
-        // targetX = canvasWidth / 2 - cpuPaddle.width / 2;
-
+        // STAY MODE   
+        currentTrackingPhase = -1;
+        targetX = cpuPaddle.x;
+        return targetX;
     }
 
     currentTrackingPhase = -1;

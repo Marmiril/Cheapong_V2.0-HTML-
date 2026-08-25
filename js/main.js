@@ -161,6 +161,20 @@ window.addEventListener("keydown", (event) => {
         return;
     }
 
+    if (event.code === "Space" &&
+        appState === AppState.IN_GAME &&
+        gameState === GameState.MATCH_OVER
+    ) {
+        const nextMatchStarted = scoreSystem.startNextMatch();
+
+        if (nextMatchStarted) {
+            currentDifficulty = getDifficultyByMatch(scoreSystem.getCurrentMatch());
+            resetPaddles();
+            gameState = GameState.SERVE_CPU;
+        }
+        return;
+    }
+
     if (event.code === "ArrowLeft") { inputState.left = true; }
     if (event.code === "ArrowRight") { inputState.right = true; }
     if (event.code === "ArrowUp") { inputState.up = true; }
@@ -286,6 +300,38 @@ function renderGameScreen() {
     drawPaddle(ctx, cpuPaddle);
     drawBall(ctx, ball);
 
+    if (gameState === GameState.POINT_OVER) {
+        const message = pointWinner = "PLAYER"
+            ? "PLAYER SCORES"
+            : "CPU SCORES"
+
+        drawCenteredText(
+            ctx,
+            canvasWidth,
+            message,
+            canvasHeight * 0.50,
+            32
+        );
+    }
+
+    if (gameState === GameState.MATCH_OVER) {
+        drawCenteredText(
+            ctx,
+            canvasWidth,
+            "PLAYER WINS THE MATCH!",
+            canvasHeight * 0.45,
+            32
+        );
+
+        drawCenteredText(
+            ctx,
+            canvasWidth,
+            "PRESS SPACE FOR NEXT MATCH",
+            canvasHeight * 0.55,
+            32
+        )
+    }
+
     if (gameState === GameState.GAME_OVER) {
 
         const message = scoreSystem.winner === "CPU"
@@ -327,24 +373,24 @@ function handleScore() {
         scoreSystem.pointPlayer();
 
         if (scoreSystem.isMatchEnded()) {
-            const nextMatchStarted = scoreSystem.startNextMatch();
-
-            if (nextMatchStarted) {
-                currentDifficulty = getDifficultyByMatch(scoreSystem.getCurrentMatch());
-            }
-        }
-
-        if (scoreSystem.isGameEnded()) {
-            gameState = GameState.GAME_OVER;
+            //  const nextMatchStarted = scoreSystem.startNextMatch();
+            gameState === GameState.GAME_OVER;
             resetPaddles();
             return;
         }
 
-        gameState = GameState.SERVE_CPU;
-        resetPaddles();
+        if (scoreSystem.isMatchEnded) {
+            // currentDifficulty = getDifficultyByMatch(scoreSystem.getCurrentMatch());
+            gameState === GameState.MATCH_OVER;
+            resetPaddles;
+            return;
+        }
+
+        startPointPause("PLAYER", GameState.SERVE_CPU);
+        return;
     }
 
-    if (ball.y + ball.size >= canvas.height) {
+    if (ball.y + ball.size >= canvasHeight) {
         scoreSystem.pointCpu();
 
         if (scoreSystem.isGameEnded()) {
@@ -353,9 +399,18 @@ function handleScore() {
             return;
         }
 
-        gameState = GameState.SERVE_PLAYER;
-        resetPaddles();
+        startPointPause("CPU", GameState.SERVE_PLAYER);
     }
+}
+
+function startPointPause(winner, serveState) {
+    pointwinner = winner;
+
+    pointMessageEndTime = performance.now() + GAME_SETTINGS.pointMessageDuration;
+
+    nextServetState = serveState;
+    gameState = GameState.POINT_OVER;
+    resetPaddles();
 }
 
 function resetPaddles() {
