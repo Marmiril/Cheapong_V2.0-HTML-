@@ -301,7 +301,7 @@ function renderGameScreen() {
     drawBall(ctx, ball);
 
     if (gameState === GameState.POINT_OVER) {
-        const message = pointWinner = "PLAYER"
+        const message = pointWinner === "PLAYER"
             ? "PLAYER SCORES"
             : "CPU SCORES"
 
@@ -374,15 +374,15 @@ function handleScore() {
 
         if (scoreSystem.isMatchEnded()) {
             //  const nextMatchStarted = scoreSystem.startNextMatch();
-            gameState === GameState.GAME_OVER;
+            gameState = GameState.GAME_OVER;
             resetPaddles();
             return;
         }
 
-        if (scoreSystem.isMatchEnded) {
+        if (scoreSystem.isMatchEnded()) {
             // currentDifficulty = getDifficultyByMatch(scoreSystem.getCurrentMatch());
-            gameState === GameState.MATCH_OVER;
-            resetPaddles;
+            gameState = GameState.MATCH_OVER;
+            resetPaddles();
             return;
         }
 
@@ -404,11 +404,11 @@ function handleScore() {
 }
 
 function startPointPause(winner, serveState) {
-    pointwinner = winner;
+    pointWinner = winner;
 
     pointMessageEndTime = performance.now() + GAME_SETTINGS.pointMessageDuration;
 
-    nextServetState = serveState;
+    nextServeState = serveState;
     gameState = GameState.POINT_OVER;
     resetPaddles();
 }
