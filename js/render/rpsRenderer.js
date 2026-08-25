@@ -1,5 +1,5 @@
-import { RpsChoice } from "../game/rpsSystem";
-import { clearCanvas, drawCenteredText } from "./gameRenderer";
+import { RpsChoice } from "../game/rpsSystem.js";
+import { clearCanvas, drawCenteredText } from "./gameRenderer.js";
 
 function createRpsImage(fileName) {
     const image = new Image();
@@ -30,7 +30,8 @@ const rpsImages = Object.freeze([
 export function renderRpsScreen(
     ctx,
     canvasWidth,
-    canvasHeight
+    canvasHeight,
+    selectedChoice
 ) {
     clearCanvas(ctx, canvasWidth, canvasHeight);
 
@@ -69,5 +70,17 @@ export function renderRpsScreen(
             imageSize,
             imageSize
         );
+
+        if (rpsImage.choice === selectedChoice) {
+            ctx.strokeStyle = "#ffd700";
+            ctx.lineWidth = 6;
+
+            ctx.strokeRect(
+                imageX - 8,
+                imageY - 8,
+                imageSize + 16,
+                imageSize + 16
+            );
+        }
     });
 }

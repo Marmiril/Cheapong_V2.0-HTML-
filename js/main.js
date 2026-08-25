@@ -51,6 +51,9 @@ import { renderScore } from "./render/scoreRenderer.js";
 // RPS renderer
 import { renderRpsScreen } from "./render/rpsRenderer.js";
 
+// Rock-paper-scissors system
+import { RPS_CHOICES } from "./game/rpsSystem.js";
+
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -67,6 +70,9 @@ const canvasHeight = GAME_SETTINGS.canvasHeight;
 
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
+
+// Currently selected RPS option
+let selectedRpsIndex = 0;
 
 // Player paddle
 const playerPaddle = new Paddle(
@@ -372,7 +378,8 @@ function render() {
             renderRpsScreen(
                 ctx,
                 canvasWidth,
-                canvasHeight
+                canvasHeight,
+                RPS_CHOICES[selectedRpsIndex]
             );
         } else {
             renderGameScreen();
