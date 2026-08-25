@@ -372,7 +372,7 @@ function handleScore() {
     if (ball.y <= 0) {
         scoreSystem.pointPlayer();
 
-        if (scoreSystem.isMatchEnded()) {
+        if (scoreSystem.isGameEnded()) {
             //  const nextMatchStarted = scoreSystem.startNextMatch();
             gameState = GameState.GAME_OVER;
             resetPaddles();

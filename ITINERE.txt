@@ -244,28 +244,66 @@ ITINERARIO
      appState vuelve a MAIN_MENU.
 
 
+54 - CONFIGURACIÓN CENTRALIZADA DEL JUEGO Y LA DIFICULTAD.
+     gameConfig.js incorpora GAME_SETTINGS, Difficulty y DIFFICULTY_SETTINGS.
+     GAME_SETTINGS centraliza dimensiones, velocidades y la duración del mensaje de punto.
+     getDifficultyByMatch() asigna EASY, NORMAL o HARD según el match actual.
+     scoreRenderer.js muestra la dificultad activa junto al número de match.
+
+55 - NIVELES DE DIFICULTAD DE LA CPU.
+     Cada dificultad define sus fases de reacción, error máximo, drift y comportamiento de retorno.
+     EASY utiliza STAY cuando la bola se aleja de la CPU.
+     NORMAL utiliza CENTER.
+     HARD utiliza TRACK.
+     main.js pasa la configuración activa a calculateCpuTargetX().
+
+56 - VARIEDAD DEL SAQUE CPU SEGÚN LA DIFICULTAD.
+     getCpuServeTargetPositions() utiliza siete posiciones simétricas.
+     calculateCpuServePlan() guarda los planes candidatos y los ordena por reactionTime.
+     servePlanRanks limita la calidad de los planes disponibles en cada dificultad.
+     cpuServePlanRank se elige una sola vez al comenzar cada saque CPU.
+
+57 - RECÁLCULO DEL PLAN DURANTE LA PREPARACIÓN DEL SAQUE CPU.
+     Mientras transcurre CPU_SERVE_DELAY, calculateCpuServePlan() usa la posición actual del jugador.
+     Al terminar el temporizador, el último plan queda bloqueado.
+     La CPU termina de alcanzar targetX y solo entonces lanza la bola.
+     Los datos de preparación se reinician exclusivamente después del lanzamiento.
+
+58 - SEGUIMIENTO POR FASES EN DIFICULTAD HARD.
+     trackingPhases define tres momentos de actualización mientras la bola se aleja de la CPU.
+     currentTrackingPhase evita que el objetivo se recalcule continuamente.
+     Entre fases, updateCpuPaddle() mantiene el último objetivo y conserva la velocidad de la pala.
+     EASY y NORMAL no ejecutan las fases de seguimiento de HARD.
+
+59 - PAUSAS Y MENSAJES DE FINALIZACIÓN.
+     GameState incorpora POINT_OVER, MATCH_OVER y GAME_OVER.
+     Tras un punto normal, POINT_OVER muestra el ganador durante 700 milisegundos.
+     nextServeState conserva quién debe sacar después de la pausa.
+     MATCH_OVER muestra la victoria del jugador y espera SPACE para continuar.
+     Si CPU gana un match o PLAYER gana el último, se activa GAME_OVER.
+
+
 ESTADO ACTUAL
 
-- El menú entra correctamente en SERVE_PLAYER.
-- El jugador y la CPU disponen de saques diferenciados con una velocidad base compartida desde main.js.
-- La CPU predice rebotes laterales, compara efectos y prepara su saque antes de lanzarlo.
-- La dificultad de la CPU está reducida temporalmente a dos fases activas para facilitar las pruebas.
-- La pala CPU conserva su posición cuando la bola se aleja de ella.
-- Las palas regresan al centro después de cada punto.
-- ScoreSystem registra puntos, ganador, final de match y número del match actual.
-- El marcador HTML muestra playerPoints, cpuPoints y matchNumber.
-- La dificultad se muestra como EASY, pero todavía no está conectada a la lógica.
-- GAME_OVER muestra un mensaje diferente para PLAYER y CPU.
-- SPACE durante GAME_OVER reinicia el sistema y devuelve la aplicación a MAIN_MENU.
-- GameState.MATCH_OVER existe, pero todavía no se utiliza desde main.js.
-- La constante BALL_SPEED = 6 de serveSystem.js permanece declarada, aunque los lanzamientos usan el parámetro ballSpeed recibido desde main.js.
-- La rama del punto de CPU comprueba isGameEnded().
-- La rama del punto de PLAYER todavía no comprueba isGameEnded() en la versión actual de main.
+- El juego dispone de puntuación, matches, dificultad progresiva y saques diferenciados.
+- EASY, NORMAL y HARD modifican la reacción, precisión, retorno y planificación del saque de la CPU.
+- El plan de saque CPU se recalcula durante los 600 milisegundos de preparación y después queda bloqueado.
+- HARD sigue la bola mediante fases discretas, sin recalcular el objetivo en cada fotograma.
+- POINT_OVER pausa el juego durante 700 milisegundos y muestra quién ha marcado.
+- MATCH_OVER espera SPACE antes de iniciar el siguiente match ganado por PLAYER.
+- GAME_OVER se activa si CPU gana un match o PLAYER completa el último.
+- La rama main aún contiene una condición incorrecta en handleScore(): tras una victoria de PLAYER comprueba isMatchEnded() para activar GAME_OVER. La corrección realizada en local debe subirse y verificarse.
+- Los archivos adjuntos disponibles en esta conversación son anteriores a la rama main y no representan el estado actual del proyecto.
 
 
 SIGUIENTE PUNTO
 
-54 - CORREGIR EL FINAL DEL JUEGO CUANDO GANA PLAYER.
-     Tras pointPlayer(), comprobar isGameEnded() antes de iniciar el siguiente match.
-     Si el jugador ha ganado el último match, establecer GameState.GAME_OVER y detener el flujo con return.
-     Si todavía quedan matches, ejecutar startNextMatch() y continuar con SERVE_CPU.
+60 - MINIJUEGO DE PIEDRA, PAPEL O TIJERA PARA DECIDIR EL PRIMER SAQUE DEL MATCH.
+     Se ejecutará al comenzar cada match, no después de cada punto.
+     PLAYER elegirá piedra, papel o tijera y CPU realizará una elección aleatoria.
+     Un empate repetirá el minijuego sin iniciar el match.
+     Si gana PLAYER, el match comenzará en SERVE_PLAYER.
+     Si gana CPU, el match comenzará en SERVE_CPU.
+     El flujo inicial pasará de MAIN_MENU a IN_GAME y al estado del minijuego.
+     Después de MATCH_OVER, SPACE iniciará el siguiente match mediante el mismo minijuego.
+     Los saques posteriores a cada punto mantendrán la alternancia existente.
