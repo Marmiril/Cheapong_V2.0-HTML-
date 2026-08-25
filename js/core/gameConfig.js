@@ -20,6 +20,7 @@ export const DIFFICULTY_SETTINGS = {
 
     [Difficulty.EASY]: {
         phases: [0.50, 0.10],
+        trackingPhases: [],
         maxErrorFactor: 0.40,
         maxDrift: 0.12,
         returnMode: "STAY",
@@ -27,6 +28,7 @@ export const DIFFICULTY_SETTINGS = {
     },
     [Difficulty.NORMAL]: {
         phases: [0.50, 0.25, 0.10],
+        trackingPhases: [],
         maxErrorFactor: 0.25,
         maxDrift: 0.08,
         returnMode: "CENTER",
@@ -35,6 +37,7 @@ export const DIFFICULTY_SETTINGS = {
 
     [Difficulty.HARD]: {
         phases: [0.90, 0.75, 0.50, 0.25, 0.10],
+        trackingPhases: [0.25, 0.50, 0.75],
         maxErrorFactor: 0.15,
         maxDrift: 0.05,
         returnMode: "TRACK",

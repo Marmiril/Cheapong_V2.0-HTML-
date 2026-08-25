@@ -35,6 +35,9 @@ const CPU_BREAK_BONUS = 2.2;
 // Prevents the CPU from recalculating the target every frame.
 let currentPhase = -1;
 
+// Stores the las tracking phase already processed
+let currentTrackingPhase = -1;
+
 // Stores the curretn X postiion the CPU wants to reach
 let targetX = 0;
 
@@ -48,7 +51,7 @@ let targetX = 0;
 
 export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, difficultySettings) {
 
-    const { phases, maxErrorFactor, maxDrift, returnMode } = difficultySettings;
+    const { phases, trackingPhases, maxErrorFactor, maxDrift, returnMode } = difficultySettings;
 
     // If the ball is moving down, it is going away from the CPU.
     // The CPU resets its phase and returns to the center.
@@ -56,18 +59,33 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
         currentPhase = -1;
 
         if (returnMode === "CENTER") {
+            currentTrackingPhase = -1;
             targetX = canvasWidth / 2 - cpuPaddle.width / 2;
             return targetX;
         }
 
         if (returnMode === "TRACK") {
-            targetX = ball.x + ball.size / 2 - cpuPaddle.width / 2;
+            if (currentTrackingPhase === -1) { targetX = cpuPaddle.x; }
+
+            for (let i = 0; i < trackingPhases.length; i++) {
+                const trackingPhaseY = canvasHeight * trackingPhases[i];
+
+                if (ball.y >= trackingPhaseY && currentTrackingPhase < i) {
+                    currentTrackingPhase = i;
+                    targetX = ball.x + ball.size / 2 - cpuPaddle.width / 2;
+                    break;
+                }
+            }
+            currentTrackingPhase = -1;
+            targetX = cpuPaddle.x;
             return targetX;
         }
         // targetX = canvasWidth / 2 - cpuPaddle.width / 2;
-        targetX = cpuPaddle.x;
-        return targetX;
+
     }
+
+    currentTrackingPhase = -1;
+
     // 
     if (currentPhase === -1) { targetX = cpuPaddle.x; }
 
