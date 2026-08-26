@@ -233,7 +233,7 @@ window.addEventListener("keydown", (event) => {
 
             // rpsResult = determineRpsWinner(playerRpsChoice, cpuRpsChoice);
 
-            if (event.repeat || cpuRpsSweepStartTime !== null) { return; }
+            // if (event.repeat || cpuRpsSweepStartTime !== null) { return; }
 
             nextServeState = null;
 
@@ -285,7 +285,7 @@ function updateGame() {
         return;
     }
 
-    if (gameState === GameState.RPS ||
+    if (// gameState === GameState.RPS ||
         gameState === GameState.MATCH_OVER ||
         gameState === GameState.GAME_OVER
     ) { return; }
