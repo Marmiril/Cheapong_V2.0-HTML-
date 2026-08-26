@@ -201,10 +201,12 @@ window.addEventListener("keydown", (event) => {
     if (appState === AppState.IN_GAME &&
         gameState === GameState.RPS
     ) {
-        if (event.repeat) { return; }
+        if (event.repeat || cpuRpsSweepStartTime !== null) { return; }
 
         if (rpsResult === RpsResult.DRAW) {
-            resetRpsRound();
+            if (event.code === "Space") {
+                resetRpsRound();
+            }
             return;
         }
 
@@ -234,11 +236,12 @@ window.addEventListener("keydown", (event) => {
             // rpsResult = determineRpsWinner(playerRpsChoice, cpuRpsChoice);
 
             // if (event.repeat || cpuRpsSweepStartTime !== null) { return; }
-
-            nextServeState = null;
-
-            if (rpsResult === RpsResult.PLAYER) { nextServeState = GameState.SERVE_PLAYER; }
-            if (rpsResult === RpsResult.CPU) { nextServeState = GameState.SERVE_CPU; }
+            /*
+                        nextServeState = null;
+            
+                        if (rpsResult === RpsResult.PLAYER) { nextServeState = GameState.SERVE_PLAYER; }
+                        if (rpsResult === RpsResult.CPU) { nextServeState = GameState.SERVE_CPU; }
+            */
         }
         return;
     }
@@ -273,7 +276,6 @@ gameLoop();
 
 function updateGame() {
 
-
     if (gameState === GameState.POINT_OVER) {
         if (performance.now() >= pointMessageEndTime) {
             gameState = nextServeState;
@@ -284,8 +286,35 @@ function updateGame() {
         }
         return;
     }
+    if (gameState === GameState.RPS) {
+        if (cpuRpsSweepStartTime === null) { return; }
 
-    if (// gameState === GameState.RPS ||
+        const elapsedTime = performance.now() - cpuRpsSweepStartTime;
+
+        if (elapsedTime >= CPU_RPS_SWEEP_DURATION) {
+            cpuRpsDisplayIndex = Math.floor(
+                elapsedTime / CPU_RPS_SWEEP_INTERVAL
+            ) % RPS_CHOICES.length;
+            return;
+        }
+
+        cpuRpsDisplayIndex = RPS_CHOICES.indexOf(cpuRpsChoice);
+
+        rpsResult = determineRpsWinner(
+            playerRpsChoice,
+            cpuRpsChoice
+        );
+
+        nextServeState = null;
+
+        if (rpsResult === RpsResult.PLAYER) { nextServeState = GameState.SERVE_PLAYER; }
+        if (rpsResult === RpsResult.CPU) { nextServeState = GameState.SERVE_CPU; }
+
+        cpuRpsSweepStartTime = null;
+        return;
+    }
+
+    if (gameState === GameState.RPS ||
         gameState === GameState.MATCH_OVER ||
         gameState === GameState.GAME_OVER
     ) { return; }
@@ -381,34 +410,6 @@ function renderGameScreen() {
             canvasHeight * 0.50,
             32
         );
-    }
-
-    if (gameState === GameState.RPS) {
-        if (cpuRpsSweepStartTime === null) { return; }
-
-        const elapsedTime = performance.now() - cpuRpsSweepStartTime;
-
-        if (elapsedTime >= CPU_RPS_SWEEP_DURATION) {
-            cpuRpsDisplayIndex = Math.floor(
-                elapsedTime / CPU_RPS_SWEEP_INTERVAL
-            ) % RPS_CHOICES.length;
-            return;
-        }
-
-        cpuRpsDisplayIndex = RPS_CHOICES.indexOf(cpuRpsChoice);
-
-        rpsResult = determineRpsWinner(
-            playerRpsChoice,
-            cpuRpsChoice
-        );
-
-        nextServeState = null;
-
-        if (rpsResult === RpsResult.PLAYER) { nextServeState = GameState.SERVE_PLAYER; }
-        if (rpsResult === RpsResult.CPU) { nextServeState = GameState.SERVE_CPU; }
-
-        cpuRpsSweepStartTime = null;
-        return;
     }
 
     if (gameState === GameState.MATCH_OVER) {
