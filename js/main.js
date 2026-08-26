@@ -79,6 +79,14 @@ let playerRpsChoice = null;
 let cpuRpsChoice = null;
 let rpsResult = null;
 
+// CPU animations settings
+const CPU_RPS_SWEEP_DURATION = 2000;
+const CPU_RPS_SWEEP_INTERVAL = 100;
+
+// CPU selection animations state
+let cpuRpsSweepStartTime = null;
+let cpuRpsDisplayIndex = 0;
+
 // Player paddle
 const playerPaddle = new Paddle(
     (canvasWidth - GAME_SETTINGS.paddleWidth) / 2,
@@ -217,9 +225,15 @@ window.addEventListener("keydown", (event) => {
 
         if (event.code === "Space") {
             playerRpsChoice = RPS_CHOICES[selectedRpsIndex];
-            cpuRpsChoice = getRandomCpuChoice();
 
-            rpsResult = determineRpsWinner(playerRpsChoice, cpuRpsChoice);
+            cpuRpsChoice = getRandomCpuChoice();
+            cpuRpsDisplayIndex = 0;
+            cpuRpsSweepStartTime = performance.now();
+
+
+            // rpsResult = determineRpsWinner(playerRpsChoice, cpuRpsChoice);
+
+            if (event.repeat || cpuRpsSweepStartTime !== null) { return; }
 
             nextServeState = null;
 
