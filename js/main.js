@@ -426,7 +426,7 @@ function renderGameScreen() {
             "PRESS SPACE FOR NEXT MATCH",
             canvasHeight * 0.55,
             32
-        )
+        );
     }
 
     if (gameState === GameState.GAME_OVER) {
