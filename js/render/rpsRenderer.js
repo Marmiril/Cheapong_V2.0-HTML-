@@ -55,7 +55,7 @@ export function renderRpsScreen(
     ctx.imageSmoothingEnabled = false;
 
     rpsImages.forEach((rpsImage, index) => {
-        if (rpsImage.image.complete ||
+        if (!rpsImage.image.complete ||
             rpsImage.image.naturalWidth === 0
         ) {
             return;

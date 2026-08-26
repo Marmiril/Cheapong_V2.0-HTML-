@@ -1,4 +1,4 @@
-5/**
+/**
  * Cheapong - Main entry point
  * 
  * - get canvas
