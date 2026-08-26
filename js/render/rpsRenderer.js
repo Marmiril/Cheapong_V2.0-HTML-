@@ -34,14 +34,18 @@ export function renderRpsScreen(
     selectedChoice,
     playerChoice,
     cpuChoice,
-    result
+    result,
+    currentMatch
 ) {
     clearCanvas(ctx, canvasWidth, canvasHeight);
+
+    const message = `MATCH ${currentMatch} - CHOOSE YOUR MOVE`;
+
 
     drawCenteredText(
         ctx,
         canvasWidth,
-        "CHOOSE YOUR MOVE",
+        message,
         canvasHeight * 0.18,
         32
     );

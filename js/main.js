@@ -210,7 +210,22 @@ window.addEventListener("keydown", (event) => {
             return;
         }
 
-        if (rpsResult !== null) { return; }
+        if (rpsResult !== null) {
+
+            if (
+                event.code === "Space" &&
+                nextServeState !== null
+            ) {
+                gameState = nextServeState;
+
+                resetPaddles();
+                resetRpsRound();
+
+                nextServeState = null;
+            }
+
+            return;
+        }
 
         if (event.code === "ArrowLeft") {
             selectedRpsIndex = (
@@ -291,7 +306,7 @@ function updateGame() {
 
         const elapsedTime = performance.now() - cpuRpsSweepStartTime;
 
-        if (elapsedTime >= CPU_RPS_SWEEP_DURATION) {
+        if (elapsedTime < CPU_RPS_SWEEP_DURATION) {
             cpuRpsDisplayIndex = Math.floor(
                 elapsedTime / CPU_RPS_SWEEP_INTERVAL
             ) % RPS_CHOICES.length;
@@ -476,7 +491,8 @@ function render() {
                 RPS_CHOICES[selectedRpsIndex],
                 playerRpsChoice,
                 displayedCpuChoice,
-                rpsResult
+                rpsResult,
+                scoreSystem.getCurrentMatch()
             );
         } else {
             renderGameScreen();
