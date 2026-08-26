@@ -52,7 +52,7 @@ import { renderScore } from "./render/scoreRenderer.js";
 import { renderRpsScreen } from "./render/rpsRenderer.js";
 
 // Rock-paper-scissors system
-import { RPS_CHOICES, determineRpsWinner, getRandomCpuChoice } from "./game/rpsSystem.js";
+import { RPS_CHOICES, determineRpsWinner, getRandomCpuChoice, RpsResult } from "./game/rpsSystem.js";
 
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -189,33 +189,45 @@ window.addEventListener("keydown", (event) => {
         return;
     }
 
-    if (event.code === "Space")
 
-        if (appState === AppState.IN_GAME &&
-            gameState === GameState.RPS
-        ) {
-            if (event.repeat || rpsResult !== null) { return; }
-            if (event.code === "ArrowLeft") {
-                selectedRpsIndex = (
-                    selectedRpsIndex -
-                    1 +
-                    RPS_CHOICES.length
-                ) % RPS_CHOICES.length;
-            }
+    if (appState === AppState.IN_GAME &&
+        gameState === GameState.RPS
+    ) {
+        if (event.repeat) { return; }
 
-            if (event.code === "ArrowRight") {
-                selectedRpsIndex =
-                    (selectedRpsIndex + 1) % RPS_CHOICES.length;
-            }
-
-            if (event.code === "Space") {
-                playerRpsChoice = RPS_CHOICES[selectedRpsIndex];
-                cpuRpsChoice = getRandomCpuChoice();
-
-                rpsResult = determineRpsWinner(playerRpsChoice, cpuRpsChoice);
-            }
+        if (rpsResult === RpsResult.DRAW) {
+            resetRpsRound();
             return;
         }
+
+        if (rpsResult !== null) { return; }
+
+        if (event.code === "ArrowLeft") {
+            selectedRpsIndex = (
+                selectedRpsIndex -
+                1 +
+                RPS_CHOICES.length
+            ) % RPS_CHOICES.length;
+        }
+
+        if (event.code === "ArrowRight") {
+            selectedRpsIndex =
+                (selectedRpsIndex + 1) % RPS_CHOICES.length;
+        }
+
+        if (event.code === "Space") {
+            playerRpsChoice = RPS_CHOICES[selectedRpsIndex];
+            cpuRpsChoice = getRandomCpuChoice();
+
+            rpsResult = determineRpsWinner(playerRpsChoice, cpuRpsChoice);
+
+            nextServeState = null;
+
+            if (rpsResult === RpsResult.PLAYER) { nextServeState = GameState.SERVE_PLAYER; }
+            if (rpsResult === RpsResult.CPU) { nextServeState = GameState.SERVE_CPU; }
+        }
+        return;
+    }
 
     if (event.code === "ArrowLeft") { inputState.left = true; }
     if (event.code === "ArrowRight") { inputState.right = true; }
@@ -412,7 +424,10 @@ function render() {
                 ctx,
                 canvasWidth,
                 canvasHeight,
-                RPS_CHOICES[selectedRpsIndex]
+                RPS_CHOICES[selectedRpsIndex],
+                playerRpsChoice,
+                cpuRpsChoice,
+                rpsResult
             );
         } else {
             renderGameScreen();
@@ -474,3 +489,8 @@ function resetPaddles() {
     cpuPaddle.prevX = cpuPaddle.x;
 }
 
+function resetRpsRound() {
+    playerRpsChoice = null;
+    cpuRpsChoice = null;
+    rpsResult = null;
+}

@@ -1,4 +1,4 @@
-import { RpsChoice } from "../game/rpsSystem.js";
+import { RpsChoice, RpsResult } from "../game/rpsSystem.js";
 import { clearCanvas, drawCenteredText } from "./gameRenderer.js";
 
 function createRpsImage(fileName) {
@@ -31,7 +31,10 @@ export function renderRpsScreen(
     ctx,
     canvasWidth,
     canvasHeight,
-    selectedChoice
+    selectedChoice,
+    playerChoice,
+    cpuChoice,
+    result
 ) {
     clearCanvas(ctx, canvasWidth, canvasHeight);
 
@@ -82,5 +85,42 @@ export function renderRpsScreen(
                 imageSize + 16
             );
         }
+
+        if (result === null) {
+            drawCenteredText(
+                ctx,
+                canvasWidth,
+                "ARROWS TO CHOOSE - SPACE TO CONFIRM",
+                canvasHeight * 0.78,
+                18
+            );
+            return;
+        }
+        drawCenteredText(
+            ctx,
+            canvasWidth,
+            `PLAYER: ${playerChoice}`,
+            canvasHeight * 0.72,
+            22
+        );
+        drawCenteredText(
+            ctx,
+            canvasWidth,
+            `CPU: ${cpuChoice}`,
+            canvasHeight * 0.78,
+            22
+        );
+
+        const resultMessage = result === RpsResult.DRAW
+            ? "DRAW!"
+            : `${result} WINS & SERVES!`
+
+        drawCenteredText(
+            ctx,
+            canvasWidth,
+            resultMessage,
+            canvasHeight * 0.88,
+            28
+        );
     });
 }
