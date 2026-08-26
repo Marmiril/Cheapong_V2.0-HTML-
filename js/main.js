@@ -383,6 +383,34 @@ function renderGameScreen() {
         );
     }
 
+    if (gameState === GameState.RPS) {
+        if (cpuRpsSweepStartTime === null) { return; }
+
+        const elapsedTime = performance.now() - cpuRpsSweepStartTime;
+
+        if (elapsedTime >= CPU_RPS_SWEEP_DURATION) {
+            cpuRpsDisplayIndex = Math.floor(
+                elapsedTime / CPU_RPS_SWEEP_INTERVAL
+            ) % RPS_CHOICES.length;
+            return;
+        }
+
+        cpuRpsDisplayIndex = RPS_CHOICES.indexOf(cpuRpsChoice);
+
+        rpsResult = determineRpsWinner(
+            playerRpsChoice,
+            cpuRpsChoice
+        );
+
+        nextServeState = null;
+
+        if (rpsResult === RpsResult.PLAYER) { nextServeState = GameState.SERVE_PLAYER; }
+        if (rpsResult === RpsResult.CPU) { nextServeState = GameState.SERVE_CPU; }
+
+        cpuRpsSweepStartTime = null;
+        return;
+    }
+
     if (gameState === GameState.MATCH_OVER) {
         drawCenteredText(
             ctx,
