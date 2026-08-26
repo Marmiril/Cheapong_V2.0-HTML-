@@ -52,7 +52,7 @@ import { renderScore } from "./render/scoreRenderer.js";
 import { renderRpsScreen } from "./render/rpsRenderer.js";
 
 // Rock-paper-scissors system
-import { RPS_CHOICES } from "./game/rpsSystem.js";
+import { RPS_CHOICES, determineRpsWinner, getRandomCpuChoice } from "./game/rpsSystem.js";
 
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -73,6 +73,11 @@ canvas.height = canvasHeight;
 
 // Currently selected RPS option
 let selectedRpsIndex = 0;
+
+// Stores the confirmed RPS choices and result
+let playerRpsChoice = null;
+let cpuRpsChoice = null;
+let rpsResult = null;
 
 // Player paddle
 const playerPaddle = new Paddle(
@@ -183,6 +188,34 @@ window.addEventListener("keydown", (event) => {
         }
         return;
     }
+
+    if (event.code === "Space")
+
+        if (appState === AppState.IN_GAME &&
+            gameState === GameState.RPS
+        ) {
+            if (event.repeat || rpsResult !== null) { return; }
+            if (event.code === "ArrowLeft") {
+                selectedRpsIndex = (
+                    selectedRpsIndex -
+                    1 +
+                    RPS_CHOICES.length
+                ) % RPS_CHOICES.length;
+            }
+
+            if (event.code === "ArrowRight") {
+                selectedRpsIndex =
+                    (selectedRpsIndex + 1) % RPS_CHOICES.length;
+            }
+
+            if (event.code === "Space") {
+                playerRpsChoice = RPS_CHOICES[selectedRpsIndex];
+                cpuRpsChoice = getRandomCpuChoice();
+
+                rpsResult = determineRpsWinner(playerRpsChoice, cpuRpsChoice);
+            }
+            return;
+        }
 
     if (event.code === "ArrowLeft") { inputState.left = true; }
     if (event.code === "ArrowRight") { inputState.right = true; }
