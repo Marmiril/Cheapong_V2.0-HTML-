@@ -86,6 +86,36 @@ export function renderRpsScreen(
             );
         }
 
+        if (
+            playerChoice !== null &&
+            rpsImage.choice === playerChoice
+        ) {
+            ctx.fillStyle = "#ffd700";
+            ctx.font = "18px Arial";
+            ctx.textAlign = "center";
+
+            ctx.fillText(
+                "PLAYER",
+                imageX + imageSize / 2,
+                imageY - 18
+            );
+        }
+
+        if (
+            cpuChoice !== null &&
+            rpsImage.choice === cpuChoice
+        ) {
+            ctx.strokeStyle = "#ff3b3b";
+            ctx.lineWidth = 6;
+
+            ctx.strokeRect(
+                imageX - 14,
+                imageY - 14,
+                imageSize + 28,
+                imageSize + 28
+            );
+        }
+
         if (result === null) {
             drawCenteredText(
                 ctx,

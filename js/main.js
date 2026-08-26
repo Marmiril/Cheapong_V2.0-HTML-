@@ -463,13 +463,19 @@ function render() {
     if (appState === AppState.IN_GAME) {
 
         if (gameState === GameState.RPS) {
+
+            const displayedCpuChoice =
+                cpuRpsSweepStartTime !== null
+                    ? RPS_CHOICES[cpuRpsDisplayIndex]
+                    : cpuRpsChoice;
+
             renderRpsScreen(
                 ctx,
                 canvasWidth,
                 canvasHeight,
                 RPS_CHOICES[selectedRpsIndex],
                 playerRpsChoice,
-                cpuRpsChoice,
+                displayedCpuChoice,
                 rpsResult
             );
         } else {
