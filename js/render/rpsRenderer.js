@@ -105,14 +105,29 @@ export function renderRpsScreen(
             cpuChoice !== null &&
             rpsImage.choice === cpuChoice
         ) {
-            ctx.strokeStyle = "#ff3b3b";
+            ctx.strokeStyle = "#6b0589ff";
             ctx.lineWidth = 6;
 
             ctx.strokeRect(
-                imageX - 14,
-                imageY - 14,
-                imageSize + 28,
-                imageSize + 28
+                imageX - 8,
+                imageY - 8,
+                imageSize + 16,
+                imageSize + 16
+            );
+
+            const cpuLabelY =
+                cpuChoice === playerChoice
+                    ? imageY - 40
+                    : imageY - 18;
+
+            ctx.fillStyle = "#6b0589ff";
+            ctx.font = "18px Arial";
+            ctx.textAlign = "center";
+
+            ctx.fillText(
+                "CPU",
+                imageX + imageSize / 2,
+                cpuLabelY
             );
         }
 
