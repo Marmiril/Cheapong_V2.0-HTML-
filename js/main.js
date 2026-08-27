@@ -53,7 +53,9 @@ import { renderRpsScreen } from "./render/rpsRenderer.js";
 
 // Rock-paper-scissors system
 import { RPS_CHOICES, determineRpsWinner, getRandomCpuChoice, RpsResult } from "./game/rpsSystem.js";
-import { playPointSound } from "./game/soundSystem.js";
+
+// Sounds
+import { playPointSound, playMatchSound } from "./game/soundSystem.js";
 
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -517,6 +519,7 @@ function handleScore() {
 
         if (scoreSystem.isMatchEnded()) {
             // currentDifficulty = getDifficultyByMatch(scoreSystem.getCurrentMatch());
+            playMatchSound("PLAYER");
             gameState = GameState.MATCH_OVER;
             resetPaddles();
             return;
@@ -532,6 +535,7 @@ function handleScore() {
         playPointSound("CPU");
 
         if (scoreSystem.isGameEnded()) {
+            playMatchSound("CPU");
             gameState = GameState.GAME_OVER;
             resetPaddles();
             return;

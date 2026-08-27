@@ -24,11 +24,11 @@ export function playPaddleHit() {
 
 const POINT_SOUNDS = {
     PLAYER: new Audio("assets/sounds/playerPoint.mp3"),
-    CPU: Audio("assets/sounds/cpuPoint.mp3")
+    CPU: new Audio("assets/sounds/cpuPoint.mp3")
 };
 
 export function playPointSound(pointWinner) {
-    const sound = POINT_SOUNDS(pointWinner);
+    const sound = POINT_SOUNDS[pointWinner];
 
     if (!sound) { throw new Error(`Unknown point winner: ${pointWinner}`); }
 
@@ -36,5 +36,23 @@ export function playPointSound(pointWinner) {
 
     sound.play().catch((error) => {
         console.warn("Point sound could not be played!")
+    });
+}
+
+
+const MATCH_SOUNDS = {
+    PLAYER: new Audio("assets/sounds/winBack.mp3"),
+    CPU: new Audio("assets/sounds/loseBack.mp3")
+};
+
+export function playMatchSound(matchWinner) {
+    const sound = MATCH_SOUNDS[matchWinner];
+
+    if (!sound) { throw new Error(`Unknown match winner: ${matchWinner}`); }
+
+    sound.currentTime = 0;
+
+    sound.play().catch((error) => {
+        console.warn("Match sound could not be played!");
     });
 }
