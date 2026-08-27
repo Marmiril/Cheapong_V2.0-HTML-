@@ -5,6 +5,8 @@ import {
     NORMAL_EFFECTS
 } from "./aiSystem.js";
 
+import { playPaddleHit } from "../game/soundSystem.js";
+
 const SPIN_FACTOR = 0.35;
 const INPUT_SPIN_BONUS = 2.2;
 const CPU_BREAK_BONUS = 2.2;
@@ -56,6 +58,9 @@ export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ball
     ) {
         ball.y = playerPaddle.y - ball.size;
         ball.speedY *= -1;
+
+        playPaddleHit();
+
         applyPlayerSpin(ball, playerPaddle, inputState, ballSpeed);
     }
 
@@ -112,6 +117,8 @@ export function handleCpuPaddleCollision(
 
     ball.y = cpuPaddle.y + cpuPaddle.height;
     ball.speedY *= -1;
+
+    playPaddleHit();
 
     const effect = calculateCpuHitEffect(ball, playerPaddle, canvasWidth, NORMAL_EFFECTS);
 

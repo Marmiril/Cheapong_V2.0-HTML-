@@ -53,6 +53,7 @@ import { renderRpsScreen } from "./render/rpsRenderer.js";
 
 // Rock-paper-scissors system
 import { RPS_CHOICES, determineRpsWinner, getRandomCpuChoice, RpsResult } from "./game/rpsSystem.js";
+import { playPointSound } from "./game/soundSystem.js";
 
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -505,6 +506,8 @@ function handleScore() {
     if (ball.y <= 0) {
         scoreSystem.pointPlayer();
 
+        playPointSound("PLAYER");
+
         if (scoreSystem.isGameEnded()) {
             //  const nextMatchStarted = scoreSystem.startNextMatch();
             gameState = GameState.GAME_OVER;
@@ -525,6 +528,8 @@ function handleScore() {
 
     if (ball.y + ball.size >= canvasHeight) {
         scoreSystem.pointCpu();
+
+        playPointSound("CPU");
 
         if (scoreSystem.isGameEnded()) {
             gameState = GameState.GAME_OVER;
