@@ -1,7 +1,7 @@
 CHEAPONG - ITINERARIO DE DESARROLLO WEB
 
 
-ESTRUCTURA DEL PROYECTO
+ESTRUCTURA ACTUAL DEL PROYECTO
 
 Cheapong/
 ├── index.html
@@ -11,17 +11,12 @@ Cheapong/
 ├── FRONT.pdf
 │
 ├── assets/
-│   ├── img/
-│   │   ├── backgrounds/
-│   │   ├── ui/
-│   │   └── sprites/
-│   │
-│   └── sounds/
-│       ├── paddle-hit-1.mp3
-│       ├── paddle-hit-2.mp3
-│       ├── point.mp3
-│       ├── win.mp3
-│       └── lose.mp3
+│   └── img/
+│       └── ui/
+│           └── rps/
+│               ├── paper.png
+│               ├── rock.png
+│               └── scissors.png
 │
 ├── css/
 │   └── style.css
@@ -32,9 +27,12 @@ Cheapong/
     ├── core/
     │   └── gameConfig.js
     │
-    ├── models/
-    │   ├── Ball.js
-    │   └── Paddle.js
+    ├── game/
+    │   ├── rpsSystem.js
+    │   └── scoreSystem.js
+    │
+    ├── input/
+    │   └── inputState.js
     │
     ├── logic/
     │   ├── aiSystem.js
@@ -44,16 +42,13 @@ Cheapong/
     │   ├── paddleMovementSystem.js
     │   └── serveSystem.js
     │
-    ├── game/
-    │   ├── scoreSystem.js
-    │   ├── soundSystem.js
-    │   └── speedProgressionSystem.js
-    │
-    ├── input/
-    │   └── inputState.js
+    ├── models/
+    │   ├── Ball.js
+    │   └── Paddle.js
     │
     ├── render/
     │   ├── gameRenderer.js
+    │   ├── rpsRenderer.js
     │   └── scoreRenderer.js
     │
     └── states/
@@ -232,7 +227,7 @@ ITINERARIO
      startNextMatch() avanza únicamente cuando PLAYER gana y quedan matches disponibles.
      Si CPU gana un match, isGameEnded() considera terminado el juego completo.
      Si PLAYER gana el último match, isGameEnded() también considera terminado el juego.
-     El constructor mantiene 10 matches por defecto; main.js usa temporalmente 1 para las pruebas.
+     El constructor mantiene 10 matches; main.js usa temporalmente 2 puntos por match para las pruebas.
 52 - ESTADOS DE FINALIZACIÓN.
      GameState incorpora MATCH_OVER y GAME_OVER.
      renderGameScreen() muestra un mensaje distinto según winner sea CPU o PLAYER.
@@ -283,27 +278,51 @@ ITINERARIO
      Si CPU gana un match o PLAYER gana el último, se activa GAME_OVER.
 
 
+60 - MINIJUEGO DE PIEDRA, PAPEL O TIJERA PARA DECIDIR EL PRIMER SAQUE.
+     GameState incorpora RPS como estado interno de IN_GAME.
+     rpsSystem.js define ROCK, PAPER y SCISSORS, además de PLAYER, CPU y DRAW.
+     determineRpsWinner() resuelve el resultado mediante los índices de RPS_CHOICES.
+     getRandomCpuChoice() genera la elección aleatoria de la CPU.
+     MAIN_MENU → SPACE inicia cada partida en GameState.RPS.
+     Después de MATCH_OVER, SPACE avanza el match y vuelve a GameState.RPS.
+     PLAYER selecciona de forma circular con ARROWLEFT y ARROWRIGHT.
+     event.repeat evita desplazamientos y confirmaciones repetidas al mantener una tecla.
+     SPACE confirma la elección del jugador e inicia el barrido visual de la CPU.
+     El barrido de CPU dura 2000 milisegundos y cambia de opción cada 100 milisegundos.
+     rpsRenderer.js dibuja las tres imágenes, el marco PLAYER, el marco CPU y el resultado.
+     El encabezado del minijuego muestra el número del match actual.
+     Si el resultado es DRAW, SPACE limpia la ronda y repite el minijuego.
+     Si gana PLAYER, nextServeState se establece en SERVE_PLAYER.
+     Si gana CPU, nextServeState se establece en SERVE_CPU.
+     SPACE confirma el resultado, reinicia las palas y entra en el saque asignado.
+     El minijuego solo decide el primer saque del match.
+     Los saques posteriores a cada punto conservan la alternancia existente.
+
+
 ESTADO ACTUAL
 
-- El juego dispone de puntuación, matches, dificultad progresiva y saques diferenciados.
+- El juego dispone de puntuación, 10 matches, dificultad progresiva y saques diferenciados.
+- main.js usa temporalmente 2 puntos por match para agilizar las pruebas.
 - EASY, NORMAL y HARD modifican la reacción, precisión, retorno y planificación del saque de la CPU.
 - El plan de saque CPU se recalcula durante los 600 milisegundos de preparación y después queda bloqueado.
 - HARD sigue la bola mediante fases discretas, sin recalcular el objetivo en cada fotograma.
 - POINT_OVER pausa el juego durante 700 milisegundos y muestra quién ha marcado.
 - MATCH_OVER espera SPACE antes de iniciar el siguiente match ganado por PLAYER.
 - GAME_OVER se activa si CPU gana un match o PLAYER completa el último.
-- La rama main aún contiene una condición incorrecta en handleScore(): tras una victoria de PLAYER comprueba isMatchEnded() para activar GAME_OVER. La corrección realizada en local debe subirse y verificarse.
-- Los archivos adjuntos disponibles en esta conversación son anteriores a la rama main y no representan el estado actual del proyecto.
+- Cada match comienza con el minijuego de piedra, papel o tijera.
+- PLAYER selecciona con las flechas y confirma con SPACE.
+- La CPU muestra un barrido visual de 2 segundos antes de revelar su elección.
+- Un empate repite el minijuego.
+- El ganador del minijuego obtiene el primer saque del match.
+- Las imágenes rock.png, paper.png y scissors.png están integradas desde assets/img/ui/rps/.
+- La rama main todavía no contiene assets/sounds/ ni js/game/soundSystem.js.
 
 
 SIGUIENTE PUNTO
 
-60 - MINIJUEGO DE PIEDRA, PAPEL O TIJERA PARA DECIDIR EL PRIMER SAQUE DEL MATCH.
-     Se ejecutará al comenzar cada match, no después de cada punto.
-     PLAYER elegirá piedra, papel o tijera y CPU realizará una elección aleatoria.
-     Un empate repetirá el minijuego sin iniciar el match.
-     Si gana PLAYER, el match comenzará en SERVE_PLAYER.
-     Si gana CPU, el match comenzará en SERVE_CPU.
-     El flujo inicial pasará de MAIN_MENU a IN_GAME y al estado del minijuego.
-     Después de MATCH_OVER, SPACE iniciará el siguiente match mediante el mismo minijuego.
-     Los saques posteriores a cada punto mantendrán la alternancia existente.
+61 - SISTEMA DE SONIDOS.
+     Crear la carpeta assets/sounds/.
+     Incorporar los archivos de audio necesarios para golpes, puntos y finales.
+     Crear js/game/soundSystem.js para centralizar la carga y reproducción.
+     Activar el audio después de una interacción del usuario para respetar las restricciones del navegador.
+     Reproducir sonidos desde los eventos reales del juego sin mezclar audio con el renderizado.
