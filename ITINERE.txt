@@ -11,12 +11,30 @@ Cheapong/
 ├── FRONT.pdf
 │
 ├── assets/
-│   └── img/
-│       └── ui/
-│           └── rps/
-│               ├── paper.png
-│               ├── rock.png
-│               └── scissors.png
+│   ├── img/
+│   │   └── ui/
+│   │       └── rps/
+│   │           ├── paper.png
+│   │           ├── rock.png
+│   │           └── scissors.png
+│   └── sounds/
+│       ├── cpuPoint.mp3
+│       ├── draw.wav
+│       ├── gameWin.wav
+│       ├── hit00.mp3
+│       ├── hit01.mp3
+│       ├── hit02.mp3
+│       ├── loseBack.mp3
+│       ├── playerPoint.mp3
+│       ├── rpsLose.wav
+│       ├── rpsSelected.wav
+│       ├── rpsWin.wav
+│       ├── selection.wav
+│       ├── serve.wav
+│       ├── speedUp.mp3
+│       ├── startGame.wav
+│       ├── wallImpact.wav
+│       └── winBack.mp3
 │
 ├── css/
 │   └── style.css
@@ -28,8 +46,10 @@ Cheapong/
     │   └── gameConfig.js
     │
     ├── game/
+    │   ├── SpeedProgressionSystem.js
     │   ├── rpsSystem.js
-    │   └── scoreSystem.js
+    │   ├── scoreSystem.js
+    │   └── soundSystem.js
     │
     ├── input/
     │   └── inputState.js
@@ -299,10 +319,33 @@ ITINERARIO
      Los saques posteriores a cada punto conservan la alternancia existente.
 
 
+61 - SISTEMA DE SONIDOS.
+     assets/sounds/ contiene los archivos de audio utilizados por el juego.
+     soundSystem.js centraliza la carga y reproducción mediante objetos Audio reutilizables.
+     Las colisiones con las palas reproducen aleatoriamente hit00.mp3, hit01.mp3 o hit02.mp3.
+     Las colisiones laterales reproducen wallImpact.wav.
+     PLAYER y CPU tienen sonidos diferentes al marcar un punto o terminar un match.
+     El final completo ganado por PLAYER reproduce gameWin.wav.
+     El inicio del juego y los saques de PLAYER y CPU tienen sonidos propios.
+     El minijuego RPS reproduce sonidos al mover y confirmar la selección.
+     Durante el barrido de la CPU, selection.wav se reproduce en bucle hasta revelar el resultado.
+     El resultado PLAYER, CPU o DRAW selecciona su sonido correspondiente.
+     Los sonidos se ejecutan desde los eventos reales del juego y no desde el renderizado.
+
+62 - PROGRESIÓN DE VELOCIDAD DURANTE EL PUNTO.
+     SpeedProgressionSystem registra exclusivamente los golpes confirmados del jugador.
+     Cada 5 golpes activa un aumento pendiente.
+     currentBallSpeed sustituye a la velocidad base constante durante el punto.
+     GAME_SETTINGS define speedIncreaseFactor, maxBallSpeed y maxPaddleSpeed.
+     increaseGameSpeed() incrementa un 10 % la pelota y ambas palas sin superar sus límites.
+     ballSpeedFactor aplica a speedX y speedY el incremento real después de limitar la magnitud.
+     speedUp.mp3 se reproduce una vez cuando se aplica cada incremento.
+     resetGameSpeed() restaura la velocidad base y reinicia SpeedProgressionSystem después de cada punto.
+
 ESTADO ACTUAL
 
 - El juego dispone de puntuación, 10 matches, dificultad progresiva y saques diferenciados.
-- main.js usa temporalmente 2 puntos por match para agilizar las pruebas.
+- main.js usa temporalmente 2 puntos y 2 matches para agilizar las pruebas.
 - EASY, NORMAL y HARD modifican la reacción, precisión, retorno y planificación del saque de la CPU.
 - El plan de saque CPU se recalcula durante los 600 milisegundos de preparación y después queda bloqueado.
 - HARD sigue la bola mediante fases discretas, sin recalcular el objetivo en cada fotograma.
@@ -315,14 +358,16 @@ ESTADO ACTUAL
 - Un empate repite el minijuego.
 - El ganador del minijuego obtiene el primer saque del match.
 - Las imágenes rock.png, paper.png y scissors.png están integradas desde assets/img/ui/rps/.
-- La rama main todavía no contiene assets/sounds/ ni js/game/soundSystem.js.
+- soundSystem.js centraliza los sonidos del juego y reutiliza las instancias de Audio.
+- Las colisiones con palas y paredes, los puntos, los finales, los saques y el minijuego RPS tienen sonido.
+- La velocidad de la pelota y de ambas palas aumenta cada 5 golpes del jugador.
+- La progresión de velocidad y el contador de golpes se reinician después de cada punto.
+
 
 
 SIGUIENTE PUNTO
 
-61 - SISTEMA DE SONIDOS.
-     Crear la carpeta assets/sounds/.
-     Incorporar los archivos de audio necesarios para golpes, puntos y finales.
-     Crear js/game/soundSystem.js para centralizar la carga y reproducción.
-     Activar el audio después de una interacción del usuario para respetar las restricciones del navegador.
-     Reproducir sonidos desde los eventos reales del juego sin mezclar audio con el renderizado.
+63 - DECORACIÓN VISUAL DE PALAS Y PELOTA.
+     Incorporar recursos gráficos para playerPaddle, cpuPaddle y ball.
+     Sustituir su representación rectangular actual por imágenes dibujadas en el canvas.
+     Mantener las dimensiones y posiciones de los modelos para no alterar colisiones ni movimiento.

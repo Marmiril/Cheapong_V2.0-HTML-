@@ -125,14 +125,14 @@ const ball = new Ball(
     0
 );
 
-// Normalize ballSpeed
+// Normalize ballSpeed  
 //const currentBallSpeed = GAME_SETTINGS.ballSpeed;
 let currentBallSpeed = GAME_SETTINGS.ballSpeed;
 
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
 
-const scoreSystem = new ScoreSystem(2, 2);
+const scoreSystem = new ScoreSystem(2, 10);
 
 const speedProgressionSystem = new SpeedProgressionSystem();
 

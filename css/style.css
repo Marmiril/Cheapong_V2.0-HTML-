@@ -15,6 +15,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-image: "assets\img\backgrounds\back1.png"
 }
 
 .cheapong-wrapper {
