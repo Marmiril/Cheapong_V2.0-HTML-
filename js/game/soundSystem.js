@@ -67,7 +67,7 @@ export function playWallCollision() {
     });
 }
 
-const SPEED_UP_SOUND = new Audio("assets/sounds/wallImpact.wav");
+const SPEED_UP_SOUND = new Audio("assets/sounds/speedUp.mp3");
 
 export function playSpeedUpSound() {
     SPEED_UP_SOUND.currentTime = 0;

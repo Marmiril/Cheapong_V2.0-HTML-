@@ -55,7 +55,7 @@ import { renderRpsScreen } from "./render/rpsRenderer.js";
 import { RPS_CHOICES, determineRpsWinner, getRandomCpuChoice, RpsResult } from "./game/rpsSystem.js";
 
 // Sounds
-import { playPointSound, playMatchSound } from "./game/soundSystem.js";
+import { playPointSound, playMatchSound, playSpeedUpSound } from "./game/soundSystem.js";
 
 // Speed progression system
 import { SpeedProgressionSystem } from "./game/SpeedProgressionSystem.js";
@@ -406,7 +406,13 @@ function updateGame() {
         handleWallCollision(ball, canvasWidth, canvasHeight);
         const playerHit = handlePlayerPaddleCollision(ball, playerPaddle, inputState, currentBallSpeed);
 
-        if (playerHit) { speedProgressionSystem.registerPlayerHits(); }
+        if (playerHit) {
+            speedProgressionSystem.registerPlayerHits();
+            if (speedProgressionSystem.isSpeedIncreasingPending()) {
+                increaseGameSpeed();
+                playSpeedUpSound();
+            }
+        }
 
         handleCpuPaddleCollision(ball, cpuPaddle, playerPaddle, canvasWidth, currentBallSpeed);
 
@@ -516,6 +522,7 @@ function render() {
 function increaseGameSpeed() {
 
     speedProgressionSystem.clearSpeedIncrease();
+
     const previousBallSpeed = currentBallSpeed;
 
     currentBallSpeed = Math.min(
@@ -603,4 +610,15 @@ function resetRpsRound() {
     playerRpsChoice = null;
     cpuRpsChoice = null;
     rpsResult = null;
+}
+
+function resetGameSpeed() {
+    currentBallSpeed = GAME_SETTINGS.ballSpeed;
+
+    ball.speedX = 0;
+    ball.speedY = 0;
+    playerPaddle.speed = GAME_SETTINGS.paddleSpeed;
+    cpuPaddle.speed = GAME_SETTINGS.paddleSpeed;
+
+    speedProgressionSystem.reset();
 }
