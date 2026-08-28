@@ -57,6 +57,9 @@ import { RPS_CHOICES, determineRpsWinner, getRandomCpuChoice, RpsResult } from "
 // Sounds
 import { playPointSound, playMatchSound } from "./game/soundSystem.js";
 
+// Speed progression system
+import { SpeedProgressionSystem } from "./game/SpeedProgressionSystem.js";
+
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -124,6 +127,8 @@ const BALL_SPEED = GAME_SETTINGS.ballSpeed;
 let appState = AppState.MAIN_MENU;
 
 const scoreSystem = new ScoreSystem(2, 10);
+
+const speedProgressionSystem = new SpeedProgressionSystem();
 
 let gameState = GameState.RPS;
 
