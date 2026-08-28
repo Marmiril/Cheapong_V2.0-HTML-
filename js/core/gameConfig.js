@@ -7,6 +7,9 @@ export const GAME_SETTINGS = {
     paddleSpeed: 7,
     ballSize: 15,
     ballSpeed: Math.sqrt(5 ** 2 + 5 ** 2),
+    speedIncreaseFactor: 1.1,
+    maxBallSpeed: 18,
+    maxPaddleSpeed: 18,
     pointMessageDuration: 700
 };
 

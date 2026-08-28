@@ -121,7 +121,8 @@ const ball = new Ball(
 );
 
 // Normalize ballSpeed
-const BALL_SPEED = GAME_SETTINGS.ballSpeed;
+//const currentBallSpeed = GAME_SETTINGS.ballSpeed;
+let currentBallSpeed = GAME_SETTINGS.ballSpeed;
 
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
@@ -171,7 +172,7 @@ window.addEventListener("keydown", (event) => {
         appState === AppState.IN_GAME &&
         gameState === GameState.SERVE_PLAYER
     ) {
-        gameState = launchPlayerServe(ball, inputState, BALL_SPEED);
+        gameState = launchPlayerServe(ball, inputState, currentBallSpeed);
     }
 
     if (event.code === "Space" &&
@@ -367,7 +368,7 @@ function updateGame() {
                 cpuPaddle,
                 playerPaddle,
                 canvasWidth,
-                BALL_SPEED,
+                currentBallSpeed,
                 cpuServePlanRank
             );
         }
@@ -388,7 +389,7 @@ function updateGame() {
             gameState = launchCpuServe(
                 ball,
                 cpuServePlan.effect,
-                BALL_SPEED
+                currentBallSpeed
             );
             // Resets the preparation data fot the next CPU serve
             cpuServePlan = null;
@@ -403,8 +404,11 @@ function updateGame() {
         updateCpuPaddle(cpuPaddle, cpuTargetX, canvasWidth);
         updateBall(ball);
         handleWallCollision(ball, canvasWidth, canvasHeight);
-        handlePlayerPaddleCollision(ball, playerPaddle, inputState, BALL_SPEED);
-        handleCpuPaddleCollision(ball, cpuPaddle, playerPaddle, canvasWidth, BALL_SPEED);
+        const playerHit = handlePlayerPaddleCollision(ball, playerPaddle, inputState, currentBallSpeed);
+
+        if (playerHit) { speedProgressionSystem.registerPlayerHits(); }
+
+        handleCpuPaddleCollision(ball, cpuPaddle, playerPaddle, canvasWidth, currentBallSpeed);
 
         handleScore();
     }
@@ -507,6 +511,33 @@ function render() {
         }
         renderScore(scoreSystem, currentDifficulty);
     }
+}
+
+function increaseGameSpeed() {
+
+    speedProgressionSystem.clearSpeedIncrease();
+    const previousBallSpeed = currentBallSpeed;
+
+    currentBallSpeed = Math.min(
+        currentBallSpeed * GAME_SETTINGS.speedIncreaseFactor,
+        GAME_SETTINGS.maxBallSpeed
+    );
+
+    const ballSpeedFactor = currentBallSpeed / previousBallSpeed;
+
+    ball.speedX *= ballSpeedFactor;
+    ball.speedY *= ballSpeedFactor;
+
+    playerPaddle.speed = Math.min(
+        playerPaddle.speed * GAME_SETTINGS.speedIncreaseFactor,
+        GAME_SETTINGS.maxPaddleSpeed
+    );
+
+    cpuPaddle.speed = Math.min(
+        cpuPaddle.speed * GAME_SETTINGS.speedIncreaseFactor,
+        GAME_SETTINGS.maxPaddleSpeed
+    );
+
 }
 
 function handleScore() {
