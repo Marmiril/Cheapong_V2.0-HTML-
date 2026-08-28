@@ -55,7 +55,9 @@ import { renderRpsScreen } from "./render/rpsRenderer.js";
 import { RPS_CHOICES, determineRpsWinner, getRandomCpuChoice, RpsResult } from "./game/rpsSystem.js";
 
 // Sounds
-import { playPointSound, playMatchSound, playSpeedUpSound } from "./game/soundSystem.js";
+import {
+    playPointSound, playMatchSound, playSpeedUpSound, playSelection, playRpsSelected, playCpuSelection, playRpsSounds
+} from "./game/soundSystem.js";
 
 // Speed progression system
 import { SpeedProgressionSystem } from "./game/SpeedProgressionSystem.js";
@@ -212,6 +214,7 @@ window.addEventListener("keydown", (event) => {
     ) {
         if (event.repeat || cpuRpsSweepStartTime !== null) { return; }
 
+
         if (rpsResult === RpsResult.DRAW) {
             if (event.code === "Space") {
                 resetRpsRound();
@@ -237,6 +240,7 @@ window.addEventListener("keydown", (event) => {
         }
 
         if (event.code === "ArrowLeft") {
+            playSelection();
             selectedRpsIndex = (
                 selectedRpsIndex -
                 1 +
@@ -245,27 +249,18 @@ window.addEventListener("keydown", (event) => {
         }
 
         if (event.code === "ArrowRight") {
+            playSelection();
             selectedRpsIndex =
                 (selectedRpsIndex + 1) % RPS_CHOICES.length;
         }
 
         if (event.code === "Space") {
             playerRpsChoice = RPS_CHOICES[selectedRpsIndex];
-
+            playRpsSelected()
             cpuRpsChoice = getRandomCpuChoice();
             cpuRpsDisplayIndex = 0;
             cpuRpsSweepStartTime = performance.now();
-
-
-            // rpsResult = determineRpsWinner(playerRpsChoice, cpuRpsChoice);
-
-            // if (event.repeat || cpuRpsSweepStartTime !== null) { return; }
-            /*
-                        nextServeState = null;
-            
-                        if (rpsResult === RpsResult.PLAYER) { nextServeState = GameState.SERVE_PLAYER; }
-                        if (rpsResult === RpsResult.CPU) { nextServeState = GameState.SERVE_CPU; }
-            */
+            playCpuSelection("PLAY");
         }
         return;
     }
@@ -335,6 +330,8 @@ function updateGame() {
         if (rpsResult === RpsResult.CPU) { nextServeState = GameState.SERVE_CPU; }
 
         cpuRpsSweepStartTime = null;
+        playCpuSelection("STOP");
+        playRpsSounds(rpsResult);
         return;
     }
 
@@ -570,7 +567,6 @@ function handleScore() {
 
         startPointPause("PLAYER", GameState.SERVE_CPU);
         return;
-        resetGameSpeed();
     }
 
     if (ball.y + ball.size >= canvasHeight) {
