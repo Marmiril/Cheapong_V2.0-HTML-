@@ -41,7 +41,7 @@ export function handleWallCollision(ball, canvasWidth, canvasHeight) {
 export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ballSpeed) {
     const isColliding = intersects(ball, playerPaddle);
 
-    if (!isColliding || ball.speedY <= 0) { return; }
+    if (!isColliding || ball.speedY <= 0) { return false; }
 
     const overlapsX =
         ball.x < playerPaddle.x + playerPaddle.width &&
@@ -62,28 +62,10 @@ export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ball
         playPaddleHit();
 
         applyPlayerSpin(ball, playerPaddle, inputState, ballSpeed);
+
+        return true;
     }
-
-
-
-    /*
-    if (isColliding && ball.speedY > 0) {
-        const incomingSpeedX = ball.speedX;
-        const paddleDeltaX = playerPaddle.x - playerPaddle.prevX;
-
-        ball.y = playerPaddle.y - ball.size;
-        ball.speedY *= -1;
-
-        if (inputState.up) { ball.speedX = 0; return; }
-        if (inputState.down) {
-            ball.speedX = -incomingSpeedX;
-            if (inputState.left) { ball.speedX -= INPUT_SPIN_BONUS; }
-            if (inputState.right) { ball.speedX += INPUT_SPIN_BONUS; }
-        }
-        ball.speedX += paddleDeltaX * SPIN_FACTOR;
-        normalizeBallSpeed(ball, ballSpeed);
-    }
-    */
+    return false;
 }
 
 function applyPlayerSpin(ball, playerPaddle, inputState, ballSpeed) {
