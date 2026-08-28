@@ -56,7 +56,10 @@ import { RPS_CHOICES, determineRpsWinner, getRandomCpuChoice, RpsResult } from "
 
 // Sounds
 import {
-    playPointSound, playMatchSound, playSpeedUpSound, playSelection, playRpsSelected, playCpuSelection, playRpsSounds
+    playPointSound, playMatchSound, playSpeedUpSound, playSelection,
+    playRpsSelected, playCpuSelection, playRpsSounds, playStart,
+    playServe,
+    playGameWin
 } from "./game/soundSystem.js";
 
 // Speed progression system
@@ -129,7 +132,7 @@ let currentBallSpeed = GAME_SETTINGS.ballSpeed;
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
 
-const scoreSystem = new ScoreSystem(2, 10);
+const scoreSystem = new ScoreSystem(2, 2);
 
 const speedProgressionSystem = new SpeedProgressionSystem();
 
@@ -167,6 +170,7 @@ window.addEventListener("keydown", (event) => {
         appState === AppState.MAIN_MENU
     ) {
         appState = AppState.IN_GAME;
+        playStart();
         gameState = GameState.RPS;
         return;
     }
@@ -175,6 +179,7 @@ window.addEventListener("keydown", (event) => {
         gameState === GameState.SERVE_PLAYER
     ) {
         gameState = launchPlayerServe(ball, inputState, currentBallSpeed);
+        playServe();
     }
 
     if (event.code === "Space" &&
@@ -388,6 +393,7 @@ function updateGame() {
                 cpuServePlan.effect,
                 currentBallSpeed
             );
+            playServe();
             // Resets the preparation data fot the next CPU serve
             cpuServePlan = null;
             cpuServeStartTime = null;
@@ -553,13 +559,16 @@ function handleScore() {
         if (scoreSystem.isGameEnded()) {
             //  const nextMatchStarted = scoreSystem.startNextMatch();
             gameState = GameState.GAME_OVER;
+            playGameWin();
             resetPaddles();
             return;
         }
 
         if (scoreSystem.isMatchEnded()) {
             // currentDifficulty = getDifficultyByMatch(scoreSystem.getCurrentMatch());
-            playMatchSound("PLAYER");
+            if (scoreSystem.getCurrentMatch() !== 10) {
+                playMatchSound("PLAYER");
+            }
             gameState = GameState.MATCH_OVER;
             resetPaddles();
             return;

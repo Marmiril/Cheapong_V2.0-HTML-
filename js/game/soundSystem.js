@@ -102,16 +102,39 @@ export function playDraw() {
 }
 
 const RPS_SOUNDS = {
-    WIN: new Audio("assets/sounds/rpsWin.wav"),
-    LOSE: new Audio("assets/sounds/rpsLose.wav"),
+    PLAYER: new Audio("assets/sounds/rpsWin.wav"),
+    CPU: new Audio("assets/sounds/rpsLose.wav"),
     DRAW: new Audio("assets/sounds/draw.wav")
 }
-export function playRpsSounds(index) {
-    const sound = RPS_SOUNDS[index];
+export function playRpsSounds(rpsResult) {
+    const sound = RPS_SOUNDS[rpsResult];
     sound.currentTime = 0;
 
     sound.play().catch((error) => {
         console.warn("Rps sound could not be played: ", error);
     });
+}
 
+const START_GAME = new Audio("assets/sounds/startGame.wav");
+export function playStart() {
+    START_GAME.currentTime = 0;
+    START_GAME.play().catch((error) => {
+        console.warn("Start game sound could not be played:", error);
+    });
+}
+
+const SERVE = new Audio("assets/sounds/serve.wav");
+export function playServe() {
+    SERVE.currentTime = 0.25;
+    SERVE.play().catch((error) => {
+        console.warn("Serve sound could not be played:", error);
+    });
+}
+
+const GAME_WIN = new Audio("assets/sounds/gameWin.wav");
+export function playGameWin() {
+    GAME_WIN.currentTime = 0;
+    GAME_WIN.play().catch((error) => {
+        console.warn("Winning game sound could not be played:", error);
+    });
 }
