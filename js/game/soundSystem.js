@@ -35,10 +35,9 @@ export function playPointSound(pointWinner) {
     sound.currentTime = 0;
 
     sound.play().catch((error) => {
-        console.warn("Point sound could not be played!")
+        console.warn("Point sound could not be played!:", error)
     });
 }
-
 
 const MATCH_SOUNDS = {
     PLAYER: new Audio("assets/sounds/winBack.mp3"),
@@ -53,16 +52,29 @@ export function playMatchSound(matchWinner) {
     sound.currentTime = 0;
 
     sound.play().catch((error) => {
-        console.warn("Match sound could not be played!");
+        console.warn("Match sound could not be played!:", error);
     });
 }
 
-export function playWallCollision() {
-    const sound = new Audio("assets/sounds/wallImpact.wav");
-    sound.volume = 0.3;
+const WALL_COLLISION = new Audio("assets/sounds/wallImpact.wav");
 
-    sound.currentTime = 0;
-    sound.play().catch((error) => {
-        console.warn("Wallcollision sound could not be played!");
+export function playWallCollision() {
+    WALL_COLLISION.volume = 0.3;
+
+    WALL_COLLISION.currentTime = 0;
+    WALL_COLLISION.play().catch((error) => {
+        console.warn("Wallcollision sound could not be played!: ", error);
     });
+}
+
+const SPEED_UP_SOUND = new Audio("assets/sounds/wallImpact.wav");
+
+export function playSpeedUpSound() {
+    SPEED_UP_SOUND.currentTime = 0;
+
+    SPEED_UP_SOUND.play().catch((error) => {
+        console.warn("Speed-up sound could not be played!", error);
+    });
+
+
 }
