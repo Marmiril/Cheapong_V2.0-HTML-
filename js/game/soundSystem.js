@@ -56,3 +56,13 @@ export function playMatchSound(matchWinner) {
         console.warn("Match sound could not be played!");
     });
 }
+
+export function playWallCollision() {
+    const sound = new Audio("assets/sounds/wallImpact.wav");
+    sound.volume = 0.3;
+
+    sound.currentTime = 0;
+    sound.play().catch((error) => {
+        console.warn("Wallcollision sound could not be played!");
+    });
+}

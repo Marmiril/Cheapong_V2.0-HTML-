@@ -5,7 +5,7 @@ import {
     NORMAL_EFFECTS
 } from "./aiSystem.js";
 
-import { playPaddleHit } from "../game/soundSystem.js";
+import { playPaddleHit, playWallCollision } from "../game/soundSystem.js";
 
 const SPIN_FACTOR = 0.35;
 const INPUT_SPIN_BONUS = 2.2;
@@ -21,11 +21,15 @@ function intersects(ball, paddle) {
 }
 
 export function handleWallCollision(ball, canvasWidth, canvasHeight) {
-    if (ball.x <= 0) { ball.x = 0; ball.speedX *= -1; }
+    if (ball.x <= 0) {
+        ball.x = 0; ball.speedX *= -1;
+        playWallCollision();
+    }
 
     if (ball.x + ball.size >= canvasWidth) {
         ball.x = canvasWidth - ball.size;
         ball.speedX *= -1;
+        playWallCollision();
     }
 
     /*
