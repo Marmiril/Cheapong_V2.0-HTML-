@@ -550,7 +550,7 @@ function increaseGameSpeed() {
 function handleScore() {
     if (ball.y <= 0) {
         scoreSystem.pointPlayer();
-
+        resetGameSpeed();
         playPointSound("PLAYER");
 
         if (scoreSystem.isGameEnded()) {
@@ -570,11 +570,12 @@ function handleScore() {
 
         startPointPause("PLAYER", GameState.SERVE_CPU);
         return;
+        resetGameSpeed();
     }
 
     if (ball.y + ball.size >= canvasHeight) {
         scoreSystem.pointCpu();
-
+        resetGameSpeed();
         playPointSound("CPU");
 
         if (scoreSystem.isGameEnded()) {
