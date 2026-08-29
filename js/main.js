@@ -132,7 +132,7 @@ let currentBallSpeed = GAME_SETTINGS.ballSpeed;
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
 
-const scoreSystem = new ScoreSystem(2, 10);
+const scoreSystem = new ScoreSystem(10, 1);
 
 const speedProgressionSystem = new SpeedProgressionSystem();
 
@@ -595,9 +595,17 @@ function handleScore() {
 }
 
 function startPointPause(winner, serveState) {
+    const cheapongPage = document.querySelector("cheapong-page");
+
+    const POINT_GIF = "assets/img/backgrounds/point.gif";
+
     pointWinner = winner;
 
     pointMessageEndTime = performance.now() + GAME_SETTINGS.pointMessageDuration;
+
+    if (winner === "PLAYER") {
+        cheapongPage.style.backgroundImage = `url("${POINT_GIF}")`;
+    }
 
     nextServeState = serveState;
     gameState = GameState.POINT_OVER;

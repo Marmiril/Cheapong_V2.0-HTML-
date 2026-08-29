@@ -15,7 +15,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: "assets\img\backgrounds\back1.png"
+    background-image: url("../assets/img/backgrounds/back01.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .cheapong-wrapper {

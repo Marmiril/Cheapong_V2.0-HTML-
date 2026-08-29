@@ -10,7 +10,7 @@ export const GAME_SETTINGS = {
     speedIncreaseFactor: 1.1,
     maxBallSpeed: 18,
     maxPaddleSpeed: 18,
-    pointMessageDuration: 700
+    pointMessageDuration: 800
 };
 
 export const Difficulty = {
