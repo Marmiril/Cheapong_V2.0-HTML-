@@ -65,6 +65,9 @@ import {
 // Speed progression system
 import { SpeedProgressionSystem } from "./game/SpeedProgressionSystem.js";
 
+// Bakcground system
+import { setBackSystem } from "./game/backSystem.js";
+
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -75,6 +78,9 @@ const canvas = document.getElementById("gameCanvas");
 if (!canvas) { throw new Error("Canvas element not found"); }
 
 const ctx = canvas.getContext("2d");
+
+const cheapongPage = document.querySelector(".cheapong-page");
+if (!cheapongPage) { throw new Error("Cheapong page element not found!"); }
 
 const canvasWidth = GAME_SETTINGS.canvasWidth;
 const canvasHeight = GAME_SETTINGS.canvasHeight;
@@ -132,7 +138,7 @@ let currentBallSpeed = GAME_SETTINGS.ballSpeed;
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
 
-const scoreSystem = new ScoreSystem(10, 1);
+const scoreSystem = new ScoreSystem(1, 3);
 
 const speedProgressionSystem = new SpeedProgressionSystem();
 
@@ -302,6 +308,11 @@ function updateGame() {
 
     if (gameState === GameState.POINT_OVER) {
         if (performance.now() >= pointMessageEndTime) {
+
+            if (pointWinner === "PLAYER") {
+                const { backgroundImage } = setBackSystem(scoreSystem.getCurrentMatch());
+                cheapongPage.style.backgroundImage = `url("${backgroundImage}")`;
+            }
             gameState = nextServeState;
 
             pointWinner = null;
@@ -594,22 +605,26 @@ function handleScore() {
     }
 }
 
-function startPointPause(winner, serveState) {
-    const cheapongPage = document.querySelector("cheapong-page");
+// const POINT_GIF = "assets/img/backgrounds/point.gif";
 
-    const POINT_GIF = "assets/img/backgrounds/point.gif";
+function startPointPause(winner, serveState) {
+
+    const { pointGif } = setBackSystem(scoreSystem.getCurrentMatch());
+    const { backgroundImage } = setBackSystem(scoreSystem.getCurrentMatch());
 
     pointWinner = winner;
 
     pointMessageEndTime = performance.now() + GAME_SETTINGS.pointMessageDuration;
 
     if (winner === "PLAYER") {
-        cheapongPage.style.backgroundImage = `url("${POINT_GIF}")`;
+        cheapongPage.style.backgroundImage = `url("${pointGif}")`;
     }
 
     nextServeState = serveState;
     gameState = GameState.POINT_OVER;
     resetPaddles();
+
+    if (!pointMessageEndTime) { cheapongPage.style.backgroundImage = `url"(${backgroundImage})"`; }
 }
 
 function resetPaddles() {
