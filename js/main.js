@@ -178,6 +178,9 @@ window.addEventListener("keydown", (event) => {
         appState = AppState.IN_GAME;
         playStart();
         gameState = GameState.RPS;
+
+        const { backgroundImage } = setBackSystem(scoreSystem.getCurrentMatch());
+        cheapongPage.style.backgroundImage = `url("${backgroundImage}")`;
         return;
     }
     if (event.code === "Space" &&
@@ -213,6 +216,11 @@ window.addEventListener("keydown", (event) => {
 
         if (nextMatchStarted) {
             currentDifficulty = getDifficultyByMatch(scoreSystem.getCurrentMatch());
+
+            const { backgroundImage } = setBackSystem(scoreSystem.getCurrentMatch());
+
+            cheapongPage.style.backgroundImage = `url("${backgroundImage}")`;
+
             resetPaddles();
             gameState = GameState.RPS;
         }
@@ -568,9 +576,8 @@ function handleScore() {
         playPointSound("PLAYER");
 
         if (scoreSystem.isGameEnded()) {
-            //  const nextMatchStarted = scoreSystem.startNextMatch();
-            gameState = GameState.GAME_OVER;
             playGameWin();
+            startPointPause("PLAYER", GameState.GAME_OVER);
             resetPaddles();
             return;
         }
@@ -580,8 +587,7 @@ function handleScore() {
             if (scoreSystem.getCurrentMatch() !== 10) {
                 playMatchSound("PLAYER");
             }
-            gameState = GameState.MATCH_OVER;
-            resetPaddles();
+            startPointPause("PLAYER", GameState.MATCH_OVER);
             return;
         }
 
