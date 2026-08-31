@@ -66,7 +66,7 @@ export const DIFFICULTY_SETTINGS = {
         servePlanRanks: [1, 2, 3]
     },
 
-    [Difficulty.DIFFICULT]: {
+    [Difficulty.HARD]: {
         phases: [0.85, 0.65, 0.45, 0.25, 0.10],
         trackingPhases: [0.50],
         maxErrorFactor: 0.20,
