@@ -109,7 +109,7 @@ export function handleCpuPaddleCollision(
 
     const hitEffectRank =
         hitEffectRanks[
-        Math.floor(Math.random() * hitEffectRank.length)
+        Math.floor(Math.random() * hitEffectRanks.length)
         ];
 
     const effect = calculateCpuHitEffect(ball, playerPaddle, canvasWidth, NORMAL_EFFECTS, hitEffectRank);

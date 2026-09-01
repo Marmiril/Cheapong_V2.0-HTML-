@@ -138,13 +138,13 @@ let currentBallSpeed = GAME_SETTINGS.ballSpeed;
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
 
-const scoreSystem = new ScoreSystem(1, 3);
+const scoreSystem = new ScoreSystem(1, 10);
 
 const speedProgressionSystem = new SpeedProgressionSystem();
 
 let gameState = GameState.RPS;
 
-let currentDifficulty = Difficulty.EASY;
+let currentDifficulty = getDifficultyByMatch(scoreSystem.getCurrentMatch());
 
 // Stores who scored the last point
 let pointWinner = null;
