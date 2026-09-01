@@ -193,7 +193,13 @@ function getCpuServeTargetPositions(cpuPaddle, canvasWidth) {
     return [0, maxPaddleX / 4, maxPaddleX / 3, maxPaddleX / 2, maxPaddleX * 2 / 3, maxPaddleX * 3 / 4, maxPaddleX]
 }
 
-export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth, availableEffects) {
+export function calculateCpuHitEffect(
+    ball,
+    playerPaddle,
+    canvasWidth,
+    availableEffects,
+    effectRank = 0
+) {
 
     const playerCenterX = playerPaddle.x + playerPaddle.width / 2;
     const ballCenterX = ball.x + ball.size / 2;
@@ -219,8 +225,13 @@ export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth, available
             : HitEffect.BREAK_RIGHT;
     }
 
+    /*
     let bestEffet = HitEffect.NONE;
     let longestReactionTime = -1;
+*/
+
+    const candidateEffetcs = [];
+
 
     for (const effect of availableEffects) {
         // Simulates the horizontal speed produced by this effect.
@@ -248,14 +259,31 @@ export function calculateCpuHitEffect(ball, playerPaddle, canvasWidth, available
         // Measures how far the player would need to move.
         const distanceToTravel = Math.abs(predicetdCenterX - playerCenterX);
         const reactionTime = distanceToTravel / playerPaddle.speed;
+        /*/
+                // Keeps the response that is hardest for the player to reach
+                if (reactionTime > longestReactionTime) {
+                    longestReactionTime = reactionTime;
+                    bestEffet = effect;
+                }
+        */
 
-        // Keeps the response that is hardest for the player to reach
-        if (reactionTime > longestReactionTime) {
-            longestReactionTime = reactionTime;
-            bestEffet = effect;
-        }
+        candidateEffetcs.push({
+            effect,
+            reactionTime
+        });
     }
-    return bestEffet;
+
+    candidateEffetcs.sort(
+        (firstEffect, secondEffect) =>
+            secondEffect.reactionTime - firstEffect.reactionTime
+    );
+
+    const selectedEffect =
+        candidateEffetcs[
+        Math.min(effectRank, candidateEffetcs.length - 1)
+        ];
+    //return bestEffet;
+    return selectedEffect.effect;
 }
 
 function createCpuServeCandidateBall(
