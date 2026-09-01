@@ -90,7 +90,8 @@ export function handleCpuPaddleCollision(
     cpuPaddle,
     playerPaddle,
     canvasWidth,
-    ballSpeed) {
+    ballSpeed,
+    hitEffectRanks) {
 
     const isColliding = intersects(ball, cpuPaddle);
 
@@ -106,8 +107,12 @@ export function handleCpuPaddleCollision(
 
     playPaddleHit();
 
-    const effect = calculateCpuHitEffect(ball, playerPaddle, canvasWidth, NORMAL_EFFECTS);
+    const hitEffectRank =
+        hitEffectRanks[
+        Math.floor(Math.random() * hitEffectRank.length)
+        ];
 
+    const effect = calculateCpuHitEffect(ball, playerPaddle, canvasWidth, NORMAL_EFFECTS, hitEffectRank);
     applyCpuEffect(ball, cpuPaddle, effect, ballSpeed);
 }
 

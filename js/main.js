@@ -436,7 +436,7 @@ function updateGame() {
             }
         }
 
-        handleCpuPaddleCollision(ball, cpuPaddle, playerPaddle, canvasWidth, currentBallSpeed);
+        handleCpuPaddleCollision(ball, cpuPaddle, playerPaddle, canvasWidth, currentBallSpeed, DIFFICULTY_SETTINGS[currentDifficulty].hitEffectRanks);
 
         handleScore();
     }
