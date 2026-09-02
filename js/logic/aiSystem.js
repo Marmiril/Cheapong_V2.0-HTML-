@@ -56,11 +56,12 @@ export function resetCpuReactioinTime() {
 
 export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, difficultySettings) {
 
-    const { phases, trackingPhases, maxErrorFactor, maxDrift, returnMode } = difficultySettings;
+    const { phases, trackingPhases, maxErrorFactor, maxDrift, reactionTime, returnMode } = difficultySettings;
 
     // If the ball is moving down, it is going away from the CPU.
     // The CPU resets its phase and returns to the center.
     if (ball.speedY >= 0) {
+        cpuReactionStartTime = null;
         currentPhase = -1;
 
         if (returnMode === "CENTER") {
@@ -84,6 +85,19 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
 
             return targetX;
         }
+
+        if (cpuReactionStartTime === null) {
+            cpuReactionStartTime = performance.now();
+            return targetX;
+        }
+
+        const reactionElapsedTime = performance.now() - cpuReactionStartTime;
+
+        if (reactionElapsedTime < reactionTime) {
+            return targetX;
+        }
+
+
         // STAY MODE   
         currentTrackingPhase = -1;
         targetX = cpuPaddle.x;
