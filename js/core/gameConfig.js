@@ -29,8 +29,8 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.FANCY]: {
         phases: [0.50, 0.10],
         trackingPhases: [],
-        maxErrorFactor: 0.40,
-        maxDrift: 0.12,
+        maxErrorFactor: 1.50,
+        maxDrift: 0.95,
         returnMode: "STAY",
         servePlanRanks: [3, 4, 5],
         hitEffectRanks: [3, 4]
@@ -39,8 +39,8 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.VERY_EASY]: {
         phases: [0.60, 0.25, 0.10],
         trackingPhases: [],
-        maxErrorFactor: 0.36,
-        maxDrift: 0.11,
+        maxErrorFactor: 1.30,
+        maxDrift: 0.80,
         returnMode: "STAY",
         servePlanRanks: [3, 4],
         hitEffectRanks: [2, 3, 4]
@@ -49,8 +49,8 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.EASY]: {
         phases: [0.65, 0.35, 0.15],
         trackingPhases: [],
-        maxErrorFactor: 0.32,
-        maxDrift: 0.10,
+        maxErrorFactor: 1.10,
+        maxDrift: 0.65,
         returnMode: "CENTER",
         servePlanRanks: [2, 3, 4],
         hitEffectRanks: [2, 3]
@@ -59,8 +59,8 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.VERY_NORMAL]: {
         phases: [0.70, 0.45, 0.20, 0.10],
         trackingPhases: [],
-        maxErrorFactor: 0.28,
-        maxDrift: 0.09,
+        maxErrorFactor: 0.90,
+        maxDrift: 0.50,
         returnMode: "CENTER",
         servePlanRanks: [2, 3],
         hitEffectRanks: [1, 2, 3]
@@ -69,8 +69,8 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.NORMAL]: {
         phases: [0.75, 0.50, 0.25, 0.10],
         trackingPhases: [],
-        maxErrorFactor: 0.24,
-        maxDrift: 0.08,
+        maxErrorFactor: 0.70,
+        maxDrift: 0.38,
         returnMode: "CENTER",
         servePlanRanks: [1, 2, 3],
         hitEffectRanks: [1, 2]
@@ -79,8 +79,8 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.HARD]: {
         phases: [0.80, 0.60, 0.40, 0.20, 0.10],
         trackingPhases: [],
-        maxErrorFactor: 0.21,
-        maxDrift: 0.07,
+        maxErrorFactor: 0.52,
+        maxDrift: 0.28,
         returnMode: "CENTER",
         servePlanRanks: [1, 2],
         hitEffectRanks: [0, 1, 2]
@@ -89,8 +89,8 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.VERY_HARD]: {
         phases: [0.85, 0.65, 0.45, 0.25, 0.10],
         trackingPhases: [0.50],
-        maxErrorFactor: 0.18,
-        maxDrift: 0.06,
+        maxErrorFactor: 0.38,
+        maxDrift: 0.20,
         returnMode: "TRACK",
         servePlanRanks: [0, 1, 2],
         hitEffectRanks: [0, 1]
@@ -99,8 +99,8 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.BLACK_METAL]: {
         phases: [0.90, 0.75, 0.50, 0.25, 0.10],
         trackingPhases: [0.25, 0.50, 0.75],
-        maxErrorFactor: 0.15,
-        maxDrift: 0.05,
+        maxErrorFactor: 0.28,
+        maxDrift: 0.14,
         returnMode: "TRACK",
         servePlanRanks: [0, 1],
         hitEffectRanks: [0]
