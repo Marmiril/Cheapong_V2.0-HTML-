@@ -31,6 +31,7 @@ export const DIFFICULTY_SETTINGS = {
         trackingPhases: [],
         maxErrorFactor: 1.50,
         maxDrift: 0.95,
+        reactionTime: 550,
         returnMode: "STAY",
         servePlanRanks: [3, 4, 5],
         hitEffectRanks: [3, 4]
@@ -41,6 +42,7 @@ export const DIFFICULTY_SETTINGS = {
         trackingPhases: [],
         maxErrorFactor: 1.30,
         maxDrift: 0.80,
+        reactionTime: 475,
         returnMode: "STAY",
         servePlanRanks: [3, 4],
         hitEffectRanks: [2, 3, 4]
@@ -51,6 +53,7 @@ export const DIFFICULTY_SETTINGS = {
         trackingPhases: [],
         maxErrorFactor: 1.10,
         maxDrift: 0.65,
+        reactionTime: 400,
         returnMode: "CENTER",
         servePlanRanks: [2, 3, 4],
         hitEffectRanks: [2, 3]
@@ -61,6 +64,7 @@ export const DIFFICULTY_SETTINGS = {
         trackingPhases: [],
         maxErrorFactor: 0.90,
         maxDrift: 0.50,
+        reactionTime: 325,
         returnMode: "CENTER",
         servePlanRanks: [2, 3],
         hitEffectRanks: [1, 2, 3]
@@ -71,6 +75,7 @@ export const DIFFICULTY_SETTINGS = {
         trackingPhases: [],
         maxErrorFactor: 0.70,
         maxDrift: 0.38,
+        reactionTime: 275,
         returnMode: "CENTER",
         servePlanRanks: [1, 2, 3],
         hitEffectRanks: [1, 2]
@@ -81,6 +86,7 @@ export const DIFFICULTY_SETTINGS = {
         trackingPhases: [],
         maxErrorFactor: 0.52,
         maxDrift: 0.28,
+        reactionTime: 250,
         returnMode: "CENTER",
         servePlanRanks: [1, 2],
         hitEffectRanks: [0, 1, 2]
@@ -91,6 +97,7 @@ export const DIFFICULTY_SETTINGS = {
         trackingPhases: [0.50],
         maxErrorFactor: 0.38,
         maxDrift: 0.20,
+        reactionTime: 225,
         returnMode: "TRACK",
         servePlanRanks: [0, 1, 2],
         hitEffectRanks: [0, 1]
@@ -101,6 +108,7 @@ export const DIFFICULTY_SETTINGS = {
         trackingPhases: [0.25, 0.50, 0.75],
         maxErrorFactor: 0.28,
         maxDrift: 0.14,
+        reactionTime: 200,
         returnMode: "TRACK",
         servePlanRanks: [0, 1],
         hitEffectRanks: [0]

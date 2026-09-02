@@ -41,6 +41,11 @@ let currentTrackingPhase = -1;
 // Stores the curretn X postiion the CPU wants to reach
 let targetX = 0;
 
+let cpuReactionStartTime = null;
+export function resetCpuReactioinTime() {
+    cpuReactionStartTime = null;
+}
+
 // Controle how much the CPU can miss its prediction.
 // Higher value means a less accurate CPU.
 // const MAX_ERROR_FACTOR = 0.40;
