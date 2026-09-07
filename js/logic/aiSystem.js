@@ -54,7 +54,7 @@ export function resetCpuReactionTime() {
 // This makes the CPU movement feel less robotic.
 // const MAX_DRIFT = 0.12;
 
-export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, difficultySettings) {
+export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, missPhaseChance, difficultySettings) {
 
     const { phases, trackingPhases, maxErrorFactor, maxDrift, reactionTime, returnMode } = difficultySettings;
 
@@ -116,6 +116,9 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
         // The CPU recalculates only when the ball reaches a new phase.
         if (ball.y <= phaseY && currentPhase < i) {
             currentPhase = i;
+
+            // The cpu may miss this decision phase depending on difficulty
+            if (Math.random() < missPhaseChance) { break; }
 
             // Calculates the ideal target without any human eror.
             const cleanTargetX = predictBallX(ball, cpuPaddle, canvasWidth)
