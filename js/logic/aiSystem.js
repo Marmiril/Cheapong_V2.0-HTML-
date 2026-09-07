@@ -42,7 +42,7 @@ let currentTrackingPhase = -1;
 let targetX = 0;
 
 let cpuReactionStartTime = null;
-export function resetCpuReactioinTime() {
+export function resetCpuReactionTime() {
     cpuReactionStartTime = null;
 }
 

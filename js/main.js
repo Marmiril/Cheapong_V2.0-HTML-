@@ -40,7 +40,7 @@ import { handleWallCollision, handlePlayerPaddleCollision, handleCpuPaddleCollis
 import { drawPaddle, drawBall, clearCanvas, drawCenteredText, renderMainMenu } from "./render/gameRenderer.js";
 
 // AI movement
-import { calculateCpuTargetX, calculateCpuServePlan } from "./logic/aiSystem.js";
+import { calculateCpuTargetX, calculateCpuServePlan, resetCpuReactionTime } from "./logic/aiSystem.js";
 
 // ScoreSystem
 import { ScoreSystem } from "./game/scoreSystem.js";
@@ -652,6 +652,9 @@ function resetGameSpeed() {
 
     ball.speedX = 0;
     ball.speedY = 0;
+
+    resetCpuReactionTime();
+
     playerPaddle.speed = GAME_SETTINGS.paddleSpeed;
     cpuPaddle.speed = GAME_SETTINGS.paddleSpeed;
 
