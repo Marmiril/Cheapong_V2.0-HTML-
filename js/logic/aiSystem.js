@@ -54,9 +54,9 @@ export function resetCpuReactionTime() {
 // This makes the CPU movement feel less robotic.
 // const MAX_DRIFT = 0.12;
 
-export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, missPhaseChance, difficultySettings) {
+export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, difficultySettings) {
 
-    const { phases, trackingPhases, maxErrorFactor, maxDrift, reactionTime, returnMode } = difficultySettings;
+    const { phases, trackingPhases, maxErrorFactor, maxDrift, reactionTime, missPhaseChance, returnMode } = difficultySettings;
 
     // If the ball is moving down, it is going away from the CPU.
     // The CPU resets its phase and returns to the center.
