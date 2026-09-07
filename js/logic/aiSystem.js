@@ -86,23 +86,23 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
             return targetX;
         }
 
-        if (cpuReactionStartTime === null) {
-            cpuReactionStartTime = performance.now();
-            return targetX;
-        }
-
-        const reactionElapsedTime = performance.now() - cpuReactionStartTime;
-
-        if (reactionElapsedTime < reactionTime) {
-            return targetX;
-        }
-
-
         // STAY MODE   
         currentTrackingPhase = -1;
         targetX = cpuPaddle.x;
         return targetX;
     }
+
+    if (cpuReactionStartTime === null) {
+        cpuReactionStartTime = performance.now();
+        return targetX;
+    }
+
+    const reactionElapsedTime = performance.now() - cpuReactionStartTime;
+
+    if (reactionElapsedTime < reactionTime) {
+        return targetX;
+    }
+
 
     currentTrackingPhase = -1;
 
