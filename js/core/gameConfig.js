@@ -55,7 +55,7 @@ export const DIFFICULTY_SETTINGS = {
         maxErrorFactor: 1.50,
         maxDrift: 0.95,
         reactionTime: 500,
-        missPhaseChance: 0.40,
+        missPhaseChance: 0.30,
         returnMode: "STAY",
         servePlanRanks: [3, 4, 5],
         hitEffectRanks: [3, 4]
@@ -67,7 +67,7 @@ export const DIFFICULTY_SETTINGS = {
         maxErrorFactor: 1.30,
         maxDrift: 0.80,
         reactionTime: 475,
-        missPhaseChance: 0.35,
+        missPhaseChance: 0.25,
         returnMode: "STAY",
         servePlanRanks: [3, 4],
         hitEffectRanks: [2, 3, 4]
@@ -79,7 +79,7 @@ export const DIFFICULTY_SETTINGS = {
         maxErrorFactor: 1.10,
         maxDrift: 0.65,
         reactionTime: 400,
-        missPhaseChance: 0.30,
+        missPhaseChance: 0.20,
         returnMode: "CENTER",
         servePlanRanks: [2, 3, 4],
         hitEffectRanks: [2, 3]
@@ -91,7 +91,7 @@ export const DIFFICULTY_SETTINGS = {
         maxErrorFactor: 1.00,
         maxDrift: 0.50,
         reactionTime: 325,
-        missPhaseChance: 0.25,
+        missPhaseChance: 0.15,
         returnMode: "CENTER",
         servePlanRanks: [2, 3],
         hitEffectRanks: [1, 2, 3]
@@ -103,7 +103,7 @@ export const DIFFICULTY_SETTINGS = {
         maxErrorFactor: 0.90,
         maxDrift: 0.38,
         reactionTime: 275,
-        missPhaseChance: 0.20,
+        missPhaseChance: 0.10,
         returnMode: "CENTER",
         servePlanRanks: [1, 2, 3],
         hitEffectRanks: [1, 2]
@@ -115,7 +115,7 @@ export const DIFFICULTY_SETTINGS = {
         maxErrorFactor: 0.80,
         maxDrift: 0.28,
         reactionTime: 250,
-        missPhaseChance: 0.15,
+        missPhaseChance: 0.10,
         returnMode: "CENTER",
         servePlanRanks: [1, 2],
         hitEffectRanks: [0, 1, 2]

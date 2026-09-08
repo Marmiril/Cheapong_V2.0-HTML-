@@ -44,6 +44,8 @@ let targetX = 0;
 let cpuReactionStartTime = null;
 export function resetCpuReactionTime() {
     cpuReactionStartTime = null;
+    currentPhase = -1;
+    currentTrackingPhase = -1;
 }
 
 // Controle how much the CPU can miss its prediction.

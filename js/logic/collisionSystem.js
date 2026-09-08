@@ -7,7 +7,7 @@ import {
 
 import { playPaddleHit, playWallCollision } from "../game/soundSystem.js";
 
-const SPIN_FACTOR = 0.35;
+const SPIN_FACTOR = 0.55;
 const INPUT_SPIN_BONUS = 2.2;
 const CPU_BREAK_BONUS = 2.2;
 
