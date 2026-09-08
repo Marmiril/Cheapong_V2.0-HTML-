@@ -50,7 +50,7 @@ export const DIFFICULTY_SETTINGS = {
 
 
     [Difficulty.FANCY]: {
-        phases: [0.60, 0.10],
+        phases: [0.90, 0.75, 0.50, 0.25, 0.10],
         trackingPhases: [],
         maxErrorFactor: 1.50,
         maxDrift: 0.95,
@@ -62,7 +62,7 @@ export const DIFFICULTY_SETTINGS = {
     },
 
     [Difficulty.VERY_EASY]: {
-        phases: [0.60, 0.25, 0.10],
+        phases: [0.90, 0.75, 0.50, 0.25, 0.10],
         trackingPhases: [],
         maxErrorFactor: 1.30,
         maxDrift: 0.80,
@@ -74,7 +74,7 @@ export const DIFFICULTY_SETTINGS = {
     },
 
     [Difficulty.EASY]: {
-        phases: [0.65, 0.35, 0.15],
+        phases: [0.90, 0.75, 0.50, 0.25, 0.10],
         trackingPhases: [],
         maxErrorFactor: 1.10,
         maxDrift: 0.65,
@@ -86,7 +86,7 @@ export const DIFFICULTY_SETTINGS = {
     },
 
     [Difficulty.VERY_NORMAL]: {
-        phases: [0.70, 0.45, 0.20, 0.10],
+        phases: [0.90, 0.75, 0.50, 0.25, 0.10],
         trackingPhases: [],
         maxErrorFactor: 1.00,
         maxDrift: 0.50,
@@ -98,7 +98,7 @@ export const DIFFICULTY_SETTINGS = {
     },
 
     [Difficulty.NORMAL]: {
-        phases: [0.75, 0.50, 0.25, 0.10],
+        phases: [0.90, 0.75, 0.50, 0.25, 0.10],
         trackingPhases: [],
         maxErrorFactor: 0.90,
         maxDrift: 0.38,
@@ -110,7 +110,7 @@ export const DIFFICULTY_SETTINGS = {
     },
 
     [Difficulty.HARD]: {
-        phases: [0.80, 0.60, 0.40, 0.20, 0.10],
+        phases: [0.90, 0.75, 0.50, 0.25, 0.10],
         trackingPhases: [],
         maxErrorFactor: 0.80,
         maxDrift: 0.28,
@@ -122,7 +122,7 @@ export const DIFFICULTY_SETTINGS = {
     },
 
     [Difficulty.VERY_HARD]: {
-        phases: [0.85, 0.65, 0.45, 0.25, 0.10],
+        phases: [0.90, 0.75, 0.50, 0.25, 0.10],
         trackingPhases: [0.50],
         maxErrorFactor: 0.70,
         maxDrift: 0.20,

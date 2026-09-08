@@ -100,9 +100,21 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
 
     const reactionElapsedTime = performance.now() - cpuReactionStartTime;
 
+    /* 
     if (reactionElapsedTime < reactionTime) {
+
+        // Phases crossing during the reaction time are considered missed
+        for (let i = 0; i < phases.length; i++) {
+            const phaseY = canvasHeight * phases[i];
+
+            if (ball.y <= phaseY) {
+                currentPhase = i;
+            }
+        }
         return targetX;
     }
+        */
+    const isReacting = reactionElapsedTime < reactionTime;
 
     currentTrackingPhase = -1;
 
@@ -116,6 +128,11 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
         // The CPU recalculates only when the ball reaches a new phase.
         if (ball.y <= phaseY && currentPhase < i) {
             currentPhase = i;
+
+            /// Phases crossed during reaction time are considered missed
+            if (isReacting) {
+                continue;
+            }
 
             // The cpu may miss this decision phase depending on difficulty
             if (Math.random() < missPhaseChance) { break; }
@@ -247,13 +264,7 @@ export function calculateCpuHitEffect(
             : HitEffect.BREAK_RIGHT;
     }
 
-    /*
-    let bestEffet = HitEffect.NONE;
-    let longestReactionTime = -1;
-*/
-
     const candidateEffetcs = [];
-
 
     for (const effect of availableEffects) {
         // Simulates the horizontal speed produced by this effect.
@@ -281,13 +292,6 @@ export function calculateCpuHitEffect(
         // Measures how far the player would need to move.
         const distanceToTravel = Math.abs(predicetdCenterX - playerCenterX);
         const reactionTime = distanceToTravel / playerPaddle.speed;
-        /*/
-                // Keeps the response that is hardest for the player to reach
-                if (reactionTime > longestReactionTime) {
-                    longestReactionTime = reactionTime;
-                    bestEffet = effect;
-                }
-        */
 
         candidateEffetcs.push({
             effect,
