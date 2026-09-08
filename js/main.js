@@ -138,7 +138,7 @@ let currentBallSpeed = GAME_SETTINGS.ballSpeed;
 // Current applicaton state
 let appState = AppState.MAIN_MENU;
 
-const scoreSystem = new ScoreSystem(1, 10);
+const scoreSystem = new ScoreSystem(5, 10);
 
 const speedProgressionSystem = new SpeedProgressionSystem();
 
