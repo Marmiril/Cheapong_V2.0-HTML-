@@ -26,13 +26,36 @@ export const Difficulty = {
 
 export const DIFFICULTY_SETTINGS = {
 
+    /*
+     * CPU DIFFICULTY SETTINGS
+     * phases - the vertical positions where cpu recalculates the incoming trajectory. Higher is earlier
+     *          More phases more oportunities
+     * trackingPhases - defines the positions where cpu updates its target while the ball is moving away.
+     *                  Usefull only in "TRACK" returnMode. More trackphases improve preparation for next return
+     * maxErroFactor - Controls the maximun aiming error added to the predicted target.
+     *                 Higher values make the cpu less accurate.
+     * maxDrift - adds independent random horizontal offset to the calculated target
+     *            Higher values produce greater random deviation
+     * reactionTime - Time in miliseconds before the CPU starts reacting to an incoming ball
+     *                Higher values produce slower reactions
+     * missPhaseChance - probability of completly ignoring a decision phase.
+     *                   0.00 never misses, 1.00 always misses it.
+     * returnMode - behaviour of cpuPaddle after returning a ball while moving toward the player.
+     *              
+     * servePlanks - Defines which ranked CPU serve plans may be selected
+     *               Rank 0 is the strongest calculated plan, higher ranks represents progressively weaker plans.
+     * hitEffectRanks - defines which ranked return effects may be selected after the CPU hit
+     *                  0 is the strongest calculated response, higher represent progressibley weaker responses.
+    */
+
+
     [Difficulty.FANCY]: {
-        phases: [0.50, 0.10],
+        phases: [0.60, 0.10],
         trackingPhases: [],
         maxErrorFactor: 1.50,
         maxDrift: 0.95,
-        reactionTime: 550,
-        missPhaseChance: 0.50,
+        reactionTime: 500,
+        missPhaseChance: 0.30,
         returnMode: "STAY",
         servePlanRanks: [3, 4, 5],
         hitEffectRanks: [3, 4]
@@ -44,7 +67,7 @@ export const DIFFICULTY_SETTINGS = {
         maxErrorFactor: 1.30,
         maxDrift: 0.80,
         reactionTime: 475,
-        missPhaseChance: 0.40,
+        missPhaseChance: 0.30,
         returnMode: "STAY",
         servePlanRanks: [3, 4],
         hitEffectRanks: [2, 3, 4]
@@ -65,10 +88,10 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.VERY_NORMAL]: {
         phases: [0.70, 0.45, 0.20, 0.10],
         trackingPhases: [],
-        maxErrorFactor: 0.90,
+        maxErrorFactor: 1.00,
         maxDrift: 0.50,
         reactionTime: 325,
-        missPhaseChance: 0.22,
+        missPhaseChance: 0.25,
         returnMode: "CENTER",
         servePlanRanks: [2, 3],
         hitEffectRanks: [1, 2, 3]
@@ -77,10 +100,10 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.NORMAL]: {
         phases: [0.75, 0.50, 0.25, 0.10],
         trackingPhases: [],
-        maxErrorFactor: 0.70,
+        maxErrorFactor: 0.90,
         maxDrift: 0.38,
         reactionTime: 275,
-        missPhaseChance: 0.15,
+        missPhaseChance: 0.20,
         returnMode: "CENTER",
         servePlanRanks: [1, 2, 3],
         hitEffectRanks: [1, 2]
@@ -89,10 +112,10 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.HARD]: {
         phases: [0.80, 0.60, 0.40, 0.20, 0.10],
         trackingPhases: [],
-        maxErrorFactor: 0.52,
+        maxErrorFactor: 0.80,
         maxDrift: 0.28,
         reactionTime: 250,
-        missPhaseChance: 0.10,
+        missPhaseChance: 0.15,
         returnMode: "CENTER",
         servePlanRanks: [1, 2],
         hitEffectRanks: [0, 1, 2]
@@ -101,10 +124,10 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.VERY_HARD]: {
         phases: [0.85, 0.65, 0.45, 0.25, 0.10],
         trackingPhases: [0.50],
-        maxErrorFactor: 0.38,
+        maxErrorFactor: 0.70,
         maxDrift: 0.20,
         reactionTime: 225,
-        missPhaseChance: 0.05,
+        missPhaseChance: 0.10,
         returnMode: "TRACK",
         servePlanRanks: [0, 1, 2],
         hitEffectRanks: [0, 1]
@@ -113,10 +136,10 @@ export const DIFFICULTY_SETTINGS = {
     [Difficulty.BLACK_METAL]: {
         phases: [0.90, 0.75, 0.50, 0.25, 0.10],
         trackingPhases: [0.25, 0.50, 0.75],
-        maxErrorFactor: 0.28,
+        maxErrorFactor: 0.50,
         maxDrift: 0.14,
         reactionTime: 200,
-        missPhaseChance: 0.02,
+        missPhaseChance: 0.05,
         returnMode: "TRACK",
         servePlanRanks: [0, 1],
         hitEffectRanks: [0]

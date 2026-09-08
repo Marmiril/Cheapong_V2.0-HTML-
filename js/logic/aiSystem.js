@@ -94,6 +94,7 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
 
     if (cpuReactionStartTime === null) {
         cpuReactionStartTime = performance.now();
+        targetX = cpuPaddle.x;
         return targetX;
     }
 
@@ -102,7 +103,6 @@ export function calculateCpuTargetX(cpuPaddle, ball, canvasWidth, canvasHeight, 
     if (reactionElapsedTime < reactionTime) {
         return targetX;
     }
-
 
     currentTrackingPhase = -1;
 
