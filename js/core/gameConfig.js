@@ -55,7 +55,7 @@ export const DIFFICULTY_SETTINGS = {
         maxErrorFactor: 1.50,
         maxDrift: 0.95,
         reactionTime: 500,
-        missPhaseChance: 0.30,
+        missPhaseChance: 0.40,
         returnMode: "STAY",
         servePlanRanks: [3, 4, 5],
         hitEffectRanks: [3, 4]
@@ -67,7 +67,7 @@ export const DIFFICULTY_SETTINGS = {
         maxErrorFactor: 1.30,
         maxDrift: 0.80,
         reactionTime: 475,
-        missPhaseChance: 0.30,
+        missPhaseChance: 0.35,
         returnMode: "STAY",
         servePlanRanks: [3, 4],
         hitEffectRanks: [2, 3, 4]
