@@ -46,26 +46,15 @@ body {
     width: min(90vw, calc(75vh * 1.3333), 70rem);
     aspect-ratio: 4 / 3;
     height: auto;
-    /*
     background-color: rgba(0, 0, 0, 0.55);
     backdrop-filter: blur(8px);
-    position: relative;
-    z-index: 1;
-    */
-    background-color: transparent;
     border: 0.125rem solid white;
     display: block;
 }
 
 .game-area {
-
-    background-color: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    /*
-    overflow: hidden;
     position: relative;
-    */
+    overflow: hidden;
 }
 
 .game-area::before{
@@ -74,7 +63,6 @@ body {
     inset: 0;
     background-color: rgba(0, 0, 0, 0.55);
     backdrop-filter: blur(8px);
-    z-index: 0;
 }
 
 .score-panel,
