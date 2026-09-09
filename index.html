@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="darkreader-lock">
     <title>Cheapong</title>
 
     <link rel="stylesheet" href="./css/style.css">
@@ -12,42 +13,40 @@
 <body>
 
     <main class="cheapong-page">
+
+        <aside class="score-panel">
+            <div class="score-item">
+                <span>CPU</span>
+                <strong id="cpuPoints">0</strong>
+            </div>
+
+            <div class="score-item">
+                <span>PLAYER</span>
+                <strong id="playerPoints">0</strong>
+            </div>
+        </aside>
+
         <section class="cheapong-wrapper">
-
             <h1>Cheapong</h1>
-
             <div class="game-layout">
-
-                <aside class="score-panel">
-                    <div class="score-item">
-                        <span>CPU</span>
-                        <strong id="cpuPoints">0</strong>
-                    </div>
-
-                    <div class="score-item">
-                        <span>PLAYER</span>
-                        <strong id="playerPoints">0</strong>
-                    </div>
-                </aside>
-
                 <section class="game-area">
                     <canvas id="gameCanvas" width="800" height="600">
                     </canvas>
                 </section>
-
-                <aside class="setting-panel">
-                    <div class="setting-item">
-                        <span>MATCH</span>
-                        <strong id="matchNumber">1</strong>
-                    </div>
-
-                    <div class="setting-item">
-                        <span>DIFFICULTY</span>
-                        <strong id="difficultyLevel">EASY</strong>
-                    </div>
-                </aside>
             </div>
         </section>
+
+        <aside class="setting-panel">
+            <div class="setting-item">
+                <span>MATCH</span>
+                <strong id="matchNumber">1</strong>
+            </div>
+
+            <div class="setting-item">
+                <span>DIFFICULTY</span>
+                <strong id="difficultyLevel">EASY</strong>
+            </div>
+        </aside>
     </main>
 
     <script type="module" src="./js/main.js"></script>

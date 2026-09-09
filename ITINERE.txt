@@ -260,129 +260,129 @@ ITINERARIO
 
 
 54 - CONFIGURACIÓN CENTRALIZADA DEL JUEGO Y LA DIFICULTAD.
-gameConfig.js incorpora GAME_SETTINGS, Difficulty y DIFFICULTY_SETTINGS.
-GAME_SETTINGS centraliza dimensiones, velocidades, progresión de velocidad y duración del mensaje de punto.
-Difficulty define ocho niveles: FANCY, VERY_EASY, EASY, VERY_NORMAL, NORMAL, HARD, VERY_HARD y BLACK_METAL.
-getDifficultyByMatch() asigna automáticamente la dificultad según el match actual.
-scoreRenderer.js muestra la dificultad activa junto al número de match.
+     gameConfig.js incorpora GAME_SETTINGS, Difficulty y DIFFICULTY_SETTINGS.
+     GAME_SETTINGS centraliza dimensiones, velocidades, progresión de velocidad y duración del mensaje de punto.
+     Difficulty define ocho niveles: FANCY, VERY_EASY, EASY, VERY_NORMAL, NORMAL, HARD, VERY_HARD y BLACK_METAL.
+     getDifficultyByMatch() asigna automáticamente la dificultad según el match actual.
+     scoreRenderer.js muestra la dificultad activa junto al número de match.
 
 55 - NIVELES PROGRESIVOS DE DIFICULTAD DE LA CPU.
-Cada dificultad controla reactionTime, missPhaseChance, maxErrorFactor, maxDrift, returnMode, servePlanRanks y hitEffectRanks.
-reactionTime determina cuánto tarda la CPU en comenzar a analizar una trayectoria entrante.
-missPhaseChance determina la probabilidad de ignorar completamente una fase de decisión.
-maxErrorFactor controla el error añadido a la predicción de la trayectoria.
-maxDrift añade una desviación horizontal aleatoria adicional.
-returnMode define el comportamiento de la CPU mientras la bola se aleja: STAY, CENTER o TRACK.
-servePlanRanks limita la calidad de los saques disponibles.
-hitEffectRanks limita la calidad de las devoluciones disponibles.
+     Cada dificultad controla reactionTime, missPhaseChance, maxErrorFactor, maxDrift, returnMode, servePlanRanks y hitEffectRanks.
+     reactionTime determina cuánto tarda la CPU en comenzar a analizar una trayectoria entrante.
+     missPhaseChance determina la probabilidad de ignorar completamente una fase de decisión.
+     maxErrorFactor controla el error añadido a la predicción de la trayectoria.
+     maxDrift añade una desviación horizontal aleatoria adicional.
+     returnMode define el comportamiento de la CPU mientras la bola se aleja: STAY, CENTER o TRACK.
+     servePlanRanks limita la calidad de los saques disponibles.
+     hitEffectRanks limita la calidad de las devoluciones disponibles.
 
 56 - VARIEDAD DEL SAQUE CPU SEGÚN LA DIFICULTAD.
-getCpuServeTargetPositions() utiliza siete posiciones simétricas.
-calculateCpuServePlan() genera varios planes candidatos.
-Los planes se ordenan según el desplazamiento que exigirían al jugador.
-servePlanRanks limita qué posiciones del ranking puede seleccionar cada dificultad.
-Rank 0 representa el mejor plan calculado.
-Los valores superiores permiten progresivamente planes menos efectivos.
-cpuServePlanRank se elige una sola vez al comenzar cada saque CPU.
+     getCpuServeTargetPositions() utiliza siete posiciones simétricas.
+     calculateCpuServePlan() genera varios planes candidatos.
+     Los planes se ordenan según el desplazamiento que exigirían al jugador.
+     servePlanRanks limita qué posiciones del ranking puede seleccionar cada dificultad.
+     Rank 0 representa el mejor plan calculado.
+     Los valores superiores permiten progresivamente planes menos efectivos.
+     cpuServePlanRank se elige una sola vez al comenzar cada saque CPU.
 
 57 - RECÁLCULO DEL PLAN DURANTE LA PREPARACIÓN DEL SAQUE CPU.
-Mientras transcurre CPU_SERVE_DELAY, calculateCpuServePlan() utiliza la posición actual del jugador.
-El plan puede recalcularse durante los 600 milisegundos de preparación.
-Al terminar el temporizador, el último plan queda bloqueado.
-La CPU termina de alcanzar targetX y solo entonces lanza la bola.
-cpuServePlan, cpuServeStartTime y cpuServePlanRank se reinician después del lanzamiento.
+     Mientras transcurre CPU_SERVE_DELAY, calculateCpuServePlan() utiliza la posición actual del jugador.
+     El plan puede recalcularse durante los 600 milisegundos de preparación.
+     Al terminar el temporizador, el último plan queda bloqueado.
+     La CPU termina de alcanzar targetX y solo entonces lanza la bola.
+     cpuServePlan, cpuServeStartTime y cpuServePlanRank se reinician después del lanzamiento.
 
 58 - SEGUIMIENTO DE LA BOLA CUANDO SE ALEJA DE LA CPU.
-returnMode controla el comportamiento de posicionamiento después de una devolución.
-STAY mantiene la pala en su posición actual.
-CENTER devuelve la pala al centro de la cancha.
-TRACK utiliza trackingPhases para actualizar el objetivo en momentos concretos.
-VERY_HARD utiliza una fase de tracking.
-BLACK_METAL utiliza varias fases de tracking.
-currentTrackingPhase evita recalcular el objetivo continuamente en cada fotograma.
+     returnMode controla el comportamiento de posicionamiento después de una devolución.
+     STAY mantiene la pala en su posición actual.
+     CENTER devuelve la pala al centro de la cancha.
+     TRACK utiliza trackingPhases para actualizar el objetivo en momentos concretos.
+     VERY_HARD utiliza una fase de tracking.
+     BLACK_METAL utiliza varias fases de tracking.
+     currentTrackingPhase evita recalcular el objetivo continuamente en cada fotograma.
 
 59 - PAUSAS Y MENSAJES DE FINALIZACIÓN.
-GameState incorpora POINT_OVER, MATCH_OVER y GAME_OVER.
-POINT_OVER utiliza GAME_SETTINGS.pointMessageDuration.
-nextServeState conserva quién debe sacar después de la pausa.
-MATCH_OVER espera SPACE antes de iniciar el siguiente match ganado por PLAYER.
-Si CPU gana un match, el juego termina.
-Si PLAYER gana el último match, se activa GAME_OVER con victoria completa.
+     GameState incorpora POINT_OVER, MATCH_OVER y GAME_OVER.
+     POINT_OVER utiliza GAME_SETTINGS.pointMessageDuration.
+     nextServeState conserva quién debe sacar después de la pausa.
+     MATCH_OVER espera SPACE antes de iniciar el siguiente match ganado por PLAYER.
+     Si CPU gana un match, el juego termina.
+     Si PLAYER gana el último match, se activa GAME_OVER con victoria completa.
 
 60 - MINIJUEGO DE PIEDRA, PAPEL O TIJERA PARA DECIDIR EL PRIMER SAQUE.
-GameState incorpora RPS como estado interno de IN_GAME.
-rpsSystem.js define ROCK, PAPER y SCISSORS, además de PLAYER, CPU y DRAW.
-determineRpsWinner() resuelve el resultado mediante los índices de RPS_CHOICES.
-getRandomCpuChoice() genera la elección aleatoria de la CPU.
-Cada match comienza en GameState.RPS.
-PLAYER selecciona mediante ARROWLEFT y ARROWRIGHT.
-SPACE confirma la selección.
-event.repeat evita entradas repetidas al mantener una tecla.
-La CPU realiza un barrido visual antes de revelar su elección.
-El barrido dura 2000 milisegundos y cambia de opción cada 100 milisegundos.
-rpsRenderer.js dibuja las opciones, selecciones y resultado.
-Un DRAW repite el minijuego.
-PLAYER o CPU obtienen el primer saque del match según el resultado.
-Los siguientes saques vuelven a depender del ganador de cada punto.
+     GameState incorpora RPS como estado interno de IN_GAME.
+     rpsSystem.js define ROCK, PAPER y SCISSORS, además de PLAYER, CPU y DRAW.
+     determineRpsWinner() resuelve el resultado mediante los índices de RPS_CHOICES.
+     getRandomCpuChoice() genera la elección aleatoria de la CPU.
+     Cada match comienza en GameState.RPS.
+     PLAYER selecciona mediante ARROWLEFT y ARROWRIGHT.
+     SPACE confirma la selección.
+     event.repeat evita entradas repetidas al mantener una tecla.
+     La CPU realiza un barrido visual antes de revelar su elección.
+     El barrido dura 2000 milisegundos y cambia de opción cada 100 milisegundos.
+     rpsRenderer.js dibuja las opciones, selecciones y resultado.
+     Un DRAW repite el minijuego.
+     PLAYER o CPU obtienen el primer saque del match según el resultado.
+     Los siguientes saques vuelven a depender del ganador de cada punto.
 
 61 - SISTEMA DE SONIDOS.
-assets/sounds/ contiene los archivos de audio utilizados por el juego.
-soundSystem.js centraliza la carga y reproducción mediante objetos Audio reutilizables.
-Las colisiones con las palas reproducen aleatoriamente varios sonidos de impacto.
-Las colisiones laterales reproducen wallImpact.wav.
-PLAYER y CPU tienen sonidos diferenciados para puntos y finales.
-El inicio del juego, los saques y la progresión de velocidad tienen sonidos propios.
-El minijuego RPS reproduce sonidos de selección, barrido y resultado.
-Los sonidos se ejecutan desde los eventos reales del juego y no desde el renderizado.
+     assets/sounds/ contiene los archivos de audio utilizados por el juego.
+     soundSystem.js centraliza la carga y reproducción mediante objetos Audio reutilizables.
+     Las colisiones con las palas reproducen aleatoriamente varios sonidos de impacto.
+     Las colisiones laterales reproducen wallImpact.wav.
+     PLAYER y CPU tienen sonidos diferenciados para puntos y finales.
+     El inicio del juego, los saques y la progresión de velocidad tienen sonidos propios.
+     El minijuego RPS reproduce sonidos de selección, barrido y resultado.
+     Los sonidos se ejecutan desde los eventos reales del juego y no desde el renderizado.
 
 62 - PROGRESIÓN DE VELOCIDAD DURANTE EL PUNTO.
-SpeedProgressionSystem registra exclusivamente los golpes confirmados del jugador.
-Cada 5 golpes activa un aumento pendiente.
-currentBallSpeed sustituye a la velocidad base durante el punto.
-GAME_SETTINGS define speedIncreaseFactor, maxBallSpeed y maxPaddleSpeed.
-increaseGameSpeed() incrementa la velocidad de la pelota y ambas palas sin superar sus límites.
-ballSpeedFactor aplica a speedX y speedY el incremento real de velocidad.
-speedUp.mp3 se reproduce una vez por incremento.
-resetGameSpeed() restaura las velocidades base después de cada punto.
-SpeedProgressionSystem reinicia también su contador después de cada punto.
+     SpeedProgressionSystem registra exclusivamente los golpes confirmados del jugador.
+     Cada 5 golpes activa un aumento pendiente.
+     currentBallSpeed sustituye a la velocidad base durante el punto.
+     GAME_SETTINGS define speedIncreaseFactor, maxBallSpeed y maxPaddleSpeed.
+     increaseGameSpeed() incrementa la velocidad de la pelota y ambas palas sin superar sus límites.
+     ballSpeedFactor aplica a speedX y speedY el incremento real de velocidad.
+     speedUp.mp3 se reproduce una vez por incremento.
+     resetGameSpeed() restaura las velocidades base después de cada punto.
+     SpeedProgressionSystem reinicia también su contador después de cada punto.
 
 63 - SISTEMA DE FONDOS POR MATCH.
-assets/img/backgrounds/ contiene los fondos y animaciones utilizados durante los diferentes matches.
-backSystem.js centraliza la selección del fondo correspondiente al match actual.
-setBackSystem(matchNumber) transforma el número de match al formato de dos dígitos.
-Cada match utiliza backXX.png como fondo neutral.
-Cada match utiliza gifXX.gif como animación de celebración.
-main.js aplica el fondo correspondiente al comenzar y avanzar entre matches.
-Las celebraciones del jugador sustituyen temporalmente el fondo neutral por el GIF correspondiente.
+     assets/img/backgrounds/ contiene los fondos y animaciones utilizados durante los diferentes matches.
+     backSystem.js centraliza la selección del fondo correspondiente al match actual.
+     setBackSystem(matchNumber) transforma el número de match al formato de dos dígitos.
+     Cada match utiliza backXX.png como fondo neutral.
+     Cada match utiliza gifXX.gif como animación de celebración.
+     main.js aplica el fondo correspondiente al comenzar y avanzar entre matches.
+     Las celebraciones del jugador sustituyen temporalmente el fondo neutral por el GIF correspondiente.
 
 64 - AMPLIACIÓN DE LA DIFICULTAD A OCHO NIVELES.
-La progresión se divide en FANCY, VERY_EASY, EASY, VERY_NORMAL, NORMAL, HARD, VERY_HARD y BLACK_METAL.
-Match 1 utiliza FANCY.
-Match 2 utiliza VERY_EASY.
-Match 3 utiliza EASY.
-Match 4 utiliza VERY_NORMAL.
-Match 5 utiliza NORMAL.
-Matches 6 y 7 utilizan HARD.
-Matches 8 y 9 utilizan VERY_HARD.
-Match 10 utiliza BLACK_METAL.
-La dificultad aumenta modificando precisión, reacción, atención, posicionamiento, saque y calidad de las devoluciones.
+     La progresión se divide en FANCY, VERY_EASY, EASY, VERY_NORMAL, NORMAL, HARD, VERY_HARD y BLACK_METAL.
+     Match 1 utiliza FANCY.
+     Match 2 utiliza VERY_EASY.
+     Match 3 utiliza EASY.
+     Match 4 utiliza VERY_NORMAL.
+     Match 5 utiliza NORMAL.
+     Matches 6 y 7 utilizan HARD.
+     Matches 8 y 9 utilizan VERY_HARD.
+     Match 10 utiliza BLACK_METAL.
+     La dificultad aumenta modificando precisión, reacción, atención, posicionamiento, saque y calidad de las devoluciones.
 
 65 - FASES COMUNES DE RECONOCIMIENTO DE TRAYECTORIA.
-Todas las dificultades utilizan actualmente las fases [0.90, 0.75, 0.50, 0.25, 0.10].
-Las fases representan momentos concretos de la trayectoria en los que la CPU puede recalcular su objetivo.
-currentPhase evita que una misma fase vuelva a procesarse en fotogramas posteriores.
-La dificultad ya no se reduce eliminando fases.
-Los niveles fáciles conservan las mismas oportunidades de observación pero tienen mayor probabilidad de cometer errores o perder decisiones.
-Este sistema evita que las dificultades bajas permanezcan inmóviles durante casi toda la trayectoria.
+     Todas las dificultades utilizan actualmente las fases [0.90, 0.75, 0.50, 0.25, 0.10].
+     Las fases representan momentos concretos de la trayectoria en los que la CPU puede recalcular su objetivo.
+     currentPhase evita que una misma fase vuelva a procesarse en fotogramas posteriores.
+     La dificultad ya no se reduce eliminando fases.
+     Los niveles fáciles conservan las mismas oportunidades de observación pero tienen mayor probabilidad de cometer errores o perder decisiones.
+     Este sistema evita que las dificultades bajas permanezcan inmóviles durante casi toda la trayectoria.
 
 66 - HUMANIZACIÓN Y REINICIO DEL ESTADO DE LA IA.
-reactionTime introduce un retraso antes de que la CPU comience a reaccionar ante una trayectoria entrante.
-Las fases atravesadas mientras transcurre reactionTime se consideran perdidas.
-missPhaseChance permite perder adicionalmente fases después de terminar el tiempo de reacción.
-calculateAimError() y calculateDrift() mantienen imprecisión incluso cuando la CPU procesa correctamente una fase.
-Al comenzar una nueva reacción, targetX se sincroniza con cpuPaddle.x para impedir desplazamientos hacia objetivos antiguos.
-resetCpuReactionTime() reinicia cpuReactionStartTime, currentPhase y currentTrackingPhase.
-De esta forma una trayectoria nueva nunca reutiliza fases procesadas durante el punto anterior.
+     reactionTime introduce un retraso antes de que la CPU comience a reaccionar ante una trayectoria entrante.
+     Las fases atravesadas mientras transcurre reactionTime se consideran perdidas.
+     missPhaseChance permite perder adicionalmente fases después de terminar el tiempo de reacción.
+     calculateAimError() y calculateDrift() mantienen imprecisión incluso cuando la CPU procesa correctamente una fase.
+     Al comenzar una nueva reacción, targetX se sincroniza con cpuPaddle.x para impedir desplazamientos hacia objetivos antiguos.
+     resetCpuReactionTime() reinicia cpuReactionStartTime, currentPhase y currentTrackingPhase.
+     De esta forma una trayectoria nueva nunca reutiliza fases procesadas durante el punto anterior.
 
 ESTADO ACTUAL
 

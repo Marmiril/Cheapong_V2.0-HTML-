@@ -21,7 +21,7 @@ export function drawBall(ctx, ball) {
 }
 
 export function clearCanvas(ctx, canvasWidth, canvasHeight) {
-    ctx.fillStyle = "black";
+    // ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 }
 
