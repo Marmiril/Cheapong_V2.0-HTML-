@@ -45,10 +45,9 @@ export function handleWallCollision(ball, canvasWidth, canvasHeight) {
 export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ballSpeed) {
     const isColliding = intersects(ball, playerPaddle);
 
+    if (!isColliding || ball.speedY <= 0) { return false; }
 
     const collisionSide = getPaddleCollisionSide(ball, playerPaddle);
-
-    if (!isColliding || ball.speedY <= 0) { return false; }
 
     const overlapsX =
         ball.x < playerPaddle.x + playerPaddle.width &&
@@ -114,14 +113,46 @@ export function handleCpuPaddleCollision(
 
     const isColliding = intersects(ball, cpuPaddle);
 
-    const collisionSide = getPaddleCollisionSide(ball, cpuPaddle);
-
     if (!isColliding || ball.speedY >= 0) { return; }
 
-    /*
-    if (isColliding && ball.speedY < 0) { ball.y = cpuPaddle.y + cpuPaddle.height; ball.speedY *= -1; }
-    normalizeBallSpeed(ball, ballSpeed);
-    */
+    const overlapsX =
+        ball.x < cpuPaddle.x + cpuPaddle.width &&
+        ball.x + ball.size > cpuPaddle.x;
+
+    const wasBelow =
+        ball.preY >= cpuPaddle.y + cpuPaddle.height;
+
+    const crossedBottomEdge =
+        ball.y <= cpuPaddle.y + cpuPaddle.height;
+
+    // Bottom face collision has priority over lateral collisions
+    if (overlapsX && wasBelow && crossedBottomEdge) {
+        ball.y = cpuPaddle.y + cpuPaddle.height;
+        ball.speedY *= -1;
+
+        playPaddleHit();
+
+        const hitEffectRank = hitEffectRanks[Math.floor(Math.random() * hitEffectRanks.length)];
+
+        const effect = calculateCpuHitEffect(ball, playerPaddle, canvasWidth, NORMAL_EFFECTS, hitEffectRank);
+        applyCpuEffect(ball, cpuPaddle, effect, ballSpeed);
+        return;
+    }
+
+    const collisionSide = getPaddleCollisionSide(ball, cpuPaddle);
+    if (collisionSide === "LEFT") {
+        ball.x = cpuPaddle.x - ball.size;
+        ball.speedX = -Math.abs(ball.speedX);
+        playPaddleHit();
+        return;
+    }
+
+    if (collisionSide === "RIGHT") {
+        ball.x = cpuPaddle.x + cpuPaddle.width;
+        ball.speedX = Math.abs(ball.speedX)
+        playPaddleHit();
+        return;
+    }
 
     ball.y = cpuPaddle.y + cpuPaddle.height;
     ball.speedY *= -1;
@@ -133,8 +164,7 @@ export function handleCpuPaddleCollision(
         Math.floor(Math.random() * hitEffectRanks.length)
         ];
 
-    const effect = calculateCpuHitEffect(ball, playerPaddle, canvasWidth, NORMAL_EFFECTS, hitEffectRank);
-    applyCpuEffect(ball, cpuPaddle, effect, ballSpeed);
+
 }
 
 function applyCpuEffect(ball, cpuPaddle, effect, ballSpeed) {
