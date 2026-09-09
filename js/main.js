@@ -489,7 +489,7 @@ function renderGameScreen() {
 
         const message = scoreSystem.winner === "CPU"
             ? "CPU-WINS - PLAYER CRIES - GAME OVER"
-            : "MIGHTY PLAYER WINS GAME COMPLETED EPICFULLY!!!"
+            : "MIGHTY PLAYER WINS EPICFULLY!!!"
 
         drawCenteredText(
             ctx,

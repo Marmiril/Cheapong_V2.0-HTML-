@@ -51,6 +51,14 @@ export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ball
         ball.x < playerPaddle.x + playerPaddle.width &&
         ball.x + ball.size > playerPaddle.x;
 
+    const crossedLeft =
+        ball.prevX + ball.size <= paddle.prevX &&
+        ball.x + ball.size >= paddle.x;
+
+    const crossedRight =
+        ball.prevX >= paddle.prevX + paddle.width &&
+        ball.x <= paddle.x + paddle.width;
+
     const wasAbove = ball.prevY + ball.size <= playerPaddle.y;
 
     const crossEdgeTop = ball.y + ball.size >= playerPaddle.y;
