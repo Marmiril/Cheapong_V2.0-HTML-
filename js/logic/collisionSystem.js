@@ -45,19 +45,14 @@ export function handleWallCollision(ball, canvasWidth, canvasHeight) {
 export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ballSpeed) {
     const isColliding = intersects(ball, playerPaddle);
 
+
+    const collisionSide = getPaddleCollisionSide(ball, playerPaddle);
+
     if (!isColliding || ball.speedY <= 0) { return false; }
 
     const overlapsX =
         ball.x < playerPaddle.x + playerPaddle.width &&
         ball.x + ball.size > playerPaddle.x;
-
-    const crossedLeft =
-        ball.prevX + ball.size <= paddle.prevX &&
-        ball.x + ball.size >= paddle.x;
-
-    const crossedRight =
-        ball.prevX >= paddle.prevX + paddle.width &&
-        ball.x <= paddle.x + paddle.width;
 
     const wasAbove = ball.prevY + ball.size <= playerPaddle.y;
 
@@ -77,6 +72,22 @@ export function handlePlayerPaddleCollision(ball, playerPaddle, inputState, ball
 
         return true;
     }
+
+    if (collisionSide === "LEFT") {
+        ball.x = playerPaddle.x - ball.size;
+        ball.speedX = -Math.abs(ball.speedX);
+
+        playPaddleHit();
+        return true;
+    }
+    if (collisionSide === "RIGHT") {
+        ball.x = playerPaddle.x + playerPaddle.width;
+        ball.speedX = Math.abs(ball.speedX);
+
+        playPaddleHit();
+        return true;
+    }
+
     return false;
 }
 
@@ -102,6 +113,8 @@ export function handleCpuPaddleCollision(
     hitEffectRanks) {
 
     const isColliding = intersects(ball, cpuPaddle);
+
+    const collisionSide = getPaddleCollisionSide(ball, cpuPaddle);
 
     if (!isColliding || ball.speedY >= 0) { return; }
 
@@ -149,4 +162,19 @@ function applyCpuEffect(ball, cpuPaddle, effect, ballSpeed) {
     }
 
     normalizeBallSpeed(ball, ballSpeed);
+}
+
+function getPaddleCollisionSide(ball, paddle) {
+    const crossedLeft =
+        ball.prevX + ball.size <= paddle.prevX &&
+        ball.x + ball.size >= paddle.x;
+
+    const crossedRight =
+        ball.prevX >= paddle.prevX + paddle.width &&
+        ball.x <= paddle.x + paddle.width;
+
+    if (crossedLeft) { return "LEFT"; }
+    if (crossedRight) { return "RIGHT"; }
+
+    return null;
 }
