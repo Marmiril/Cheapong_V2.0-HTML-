@@ -384,35 +384,137 @@ ITINERARIO
      resetCpuReactionTime() reinicia cpuReactionStartTime, currentPhase y currentTrackingPhase.
      De esta forma una trayectoria nueva nunca reutiliza fases procesadas durante el punto anterior.
 
-ESTADO ACTUAL
+67 - ORDENACIÓN Y ACABADO DEL APARTADO VISUAL.
+     La composición final mantiene el canvas central con los paneles CPU / PLAYER y MATCH / DIFFICULTY a ambos lados.
+     style.css integra los fondos correspondientes a cada match.
+     Se incorpora iluminación lateral animada mediante CSS.
+     El apartado visual queda integrado sin alterar la lógica principal del juego.
 
-Cheapong dispone de puntuación, saques diferenciados, minijuego RPS y 10 matches.
-ScoreSystem mantiene 10 matches; main.js utiliza actualmente 1 punto por match para agilizar las pruebas.
-La dificultad progresa entre ocho niveles desde FANCY hasta BLACK_METAL.
-Todas las dificultades utilizan cinco fases comunes de reconocimiento de trayectoria.
-reactionTime controla el retraso inicial de reacción de la CPU.
-Las fases atravesadas durante reactionTime se consideran perdidas.
-missPhaseChance introduce fallos de atención independientes de reactionTime.
-maxErrorFactor y maxDrift reducen progresivamente la precisión de la CPU.
-STAY, CENTER y TRACK controlan el comportamiento de posicionamiento mientras la pelota se aleja.
-servePlanRanks controla la calidad ofensiva de los saques.
-hitEffectRanks controla la calidad ofensiva de las devoluciones.
-El estado interno de reconocimiento de la CPU se reinicia entre puntos.
-El plan de saque CPU se recalcula durante los 600 milisegundos de preparación.
-Cada match comienza con piedra, papel o tijera para determinar el primer saque.
-POINT_OVER utiliza la duración definida en GAME_SETTINGS.
-MATCH_OVER espera SPACE antes de iniciar el siguiente match ganado por PLAYER.
-GAME_OVER se activa si CPU gana un match o PLAYER completa el décimo.
-soundSystem.js centraliza los sonidos del juego.
-SpeedProgressionSystem incrementa progresivamente la velocidad durante rallies largos.
-assets/img/backgrounds/ contiene fondos neutral y GIFs de celebración asociados a cada match.
-backSystem.js selecciona automáticamente los recursos visuales del match actual.
-La lógica principal del juego y la IA se consideran funcionalmente completas; los parámetros de dificultad continúan disponibles para ajustes de balance.
+68 - COLISIONES LATERALES DE LAS PALAS.
+     collisionSystem.js incorpora getPaddleCollisionSide().
+     La detección utiliza prevX y la posición actual para distinguir impactos LEFT y RIGHT.
+     Las colisiones sobre la cara principal de la pala mantienen prioridad sobre las colisiones laterales.
+     Los impactos laterales recolocan la bola fuera de la pala y corrigen el signo de speedX.
+     La detección se aplica tanto a playerPaddle como a cpuPaddle.
 
-SIGUIENTE PUNTO
+69 - TERRENO DE JUEGO TRANSPARENTE.
+     clearCanvas() deja de rellenar el canvas completamente en negro.
+     ctx.clearRect() limpia el frame conservando la transparencia del canvas.
+     El fondo correspondiente al match puede verse a través del terreno de juego.
+     CSS aplica una capa ligeramente oscura y un difuminado suave sobre el área del canvas.
+     Se mantiene un borde visible para delimitar el terreno de juego.
 
-67 - ORDENACIÓN DEL APARTADO VISUAL.
-Revisar y ordenar la composición visual actual del juego antes de incorporar nuevos elementos.
-Organizar de forma coherente fondos, canvas, marcador, paneles, textos y recursos gráficos existentes.
-Revisar la jerarquía visual y la distribución de los elementos HTML y del canvas.
-Mantener intacta la lógica de juego mientras se trabaja exclusivamente sobre la presentación visual.
+70 - SPRITES VISUALES PARA LAS PALAS.
+     assets/img/ui incorpora playerPaddle.png y cpuPaddle.png.
+     gameRenderer.js carga las dos imágenes una única vez mediante Image().
+     drawPaddle(ctx, paddle, type) distingue entre PLAYER y CPU.
+     PLAYER utiliza su sprite azul.
+     CPU utiliza su sprite rojo.
+     ctx.drawImage() adapta cada sprite a las dimensiones reales de la pala.
+     La incorporación de sprites no modifica el sistema de colisiones.
+     GAME_SETTINGS utiliza actualmente paddleWidth = 90 y paddleHeight = 18.
+
+71 - CORRECCIÓN DE LA SIMULACIÓN DE EFECTOS DE LA CPU.
+     getCandidateSpeedX() conserva la velocidad horizontal previa al calcular BREAK_LEFT y BREAK_RIGHT.
+     BREAK_LEFT simula ball.speedX - CPU_BREAK_BONUS.
+     BREAK_RIGHT simula ball.speedX + CPU_BREAK_BONUS.
+     La predicción queda más próxima al comportamiento aplicado posteriormente por collisionSystem.js.
+     calculateCpuHitEffect() continúa ordenando las respuestas según el desplazamiento exigido al jugador.
+     hitEffectRanks determina qué posición del ranking puede utilizar cada dificultad.
+     Los niveles inferiores pueden escoger deliberadamente respuestas menos efectivas.
+     BLACK_METAL puede utilizar la opción de mayor rango ofensivo disponible.
+
+72 - CIERRE FUNCIONAL DEL PROYECTO.
+     Cheapong se considera funcionalmente terminado dentro del alcance definido para esta versión web.
+     La migración desde Evolupong JavaFX a HTML, CSS y JavaScript vanilla queda completada.
+     El renderizado utiliza Canvas 2D y requestAnimationFrame().
+     El flujo principal dispone de MAIN_MENU, RPS, SERVE_PLAYER, SERVE_CPU, RALLY, POINT_OVER, MATCH_OVER y GAME_OVER.
+     PLAYER y CPU disponen de saques diferenciados.
+     Cada match comienza con piedra, papel o tijera para determinar el primer saque.
+     ScoreSystem utiliza 5 puntos por match y un máximo de 10 matches.
+     La CPU dispone de ocho niveles progresivos de dificultad.
+     La IA utiliza predicción de trayectoria, rebotes laterales, fases de reconocimiento, reactionTime, missPhaseChance, aim error y drift.
+     servePlanRanks controla la calidad de los saques CPU.
+     hitEffectRanks controla la calidad de las devoluciones CPU.
+     El sistema incorpora efectos de golpe y normalización de velocidad.
+     Las colisiones contemplan impactos principales y laterales sobre las palas.
+     SpeedProgressionSystem incrementa progresivamente la velocidad durante rallies prolongados.
+     soundSystem.js centraliza los efectos de sonido del juego.
+     backSystem.js gestiona los fondos y GIFs asociados a cada match.
+     El terreno de juego utiliza transparencia y difuminado para integrarse con los fondos.
+     PLAYER y CPU disponen de sprites gráficos diferenciados.
+     A partir de este punto no quedan desarrollos funcionales necesarios dentro del alcance actual.
+     Cualquier cambio posterior se considerará mantenimiento, ajuste de balance, mejora estética o integración en el portfolio.
+
+ESTADO FINAL
+
+Cheapong es un minijuego arcade estilo Pong 2D desarrollado con HTML, CSS y JavaScript vanilla.
+
+El juego se ejecuta mediante CanvasRenderingContext2D y requestAnimationFrame().
+
+GAME_SETTINGS centraliza las principales dimensiones y velocidades del juego.
+El canvas interno utiliza una resolución de 800 × 600.
+Las palas utilizan actualmente unas dimensiones de 90 × 18.
+La bola utiliza un tamaño de 15.
+
+La partida está formada por un máximo de 10 matches.
+Cada match requiere actualmente 3 puntos para ser ganado.
+Si CPU gana un match, termina la partida.
+Si PLAYER supera los 10 matches, completa el juego.
+
+Cada nuevo match comienza mediante el minijuego de piedra, papel o tijera.
+El resultado determina quién realiza el primer saque.
+Los saques siguientes dependen del ganador de cada punto.
+
+La CPU utiliza ocho niveles de dificultad:
+FANCY.
+VERY_EASY.
+EASY.
+VERY_NORMAL.
+NORMAL.
+HARD.
+VERY_HARD.
+BLACK_METAL.
+
+Todas las dificultades disponen de cinco fases de reconocimiento de trayectoria:
+[0.90, 0.75, 0.50, 0.25, 0.10].
+
+reactionTime controla el retraso inicial de reacción.
+missPhaseChance permite perder fases de decisión.
+maxErrorFactor introduce error en la predicción.
+maxDrift añade variación horizontal adicional.
+STAY, CENTER y TRACK controlan el comportamiento de posicionamiento cuando la pelota se aleja.
+trackingPhases permite anticipar la siguiente jugada en las dificultades superiores.
+servePlanRanks regula la calidad de los saques.
+hitEffectRanks regula la calidad de las devoluciones.
+
+calculateCpuHitEffect() compara diferentes respuestas ofensivas.
+getCandidateSpeedX() simula la velocidad horizontal correspondiente a cada efecto.
+predictBallX() y reflectX() permiten predecir trayectorias incluyendo rebotes contra los laterales.
+
+El jugador dispone de movimiento horizontal y efectos aplicados mediante teclado.
+El movimiento de las palas puede transferir spin a la pelota.
+La velocidad total se conserva mediante normalizeBallSpeed() cuando se modifican las trayectorias.
+
+El sistema de colisiones diferencia impactos principales y laterales.
+Las posiciones anteriores de bola y palas permiten comprobar correctamente el cruce de superficies.
+
+SpeedProgressionSystem aumenta progresivamente la velocidad durante rallies prolongados y reinicia el valor tras cada punto.
+
+El juego dispone de sonidos para impactos, paredes, puntos, saques, RPS, aumento de velocidad, victoria de match, derrota y victoria final.
+
+Cada match dispone de un fondo neutral backXX.png y una animación gifXX.gif.
+backSystem.js selecciona automáticamente los recursos correspondientes al número de match.
+
+El canvas permite visualizar parcialmente el fondo mediante transparencia y difuminado.
+PLAYER utiliza playerPaddle.png.
+CPU utiliza cpuPaddle.png.
+Los sprites se renderizan mediante ctx.drawImage() respetando las dimensiones físicas utilizadas por las colisiones.
+
+La lógica de juego, estados, puntuación, IA, dificultad, sonidos, fondos, colisiones, progresión de velocidad y presentación visual se consideran terminados para esta versión.
+
+PROYECTO FINALIZADO
+
+CHEAPONG V2.0 - HTML / CSS / JAVASCRIPT
+ESTADO: FUNCIONALMENTE COMPLETO
+DESTINO: INTEGRACIÓN EN PORTFOLIO

@@ -159,6 +159,7 @@ function applyCpuEffect(ball, cpuPaddle, effect, ballSpeed) {
     const paddleDeltaX = cpuPaddle.x - cpuPaddle.prevX;
     const movementSpin = paddleDeltaX * SPIN_FACTOR;
 
+
     // Applies the natural spin produced by the CPU paddle movement.
     ball.speedX += movementSpin;
 

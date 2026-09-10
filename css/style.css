@@ -77,7 +77,7 @@ body {
     height: auto;
     background-color: rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2 px);
+    -webkit-backdrop-filter: blur(2px);
     border: 0.125rem solid rgb(4, 33, 249);
     display: block;
 }
