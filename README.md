@@ -33,7 +33,7 @@ El proyecto nace como una adaptación web de Evolupong, una versión previa crea
 
 ## Estado
 
-Proyecto en desarrollo.
+FINALIZADO
 
 # Cheapong
 
@@ -70,4 +70,4 @@ The project is based on Evolupong, a previous JavaFX version. This web version i
 
 ## Status
 
-Work in progress.
+DONE
