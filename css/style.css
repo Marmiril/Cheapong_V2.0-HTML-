@@ -75,9 +75,10 @@ body {
     width: min(90vw, calc(75vh * 1.3333), 70rem);
     aspect-ratio: 4 / 3;
     height: auto;
-    background-color: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(8px);
-    border: 0.125rem solid white;
+    background-color: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2 px);
+    border: 0.125rem solid rgb(4, 33, 249);
     display: block;
 }
 

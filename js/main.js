@@ -449,8 +449,8 @@ function renderGameScreen() {
     clearCanvas(ctx, canvasWidth, canvasHeight);
 
 
-    drawPaddle(ctx, playerPaddle);
-    drawPaddle(ctx, cpuPaddle);
+    drawPaddle(ctx, playerPaddle, "PLAYER");
+    drawPaddle(ctx, cpuPaddle, "CPU");
     drawBall(ctx, ball);
 
     if (gameState === GameState.POINT_OVER) {

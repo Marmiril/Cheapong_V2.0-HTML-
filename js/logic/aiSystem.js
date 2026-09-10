@@ -220,9 +220,9 @@ export function getCandidateSpeedX(ball, effect) {
         case HitEffect.DOWN:
             return -ball.speedX;
         case HitEffect.BREAK_LEFT:
-            return -CPU_BREAK_BONUS;
+            return ball.speedX - CPU_BREAK_BONUS;
         case HitEffect.BREAK_RIGHT:
-            return CPU_BREAK_BONUS;
+            return ball.speedX + CPU_BREAK_BONUS;
         default:
             return ball.speedX;
     }

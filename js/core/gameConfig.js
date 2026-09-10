@@ -2,8 +2,8 @@
 export const GAME_SETTINGS = {
     canvasWidth: 800,
     canvasHeight: 600,
-    paddleWidth: 80,
-    paddleHeight: 10,
+    paddleWidth: 90,
+    paddleHeight: 18,
     paddleSpeed: 7,
     ballSize: 15,
     ballSpeed: Math.sqrt(6 ** 2 + 6 ** 2),
