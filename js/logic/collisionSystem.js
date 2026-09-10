@@ -120,7 +120,7 @@ export function handleCpuPaddleCollision(
         ball.x + ball.size > cpuPaddle.x;
 
     const wasBelow =
-        ball.preY >= cpuPaddle.y + cpuPaddle.height;
+        ball.prevY >= cpuPaddle.y + cpuPaddle.height;
 
     const crossedBottomEdge =
         ball.y <= cpuPaddle.y + cpuPaddle.height;
@@ -153,18 +153,6 @@ export function handleCpuPaddleCollision(
         playPaddleHit();
         return;
     }
-
-    ball.y = cpuPaddle.y + cpuPaddle.height;
-    ball.speedY *= -1;
-
-    playPaddleHit();
-
-    const hitEffectRank =
-        hitEffectRanks[
-        Math.floor(Math.random() * hitEffectRanks.length)
-        ];
-
-
 }
 
 function applyCpuEffect(ball, cpuPaddle, effect, ballSpeed) {
